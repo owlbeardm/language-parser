@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2a1c5601cd1af7e4e360a16adb12357ddc928c3ea2ebd6710c8581c75a1ff5f7
+-- hash: dbe5dc9af57bd81077d7b9fcfbee07ff161422aacaafa8440bd063a10e2de2b2
 
 name:           language-parser
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 
 library
   exposed-modules:
+      LanguageDictionary
       Lib
   other-modules:
       Paths_language_parser
