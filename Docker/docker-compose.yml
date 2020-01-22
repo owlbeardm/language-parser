@@ -1,0 +1,28 @@
+version: '3.7'
+networks:
+  wiki-network:
+    driver: bridge
+    name: "wiki-network"
+    ipam:
+      config:
+        - subnet: 172.20.7.0/24
+
+services:
+  postgres:
+    container_name: "wiki-postgres"
+    image:
+    build:
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    enviroment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    expose:
+      - "5432"
+    networks:
+      wiki-network:
+        ipv4_address: 172.20.7.103
+        aliases:
+          - postgres.wiki.lo
+volumes:
+  pgdata:
