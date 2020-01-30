@@ -10,11 +10,11 @@ networks:
 services:
   postgres:
     container_name: "wiki-postgres"
-    image:
-    build:
+    image: wiki/postgres
+    build: .
     volumes:
       - pgdata:/var/lib/postgresql/data
-    enviroment:
+    environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     expose:
