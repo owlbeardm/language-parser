@@ -4,9 +4,9 @@ module Lib
   ( someFunc
   ) where
 
-import Control.Applicative
-import Database.SQLite.Simple
-import Database.SQLite.Simple.FromRow
+import           Control.Applicative
+import           Database.SQLite.Simple
+import           Database.SQLite.Simple.FromRow
 
 data TestField =
   TestField Int String

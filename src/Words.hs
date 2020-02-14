@@ -2,16 +2,18 @@
 
 module Words where
 
-import qualified Data.Text                     as T
+import qualified Data.Text as T
 
+type Lang = T.Text
 type TranslationComments = [T.Text]
-type Word = Data.Text
-type Words = [Word]
--- SoundLaw = ?
+type LangWord = T.Text
+type LangWords = [LangWord]
+type SoundLaw = T.Text
 type SoundLaws = [SoundLaw]
 
-migrateWords :: Words -> SoundLaws -> Words
-migrateWord :: Word -> SoundLaws -> Word
+
+evolveLang :: Lang -> Lang -> Lang
+evolveLang lang1 lang2 = 
 
 
 
