@@ -30,6 +30,7 @@ library
       LanguageDictionary
       Lib
       Words
+      PhoneticChanges
   other-modules:
       Paths_language_parser
   hs-source-dirs:
@@ -37,7 +38,8 @@ library
   build-depends:
       base >=4.7 && <5
     , sqlite-simple
-    , text
+    , text 
+    , regex-compat
   default-language: Haskell2010
 
 executable language-parser-exe
