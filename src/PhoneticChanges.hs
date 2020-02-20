@@ -8,7 +8,9 @@ import qualified Data.Text  as T
 import qualified Text.Regex as R
 
 type PhoneticWord = T.Text
+
 type Translation = T.Text
+
 type WrittenWord = T.Text
 
 data SoundLaw =
@@ -28,26 +30,20 @@ changeWord word (SoundLaw regex changedPart) =
   T.pack (R.subRegex regex (T.unpack word) (T.unpack changedPart))
 
 migrateWord :: PhoneticWord -> [SoundLaw] -> PhoneticWord
-migrateWord word soundLaws = foldl changeWord word soundLaws
+migrateWord = foldl changeWord
 
 migrateWords :: [PhoneticWord] -> [SoundLaw] -> [PhoneticWord]
-migrateWords words laws = map ((flip migrateWord) laws) words
+migrateWords words laws = map (`migrateWord` laws) words
 
 who = T.pack "kʷei"
 
 nine = T.pack "H1néwn̥"
 
-firstRegex = R.mkRegex "ei"
+firstSl = SoundLaw (R.mkRegex "ei") "ē"
 
-secondRegex = R.mkRegex "^H1"
+secondSl = SoundLaw (R.mkRegex "^H1") "a"
 
-thirdRegex = R.mkRegex "H1"
-
-firstSl = SoundLaw firstRegex "ē"
-
-secondSl = SoundLaw secondRegex "a"
-
-thirdSl = SoundLaw thirdRegex ""
+thirdSl = SoundLaw (R.mkRegex "H1") ""
 
 listSl = [firstSl, secondSl, thirdSl]
 
