@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module PhoneticChanges
-  (
+  (migrateWords
   ) where
 
 import qualified Data.Text  as T
@@ -35,19 +35,7 @@ migrateWord = foldl changeWord
 migrateWords :: [PhoneticWord] -> [SoundLaw] -> [PhoneticWord]
 migrateWords words laws = map (`migrateWord` laws) words
 
-who = T.pack "kʷei"
-
-nine = T.pack "H1néwn̥"
-
-firstSl = SoundLaw (R.mkRegex "ei") "ē"
-
-secondSl = SoundLaw (R.mkRegex "^H1") "a"
-
-thirdSl = SoundLaw (R.mkRegex "H1") ""
-
-listSl = [firstSl, secondSl, thirdSl]
-
-listW = [who, nine]
--- ei      > ē
--- H1#     > a
--- H1      >
+-- evolveLanguage :: LangName -> LangName -> [PhoneticWord]
+-- evolveLanguage fromLang toLang                 =  migrateWords wordsFrom lawsTo
+--   where wordsFrom = 1
+--         lawsTo = 1

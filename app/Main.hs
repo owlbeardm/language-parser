@@ -1,7 +1,11 @@
 module Main where
 
 import           Lib
-import qualified PhoneticChanges as PC
+import qualified PhoneticChanges  as PC
+import           System.Directory
 
 main :: IO ()
-main = print "hello"
+main = do
+    -- userInput <- getContents
+    createDirectory "userInput"
+    putStrLn "done!"
