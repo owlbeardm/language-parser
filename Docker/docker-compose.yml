@@ -2,13 +2,12 @@ version: "3.3"
 networks:
   wiki-network:
     driver: bridge
-    name: "wiki-network"
     ipam:
       config:
         - subnet: 172.20.7.0/24
 
 services:
-  postgres:
+  wiki-postgres:
     container_name: "wiki-postgres"
     image: wiki/postgres
     build: .
@@ -24,5 +23,15 @@ services:
         ipv4_address: 172.20.7.103
         aliases:
           - postgres.wiki.lo
+  wiki-flyway:
+    container_name: "wiki-flyway"
+    image: boxfuse/flyway:5.2.4
+    command: -url=jdbc:postgresql://postgres.wiki.lo:5432/wiki -user=wiki -password=wiki -connectRetries=60 migrate
+    volumes:
+      - ./sql/flyway-migration:/flyway/sql
+    networks:
+      - wiki-network
+    depends_on:
+      - wiki-postgres
 volumes:
   pgdata:
