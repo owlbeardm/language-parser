@@ -25,6 +25,7 @@ dependencies:
 - sqlite-simple   
 - regex-compat
 - directory
+- scotty
 
 library:
   source-dirs: src
