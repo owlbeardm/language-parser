@@ -1,27 +1,32 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lib
-  ( someFunc
-  ) where
+    ( main
+    ) where
 
-import           Control.Applicative
-import           Database.SQLite.Simple
-import           Database.SQLite.Simple.FromRow
+import           ClassyPrelude
 
-data TestField =
-  TestField Int String
-  deriving (Show)
+import           Data.Monoid       (mconcat)
+import           Data.Typeable
+import qualified Platform.HTTP     as HTTP
+import qualified Platform.Postgres as PG
+import           Web.Scotty
 
-instance FromRow TestField where
-  fromRow = TestField <$> field <*> field
+-- main = scotty 3000 $
+  -- get "/words/:lang" $ do
+    -- beam <- param "lang"
+    -- html $ mconcat ["<h1>words , ", beam, " me up!</h1>"]
 
-someFunc :: IO ()
-someFunc = do
-  conn <- open "test.db"
-  execute
-    conn
-    "INSERT INTO test (str) VALUES (?)"
-    (Only ("test string 2" :: String))
-  r <- query_ conn "SELECT * from test" :: IO [TestField]
-  mapM_ print r
-  close conn
+main :: IO ()
+main = do
+  pgEnv <- PG.init
+  let runner app = flip runReaderT pgEnv $ unAppT app
+  HTTP.main runner
+
+type Env = PG.Env
+
+newtype AppT a = AppT
+  { unAppT :: ReaderT Env IO a
+  } deriving  ( Applicative, Functor, Monad
+              , MonadIO, MonadReader Env)
+

@@ -4,6 +4,7 @@ module PhoneticChanges
   (migrateWords
   ) where
 
+import           Prelude
 import qualified Data.Text  as T
 import qualified Text.Regex as R
 

@@ -19,16 +19,31 @@ extra-source-files:
 # common to point users to the README.md file.
 description:         Please see the README on GitHub at <https://github.com/githubuser/language-parser#readme>
 
+default-extensions:
+- OverloadedStrings
+- GeneralizedNewtypeDeriving
+- NoImplicitPrelude
+
+
 dependencies:
-- base >= 4.7 && < 5
-- text
-- sqlite-simple   
-- regex-compat
-- directory
-- scotty
+- classy-prelude
+- base
+
 
 library:
   source-dirs: src
+  dependencies:
+    - base >= 4.7 && < 5
+    - text
+    # - sqlite-simple   
+    - regex-compat
+    # - directory
+    - scotty
+    - classy-prelude
+    - postgresql-simple
+    - resource-pool
+    - wai
+
 
 executables:
   language-parser-exe:

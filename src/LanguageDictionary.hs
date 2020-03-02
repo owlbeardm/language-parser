@@ -2,6 +2,7 @@
 
 module LanguageDictionary where
 
+import           ClassyPrelude
 import qualified Data.Text as T
 
 data TranslationLang

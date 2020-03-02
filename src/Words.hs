@@ -2,7 +2,7 @@
 
 module Words where
 
-import qualified Data.Text as T
+import           ClassyPrelude
 
 -- type TranslationComments = [T.Text]
 -- type Word = Data.Text
