@@ -1,27 +1,11 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Lib
-  ( someFunc
+  ( libMain
   ) where
 
-import           Control.Applicative
-import           Database.SQLite.Simple
-import           Database.SQLite.Simple.FromRow
+-- import           Control.Applicative
+-- import           Data.Time
+-- import           Database.PostgreSQL.Simple
+-- import           Database.PostgreSQL.Simple.FromRow
 
-data TestField =
-  TestField Int String
-  deriving (Show)
-
-instance FromRow TestField where
-  fromRow = TestField <$> field <*> field
-
-someFunc :: IO ()
-someFunc = do
-  conn <- open "test.db"
-  execute
-    conn
-    "INSERT INTO test (str) VALUES (?)"
-    (Only ("test string 2" :: String))
-  r <- query_ conn "SELECT * from test" :: IO [TestField]
-  mapM_ print r
-  close conn
+libMain :: IO ()
+libMain = print "db-lesson"

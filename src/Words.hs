@@ -2,8 +2,6 @@
 
 module Words where
 
-import qualified Data.Text as T
-
 -- type TranslationComments = [T.Text]
 -- type Word = Data.Text
 -- type Words = [Word]

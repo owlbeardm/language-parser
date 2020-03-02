@@ -20,15 +20,27 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/githubuser/language-parser#readme>
 
 dependencies:
-- base >= 4.7 && < 5
-- text
-- sqlite-simple   
-- regex-compat
-- directory
-- scotty
+- classy-prelude
+- base
 
 library:
   source-dirs: src
+  dependencies:
+  - scotty
+  - text
+  - regex-compat
+  - directory
+  - scotty
+  - postgresql-simple
+  - time
+  ghc-options:
+  - -Wall
+  - -Werror
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wredundant-constraints
+
+
 
 executables:
   language-parser-exe:
