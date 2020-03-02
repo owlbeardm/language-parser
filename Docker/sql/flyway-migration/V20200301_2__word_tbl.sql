@@ -9,5 +9,5 @@ CREATE TABLE word_tbl (
     lang_id bigint NOT NULL,
     CONSTRAINT word_pk PRIMARY KEY (id),
     CONSTRAINT word_word_lang_id_unq UNIQUE (word,lang_id),
-    CONSTRAINT word_lang_id_fk FOREIGN KEY (lang_id) REFERENCES language_tbl(lang_id)
+    CONSTRAINT word_lang_id_fk FOREIGN KEY (lang_id) REFERENCES language_tbl(id)
 );

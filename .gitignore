@@ -21,3 +21,5 @@ cabal.project.local~
 .HTF/
 .ghc.environment.*
 language-parser.cabal
+
+sql/dump/dumpfile.sql
