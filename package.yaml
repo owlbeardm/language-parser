@@ -40,6 +40,7 @@ library:
   - scotty
   - postgresql-simple
   - time
+  - resource-pool
   ghc-options:
   - -Wall
   - -Werror
