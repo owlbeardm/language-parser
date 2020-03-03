@@ -21,10 +21,14 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 default-extensions:
 - OverloadedStrings
+- GeneralizedNewtypeDeriving
+- NoImplicitPrelude
+
 
 dependencies:
 - classy-prelude
 - base
+
 
 library:
   source-dirs: src

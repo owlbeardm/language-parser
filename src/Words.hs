@@ -2,6 +2,8 @@
 
 module Words where
 
+import           ClassyPrelude
+
 -- type TranslationComments = [T.Text]
 -- type Word = Data.Text
 -- type Words = [Word]
