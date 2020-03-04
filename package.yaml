@@ -47,6 +47,7 @@ library:
   - -Wincomplete-record-updates
   - -Wincomplete-uni-patterns
   - -Wredundant-constraints
+  - -Wno-unused-top-binds
 
 
 

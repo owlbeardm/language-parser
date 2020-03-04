@@ -2,7 +2,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Lib
-  (
+  ( main
   ) where
 
 import           ClassyPrelude
@@ -11,6 +11,9 @@ import           Data.Pool
 import           Data.Time
 import           Database.PostgreSQL.Simple
 import           Database.PostgreSQL.Simple.FromRow
+
+main :: IO ()
+main = print "hello"
 
 mainPrintL :: (Show a) => (Connection -> IO [a]) -> IO ()
 mainPrintL action = do
@@ -31,24 +34,6 @@ mainPrintOne action = do
   pool <- acquirePool
   a <- withResource pool action
   print a
-
-data Language = Language
- {  langId          :: Int
-    , langVersion   :: Int
-    , langCreatedby :: String
-    -- , langCreatedwhen :: Day
-    , langModiby    :: String
-    -- , langModiwhen    :: Day
-    , langName      :: String
- }
-
-instance Show Language where
-    show lang = mconcat [ show $ langId lang
-      , ".) "
-      , langName lang]
-
-instance FromRow Language where
-  fromRow = Language <$> field <*> field <*> field <*> field <*> field
 
 data LangWord = LangWord
  {   wordId         :: Int
@@ -85,24 +70,6 @@ getWordsByLangName name conn = do
   langId <- getLangIdByName name conn
   mapM (`getWordsByLangId` conn) langId
 
-getLangs :: Connection -> IO [Language]
-getLangs = getByQuery "SELECT id,version,createdby,modiby,name FROM language_tbl" ()
-
-getLangByName :: String -> Connection -> IO [Language]
-getLangByName langName = getByQuery qry (Only langName)
-  where
-    qry = "SELECT id,version,createdby,modiby,name \
-          \FROM language_tbl AS l WHERE l.name = (?) \
-          \LIMIT 1"
-
-getLangIdByName :: String -> Connection -> IO (Maybe Int)
-getLangIdByName langName conn = do
-  results <- getLangByName langName conn
-  case results of
-    [lang] -> return $ Just (langId lang)
-    _ -> return Nothing
-
-
 acquirePool :: IO (Pool Connection)
 acquirePool = createPool (connect connInfo) close 1 10 10
   where
@@ -110,9 +77,3 @@ acquirePool = createPool (connect connInfo) close 1 10 10
 
 withConn :: Pool Connection -> (Connection -> IO a) -> IO a
 withConn  = withResource
-
-
---   getAllWords :: Connection -> IO [LangWord]
--- getAllWords pool = do
---   a <- withResource pool (\conn -> query_ conn "SELECT id,version,createdby,modiby,word FROM word_tbl" :: IO [LangWord])
---   mapM_ print a

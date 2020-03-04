@@ -23,3 +23,5 @@ cabal.project.local~
 language-parser.cabal
 
 sql/dump/dumpfile.sql
+
+dumpfile.sql
