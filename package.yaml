@@ -41,6 +41,7 @@ library:
   - postgresql-simple
   - time
   - resource-pool
+  - bytestring
   ghc-options:
   - -Wall
   - -Werror
