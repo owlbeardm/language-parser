@@ -1,7 +1,7 @@
 module Database.Word
   ( getWords,
     getWordsByLangId,
-    getWordsByLangName,
+    -- getWordsByLangName,
     getWordIdsByWord,
     Word,
     getWordById
@@ -42,10 +42,10 @@ getWordsByLangId langId = getByQuery qry (Only langId)
     qry = "SELECT id,version,createdby,createdwhen,modiby,modiwhen,word \
           \FROM word_tbl WHERE word_tbl.lang_id = (?) "
 
-getWordsByLangName :: String -> Connection -> IO (Maybe [Word])
-getWordsByLangName name conn = do
-  langId <- getLangIdByName name conn
-  mapM (`getWordsByLangId` conn) langId
+-- getWordsByLangName :: String -> Connection -> IO (Maybe [Word])
+-- getWordsByLangName name conn = do
+--   langId <- getLangIdByName name conn
+--   mapM (`getWordsByLangId` conn) langId
 
 getWordIdsByWord :: String -> Connection -> IO [ID]
 getWordIdsByWord wText = getByQuery qry (Only wText)

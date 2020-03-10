@@ -21,7 +21,7 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 default-extensions:
 - OverloadedStrings
-- GeneralizedNewtypeDeriving
+# - GeneralizedNewtypeDeriving
 - NoImplicitPrelude
 
 
@@ -42,6 +42,13 @@ library:
   - time
   - resource-pool
   - bytestring
+  - persistent
+  - persistent-template
+  - persistent-postgresql
+  - monad-logger
+  - template-haskell
+  - resourcet
+  - esqueleto
   ghc-options:
   - -Wall
   - -Werror
