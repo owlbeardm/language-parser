@@ -63,7 +63,7 @@ main = runSQLAction $ do
         word <- getBy $ WordWordPosLangIdUnq "ask" "verb" (toSqlKey 3)
         liftIO $ print word
 
-getWordById :: IO ()
-getWordById = runSQLAction $ do
-        word <- get $ (toSqlKey 3) :: Word
-        liftIO $ print word
+-- getWordById :: IO ()
+-- getWordById = runSQLAction $ do
+--         word <- get $ (toSqlKey 3) :: Word
+--         liftIO $ print word
