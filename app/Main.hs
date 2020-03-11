@@ -17,14 +17,11 @@ import           Control.Monad.IO.Class       (liftIO)
 import           Control.Monad.Logger         (LoggingT,
                                                runStderrLoggingT)
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
-import qualified Database.Esqueleto      as E
-import           Database.Esqueleto      ((^.))
+import           Database.Esqueleto
 import           Database.Language
-import           Database.Persist
-import           Database.Persist.Postgresql
-import           Database.Persist.Quasi
+import           Database.Word
+import           Database.Persist.Postgresql (withPostgresqlConn, ConnectionString)
 import           Database.Persist.TH
-import           Language.Haskell.TH.Quote
 import           Lib
 
 
@@ -36,7 +33,7 @@ Language sql=language_tbl
 Word sql=word_tbl
     word Text
     langId LanguageId
-    partOfSpeech Text
+    partOfSpeech PartOfSpeech
     WordWordPosLangIdUnq word partOfSpeech langId
     deriving Show
 |]
@@ -48,22 +45,27 @@ runSQLAction :: SqlPersistT (ResourceT (LoggingT IO)) a -> IO a
 runSQLAction = runStderrLoggingT . runResourceT . withPostgresqlConn connStr . runSqlConn
 
 
--- main :: IO ()
--- main = runStderrLoggingT $ withPostgresqlPool connStr 10 $ \pool -> liftIO $
---     flip runSqlPersistMPool pool $ do
---         printMigration migrateAll
---         lang <- getBy $ LanguageNameUnq English
---         liftIO $ print lang
-
 main :: IO ()
-main = runSQLAction $ do
-        printMigration migrateAll
-        lang <- getBy $ LanguageNameUnq English
-        liftIO $ print lang
-        word <- getBy $ WordWordPosLangIdUnq "ask" "verb" (toSqlKey 3)
-        liftIO $ print word
+main = mainW
 
--- getWordById :: IO ()
--- getWordById = runSQLAction $ do
---         word <- get $ (toSqlKey 3) :: Word
---         liftIO $ print word
+
+mainI :: IO ()
+mainI = runSQLAction $ do
+    langs <- select $
+             from $ \lang -> do
+             return lang
+    liftIO $ mapM_ (print . languageName . entityVal) langs
+
+mainW :: IO ()
+mainW = runSQLAction $ do
+    words <- select $
+             from $ \word -> do
+             where_ (word ^. WordId ==. val (toSqlKey 1))
+             return word
+    liftIO $ mapM_ (putStrLn . tshow .  wordPartOfSpeech . entityVal) words
+
+
+select $ \
+from $ \word -> do \
+where_ (word ^. WordId ==. val (toSqlKey 1)) \
+return word

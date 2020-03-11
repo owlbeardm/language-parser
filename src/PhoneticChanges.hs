@@ -1,8 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module PhoneticChanges
-  (
-  ) where
+module PhoneticChanges where
 
 -- import qualified Data.Text  as T
 -- import qualified Text.Regex as R

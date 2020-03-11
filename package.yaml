@@ -57,8 +57,6 @@ library:
   - -Wredundant-constraints
   - -Wno-unused-top-binds
 
-
-
 executables:
   language-parser-exe:
     main:                Main.hs
@@ -69,7 +67,23 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - language-parser
-
+    - scotty
+    - text
+    - regex-compat
+    - directory
+    - scotty
+    - postgresql-simple
+    - time
+    - resource-pool
+    - bytestring
+    - persistent
+    - persistent-template
+    - persistent-postgresql
+    - monad-logger
+    - template-haskell
+    - resourcet
+    - esqueleto
+  
 tests:
   language-parser-test:
     main:                Spec.hs

@@ -47,6 +47,7 @@ import           Language.Haskell.TH.Quote
 -- withConn :: Pool Connection -> (Connection -> IO a) -> IO a
 -- withConn  = withResource
 
+lowerTbl :: PersistSettings
 lowerTbl = lowerCaseSettings { psToDBName = psToDBName lowerCaseSettings .  flip mappend "_tbl"}
 
 persistLowerCaseTbl :: QuasiQuoter
