@@ -36,6 +36,13 @@ Word sql=word_tbl
     partOfSpeech PartOfSpeech
     WordWordPosLangIdUnq word partOfSpeech langId
     deriving Show
+Translation sql=translation_tbl
+    fromWordId WordId
+    toLangId LanguageId
+    toWordId WordId Maybe
+    comment Text Maybe 
+    altTranslation Text Maybe 
+    deriving Show
 |]
 
 connStr :: ConnectionString
@@ -46,7 +53,9 @@ runSQLAction = runStderrLoggingT . runResourceT . withPostgresqlConn connStr . r
 
 
 main :: IO ()
-main = mainW
+main = runSQLAction $ do
+        printMigration migrateAll
+
 
 
 mainI :: IO ()
@@ -64,8 +73,16 @@ mainW = runSQLAction $ do
              return word
     liftIO $ mapM_ (putStrLn . tshow .  wordPartOfSpeech . entityVal) words
 
+mainT :: IO ()
+mainT = runSQLAction $ do
+    trans <- select $
+             from $ \tran -> do
+             return tran
+    liftIO $ mapM_ (print . tshow . entityVal) (trans :: [Entity Translation])
 
-select $ \
-from $ \word -> do \
-where_ (word ^. WordId ==. val (toSqlKey 1)) \
-return word
+translate :: Text -> IO ()
+translate wtt = runSQLAction $ do
+     results <- select $
+             from $ \(wf,wt,tr,tl) -> do
+             return (wf,wt,tr,tl)
+    liftIO $ mapM_ (print . tshow . entityVal) results
