@@ -171,4 +171,6 @@ INSERT INTO translation_tbl(id, from_word_id, to_lang_id, to_word_id, comment, a
 (1, 78, 1, 72, null, null),
 (2, 79, 1, 56, null, null),
 (3, 80, 1, 22, null, null),
-(4, 16, 3, null, null, 'to give birth');
+(4, 16, 3, null, null, 'give birth'),
+(5, 16, 3, null, null, 'two tens'),
+(6, 16, 3, null, null, 'in front of');
