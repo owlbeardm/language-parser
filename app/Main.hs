@@ -117,6 +117,7 @@ translate wtt = runSQLAction $ do
              on (frWord ^. WordLangId ==. frLang ^. LanguageId)
              on (tr ^. TranslationFromWordId ==. frWord ^. WordId)
              where_ ((frWord ^. WordWord ==. val (toLower wtt)) 
+               ||. (mToWord ?. WordWord ==. just(val (toLower wtt))) 
                ||. (tr ^. TranslationAltTranslation `like` just (val (toLower (mconcat ["%",wtt,"%"])))))
              return (tr, frWord, frLang, toLang, mToWord)
     liftIO $ mapM_ (putStrLn . showFT . convert) results
