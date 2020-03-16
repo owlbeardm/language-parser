@@ -14,10 +14,12 @@
 
 
 
-import           ClassyPrelude                hiding (Word, on)
+import           ClassyPrelude                hiding (Word, on, (<&>))
 import           Control.Monad.IO.Class       (liftIO)
-import           Control.Monad.Logger         (LoggingT, NoLoggingT,
-                                               runNoLoggingT, runStderrLoggingT)
+import           Control.Monad.Logger         (LoggingT, NoLoggingT, logErrorN,
+                                               logErrorNS, runNoLoggingT,
+                                               runStderrLoggingT)
+import           Control.Monad.Trans.Maybe    (mapMaybeT, runMaybeT)
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import           Data.Monoid                  (mconcat)
 import           Database.Esqueleto
@@ -34,8 +36,8 @@ import           Web.Scotty                   as S
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Language sql=language_tbl
-    name LanguageName
-    LanguageNameUnq name
+    lname LanguageName sql=name
+    LanguageNameUnq lname
 Word sql=word_tbl
     word Text
     langId LanguageId
@@ -51,7 +53,7 @@ Translation sql=translation_tbl
 |]
 
 instance Show Language where
-    show l = show $ languageName l
+    show l = show $ languageLname l
 
 instance Show Word where
     show w = mconcat [ unpack $ wordWord w, " '", show $ wordPartOfSpeech w, "'"]
@@ -65,15 +67,15 @@ connStr = "host=172.20.7.103 dbname=wiki user=wiki password=wiki port=5432"
 runSQLAction :: SqlPersistT (ResourceT (LoggingT IO)) a -> IO a
 runSQLAction = runStderrLoggingT . runResourceT . withPostgresqlConn connStr . runSqlConn
 
+-- main :: IO ()
+-- main = scotty 3000 $
+--     S.get "/:word" $ do
+--         beam <- param "word"
+--         html $ mconcat ["<h1>Scotty, ", beam, " me up!</h1>"]
+
+
 main :: IO ()
-main = scotty 3000 $
-    S.get "/:word" $ do
-        beam <- param "word"
-        html $ mconcat ["<h1>Scotty, ", beam, " me up!</h1>"]
-
-
-main' :: IO ()
-main' = runSQLAction $ do
+main = runSQLAction $ do
         printMigration migrateAll
         action
 
@@ -82,14 +84,14 @@ action = do
     langs <- select $
              from $ \lang -> do
              return lang
-    liftIO $ mapM_ (print . languageName . entityVal) langs
+    liftIO $ mapM_ (print . languageLname . entityVal) langs
 
 mainI :: IO ()
 mainI = runSQLAction $ do
     langs <- select $
              from $ \lang -> do
              return lang
-    liftIO $ mapM_ (print . languageName . entityVal) langs
+    liftIO $ mapM_ (print . languageLname . entityVal) langs
 
 mainW :: IO ()
 mainW = runSQLAction $ do
@@ -98,6 +100,15 @@ mainW = runSQLAction $ do
              where_ (word ^. WordId ==. val (toSqlKey 15))
              return word
     liftIO $ mapM_ (putStrLn . tshow .  entityVal) words
+
+mainUnq :: Text ->  PartOfSpeech -> LanguageName -> IO ()
+mainUnq word pos langName = runSQLAction $ do
+    lang <- getBy $ LanguageNameUnq langName
+    case lang of
+        Just l -> do
+            mWord <- getBy $ WordWordPosLangIdUnq word pos (entityKey l)
+            liftIO $ mapM_ (putStrLn . tshow .  entityVal) mWord
+        Nothing -> liftIO $ print lang
 
 mainT :: IO ()
 mainT = runSQLAction $ do
@@ -139,3 +150,32 @@ translate wtt = runSQLAction $ do
 
 addLang :: LanguageName -> IO ()
 addLang name = runSQLAction . void . insert $ Language name
+
+addWord :: Text -> PartOfSpeech -> LanguageName -> IO ()
+addWord word pos langName = runSQLAction $ do
+    lang <- getBy $ LanguageNameUnq langName
+    case lang of
+        Just l -> do
+            id <- insert $ Word word ( entityKey l ) pos
+            liftIO $ print id
+        Nothing -> logErrorNS "addWord" "There is no such lang in the database"
+
+addTranslationFromTo :: Text ->  PartOfSpeech -> LanguageName -> Text -> PartOfSpeech -> LanguageName -> Maybe Text -> IO ()
+addTranslationFromTo fromWord fromPos fromLang toWord toPos toLang mComment = runSQLAction $ do
+    mLangFrom <- getLang fromLang
+    mLangTo <- getLang toLang
+    case (mLangFrom,mLangTo) of
+        (Nothing,_) -> logErrorNS logLabel "There is no such lang to in the database"
+        (_,Nothing) -> logErrorNS logLabel "There is no such lang from in the database"
+        (Just langFrom,Just langTo)-> do
+            mWordFrom <- getBy $ WordWordPosLangIdUnq fromWord fromPos (entityKey langFrom)
+            mWordTo <- getBy $ WordWordPosLangIdUnq toWord toPos (entityKey langTo)
+            case (mWordFrom,mWordTo) of
+                 (Nothing,_) -> logErrorNS logLabel "There is no such word to in the database"
+                 (_,Nothing) -> logErrorNS logLabel "There is no such word from in the database"
+                 (Just wordFrom,Just wordTo)-> do
+                     id <- insert $ Translation (entityKey wordFrom) (entityKey langTo) (Just (entityKey wordTo)) mComment Nothing
+                     liftIO $ print id
+    where
+        getLang = getBy . LanguageNameUnq
+        logLabel = "addTranslationFromTo"

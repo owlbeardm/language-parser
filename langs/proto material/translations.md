@@ -1,86 +1,85 @@
 asdsad | asdasd
 --- | ---
-above', 'preposition' | upéri', 'preposition'
-across', 'preposition' | per', 'preposition'
-alive', 'adjective' | gʷiH3wo', 'adjective'
-and', 'conjunction' | kʷe', 'conjunction'
-any', 'adverb' | kʷe', 'adverb'
-away', 'adverb' | apó', 'adverb'
-beyond', 'preposition' | per', 'preposition'
-big', 'adjective' | meĝ', 'adjective'
-blood', 'noun' | esH2nés', 'noun'
-bone', 'noun' | H2óst', 'noun'
-bonfire', 'noun' | péH2wr̥', 'noun'
-brightness', 'noun' | leuk', 'noun'
-brother', 'noun' | bʰréH2ter', 'noun'
-cheek', 'noun' | ĝonH2dʰos', 'noun'
-daughter', 'noun' | dʰugH2tér', 'noun'
-day', 'noun' | déiwos', 'noun'
-dream', 'noun' | swepnos', 'noun'
-earth', 'noun' | dʰeĝʰom', 'noun'
-eight', 'numeral' | H1ok̂tōu', 'numeral'
-eye', 'noun' | H3okʷ', 'noun'
-father', 'noun' | pH2tér', 'noun'
-five', 'numeral' | pénkʷe', 'numeral'
-forehead', 'noun' | H2ents', 'noun'
-four', 'numeral' | kʷetwóres', 'numeral'
-god', 'noun' | dyēus', 'noun'
-heavy', 'adjective' | gʷerH2', 'adjective'
-hundred', 'numeral' | k̂m̥tóm', 'numeral'
-increase', 'verb' | H2eug', 'verb'
-in front of', 'preposition' | H2entá', 'preposition'
-in', 'preposition' | en', 'preposition'
-I', 'pronoun' | egH2', 'pronoun'
-life', 'noun' | gʷiH3woteH2', 'noun'
-light', 'noun' | leuk', 'noun'
-middle', 'noun' | medʰyo', 'noun'
-mid', 'preposition' | medʰyo', 'preposition'
-month', 'noun' | meH1ns', 'noun'
-moon', 'noun' | meH1ns', 'noun'
-mother', 'noun' | méH2tēr', 'noun'
-name', 'noun' | H1neH3mn̥', 'noun'
-nine', 'numeral' | H1néwn̥', 'numeral'
-not', 'adverb' | n̥', 'adverb'
-old', 'adjective' | sen', 'adjective'
-one', 'numeral' | óinos', 'numeral'
-oneself', 'pronoun' | swe', 'pronoun'
-over', 'preposition' | upéri', 'preposition'
-person', 'noun' | dʰĝʰemon', 'noun'
-septḿ̥ ', '| seven
-sister', 'noun' | swésor', 'noun'
-six', 'numeral' | swék̂s', 'numeral'
-son', 'noun' | suHnú', 'noun'
-star', 'noun' | H2ster', 'noun'
-sun', 'noun' | seH2wol', 'noun'
-ten', 'numeral' | dék̂m̥t', 'numeral'
-three', 'numeral' | tréyes', 'numeral'
-through', 'preposition' | per', 'preposition'
-to ask', 'verb' | prek̂', 'verb'
-to breathe', 'verb' | H2enH1', 'verb'
-to die', 'verb' | mer', 'verb'
-to find', 'verb' | weid', 'verb'
-together', 'adverb' | sem', 'adverb'
-to give birth', 'verb' | ĝenH1', 'verb'
-to grow', 'verb' | H2eug', 'verb'
-to hear', 'verb' | k̂leus', 'verb'
-to know', 'verb' | ĝénH3', 'verb'
-to know', 'verb' | woid', 'verb'
-tooth', 'noun' | H1dn̥t', 'noun'
-to recognize', 'verb' | ĝnéH3sk̂', 'verb'
-to say', 'verb' | wekʷ', 'verb'
-to see', 'verb' | sekʷ', 'verb'
-to sleep', 'verb' | swep', 'verb'
-to snow', 'verb' | sneigʷʰ', 'verb'
-to think', 'verb' | men', 'verb'
-tree', 'noun' | doru', 'noun'
-twenty', 'numeral' | wī́k̂m̥̥tiH1', 'numeral'
-two', 'numeral' | dwóH1', 'numeral'
-two tens', 'numeral' | dwidk̂m̥̥tiH1', 'numeral'
-warm', 'adjective' | gʷʰerm', 'adjective'
-water', 'noun' | wódr̥', 'noun'
-what', 'pronoun' | kʷid', 'pronoun'
-who', 'adverb' | kʷei', 'adverb'
-wind', 'noun' | H2weH1n̥to', 'noun'
-wood', 'noun' | dreu', 'noun'
-young', 'adjective' | H2yuHn̥', 'adjective'
-you', 'pronoun' | tu', 'pronoun'
+"upéri" Preposition ProtoMaterial "above" Preposition English
+"per" Preposition ProtoMaterial "across" Preposition English
+"gʷiH3wo" Adjective ProtoMaterial "alive" Adjective English
+"kʷe" Conjunction ProtoMaterial "and" Conjunction English
+"kʷe" Adverb ProtoMaterial "any" Adverb English
+"apó" Adverb ProtoMaterial "away" Adverb English
+"per" Preposition ProtoMaterial "beyond" Preposition English
+"meĝ" Adjective ProtoMaterial "big" Adjective English
+"esH2nés" Noun ProtoMaterial "blood" Noun English
+"H2óst" Noun ProtoMaterial "bone" Noun English
+"péH2wr̥" Noun ProtoMaterial "bonfire" Noun English
+"leuk" Noun ProtoMaterial "brightness" Noun English
+"bʰréH2ter" Noun ProtoMaterial "brother" Noun English
+"ĝonH2dʰos" Noun ProtoMaterial "cheek" Noun English
+"dʰugH2tér" Noun ProtoMaterial "daughter" Noun English
+"déiwos" Noun ProtoMaterial "day" Noun English
+"swepnos" Noun ProtoMaterial "dream" Noun English
+"dʰeĝʰom" Noun ProtoMaterial "earth" Noun English
+"H1ok̂tōu" Numeral ProtoMaterial "eight" Numeral English
+"H3okʷ" Noun ProtoMaterial "eye" Noun English
+"pH2tér" Noun ProtoMaterial "father" Noun English
+"pénkʷe" Numeral ProtoMaterial "five" Numeral English
+"H2ents" Noun ProtoMaterial "forehead" Noun English
+"kʷetwóres" Numeral ProtoMaterial "four" Numeral English
+"dyēus" Noun ProtoMaterial "god" Noun English
+"gʷerH2" Adjective ProtoMaterial "heavy" Adjective English
+"k̂m̥tóm" Numeral ProtoMaterial "hundred" Numeral English
+"H2eug" Verb ProtoMaterial "increase" Verb English
+"H2entá" Preposition ProtoMaterial in front "of" Preposition English
+"en" Preposition ProtoMaterial "in" Preposition English
+"egH2" Pronoun ProtoMaterial "I" Pronoun English
+"gʷiH3woteH2" Noun ProtoMaterial "life" Noun English
+"leuk" Noun ProtoMaterial "light" Noun English
+"medʰyo" Noun ProtoMaterial "middle" Noun English
+"medʰyo" Preposition ProtoMaterial "mid" Preposition English
+"meH1ns" Noun ProtoMaterial "month" Noun English
+"meH1ns" Noun ProtoMaterial "moon" Noun English
+"méH2tēr" Noun ProtoMaterial "mother" Noun English
+"H1neH3mn̥" Noun ProtoMaterial "name" Noun English
+"H1néwn̥" Numeral ProtoMaterial "nine" Numeral English
+"n̥" Adverb ProtoMaterial "not" Adverb English
+"sen" Adjective ProtoMaterial "old" Adjective English
+"óinos" Numeral ProtoMaterial "one" Numeral English
+"swe" Pronoun ProtoMaterial "oneself" Pronoun English
+"upéri" Preposition ProtoMaterial "over" Preposition English
+"dʰĝʰemon" Noun ProtoMaterial "person" Noun English
+"swésor" Noun ProtoMaterial "sister" Noun English
+"swék̂s" Numeral ProtoMaterial "six" Numeral English
+"suHnú" Noun ProtoMaterial "son" Noun English
+"H2ster" Noun ProtoMaterial "star" Noun English
+"seH2wol" Noun ProtoMaterial "sun" Noun English
+"dék̂m̥t" Numeral ProtoMaterial "ten" Numeral English
+"tréyes" Numeral ProtoMaterial "three" Numeral English
+"per" Preposition ProtoMaterial "through" Preposition English
+"prek̂" Verb ProtoMaterial to "ask" Verb English
+"H2enH1" Verb ProtoMaterial to "breathe" Verb English
+"mer" Verb ProtoMaterial to "die" Verb English
+"weid" Verb ProtoMaterial to "find" Verb English
+"sem" Adverb ProtoMaterial "together" Adverb English
+"ĝenH1" Verb ProtoMaterial to give "birth" Verb English
+"H2eug" Verb ProtoMaterial to "grow" Verb English
+"k̂leus" Verb ProtoMaterial to "hear" Verb English
+"ĝénH3" Verb ProtoMaterial to "know" Verb English
+"woid" Verb ProtoMaterial to "know" Verb English
+"H1dn̥t" Noun ProtoMaterial "tooth" Noun English
+"ĝnéH3sk̂" Verb ProtoMaterial to "recognize" Verb English
+"wekʷ" Verb ProtoMaterial to "say" Verb English
+"sekʷ" Verb ProtoMaterial to "see" Verb English
+"swep" Verb ProtoMaterial to "sleep" Verb English
+"sneigʷʰ" Verb ProtoMaterial to "snow" Verb English
+"men" Verb ProtoMaterial to "think" Verb English
+"doru" Noun ProtoMaterial "tree" Noun English
+"wī́k̂m̥̥tiH1" Numeral ProtoMaterial "twenty" Numeral English
+"dwóH1" Numeral ProtoMaterial "two" Numeral English
+"dwidk̂m̥̥tiH1" Numeral ProtoMaterial two "tens" Numeral English
+"gʷʰerm" Adjective ProtoMaterial "warm" Adjective English
+"wódr̥" Noun ProtoMaterial "water" Noun English
+"kʷid" Pronoun ProtoMaterial "what" Pronoun English
+"kʷei" Adverb ProtoMaterial "who" Adverb English
+"H2weH1n̥to" Noun ProtoMaterial "wind" Noun English
+"dreu" Noun ProtoMaterial "wood" Noun English
+"H2yuHn̥" Adjective ProtoMaterial "young" Adjective English
+"tu" Pronoun ProtoMaterial "you" Pronoun English

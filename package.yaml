@@ -28,6 +28,8 @@ default-extensions:
 dependencies:
 - classy-prelude
 - base
+- transformers
+
 
 
 library:
