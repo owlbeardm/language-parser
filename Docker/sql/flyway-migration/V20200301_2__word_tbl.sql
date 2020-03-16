@@ -1,5 +1,5 @@
 CREATE TABLE word_tbl (
-    id bigint NOT NULL,
+    id bigint DEFAULT nextval('pk_sequence') NOT NULL,
     word text NOT NULL,
     lang_id bigint NOT NULL,
     part_of_speech text NOT NULL,

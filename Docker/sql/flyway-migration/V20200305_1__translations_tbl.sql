@@ -1,5 +1,5 @@
 CREATE TABLE translation_tbl (
-    id bigint NOT NULL,
+    id bigint DEFAULT nextval('pk_sequence') NOT NULL,
     from_word_id bigint NOT NULL,
     to_lang_id bigint NOT NULL,
     to_word_id bigint,

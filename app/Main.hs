@@ -14,21 +14,20 @@
 
 
 
-import           ClassyPrelude hiding (Word, on)
+import           ClassyPrelude                hiding (Word, on)
 import           Control.Monad.IO.Class       (liftIO)
-import           Control.Monad.Logger         (LoggingT,
-                                               runStderrLoggingT,
-                                               NoLoggingT,
-                                               runNoLoggingT)
+import           Control.Monad.Logger         (LoggingT, NoLoggingT,
+                                               runNoLoggingT, runStderrLoggingT)
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
+import           Data.Monoid                  (mconcat)
 import           Database.Esqueleto
 import           Database.Language
-import           Database.Word
-import           Database.Persist.Postgresql (withPostgresqlConn, ConnectionString)
+import           Database.Persist.Postgresql  (ConnectionString,
+                                               withPostgresqlConn)
 import           Database.Persist.TH
+import           Database.Word
 import           Lib
-import Web.Scotty as S
-import Data.Monoid (mconcat)
+import           Web.Scotty                   as S
 
 
 
@@ -46,8 +45,8 @@ Translation sql=translation_tbl
     fromWordId WordId
     toLangId LanguageId
     toWordId WordId Maybe
-    comment Text Maybe 
-    altTranslation Text Maybe 
+    comment Text Maybe
+    altTranslation Text Maybe
     deriving Show
 |]
 
@@ -63,8 +62,8 @@ connStr :: ConnectionString
 connStr = "host=172.20.7.103 dbname=wiki user=wiki password=wiki port=5432"
 
 
-runSQLAction :: SqlPersistT (ResourceT (NoLoggingT IO)) a -> IO a
-runSQLAction = runNoLoggingT . runResourceT . withPostgresqlConn connStr . runSqlConn
+runSQLAction :: SqlPersistT (ResourceT (LoggingT IO)) a -> IO a
+runSQLAction = runStderrLoggingT . runResourceT . withPostgresqlConn connStr . runSqlConn
 
 main :: IO ()
 main = scotty 3000 $
@@ -78,7 +77,7 @@ main' = runSQLAction $ do
         printMigration migrateAll
         action
 
-action :: ReaderT SqlBackend (ResourceT (NoLoggingT IO)) ()
+action :: ReaderT SqlBackend (ResourceT (LoggingT IO)) ()
 action = do
     langs <- select $
              from $ \lang -> do
@@ -116,19 +115,19 @@ translate wtt = runSQLAction $ do
              on (tr ^. TranslationToLangId ==. toLang ^. LanguageId)
              on (frWord ^. WordLangId ==. frLang ^. LanguageId)
              on (tr ^. TranslationFromWordId ==. frWord ^. WordId)
-             where_ ((frWord ^. WordWord ==. val (toLower wtt)) 
-               ||. (mToWord ?. WordWord ==. just(val (toLower wtt))) 
+             where_ ((frWord ^. WordWord ==. val (toLower wtt))
+               ||. (mToWord ?. WordWord ==. just(val (toLower wtt)))
                ||. (tr ^. TranslationAltTranslation `like` just (val (toLower (mconcat ["%",wtt,"%"])))))
              return (tr, frWord, frLang, toLang, mToWord)
     liftIO $ mapM_ (putStrLn . showFT . convert) results
     where
-     convert = \(tr, frWord, frLang, toLang, mToWord) -> (entityVal tr, entityVal frWord, entityVal frLang, entityVal toLang, map entityVal mToWord)
-     showFT = \(tr, frWord, frLang, toLang, mToWord) -> mconcat [
-         case mToWord of 
+     convert (tr, frWord, frLang, toLang, mToWord) = (entityVal tr, entityVal frWord, entityVal frLang, entityVal toLang, map entityVal mToWord)
+     showFT (tr, frWord, frLang, toLang, mToWord) = mconcat [
+         case mToWord of
           Just toWord -> tshow toWord
-          _ -> case translationAltTranslation tr of 
+          _ -> case translationAltTranslation tr of
            Just a -> a
-           _ -> ""
+           _      -> ""
          , " ("
          , tshow toLang
          , ") [from ("
@@ -138,12 +137,5 @@ translate wtt = runSQLAction $ do
          , "]"
          ]
 
-    -- fromWordId WordId
-    -- toLangId LanguageId
-    -- toWordId WordId Maybe
-    -- comment Text Maybe 
-    -- altTranslation Text Maybe 
--- (tr, frLang, frWord, toLang, mToWord)
--- (Entity (Translation, Language, Word, Language, Maybe Word))
-    -- from $ \(b, p) -> do
-    -- from $ \(p `LeftOuterJoin` mb) -> do
+addLang :: LanguageName -> IO ()
+addLang name = runSQLAction . void . insert $ Language name

@@ -17,13 +17,13 @@ data PartOfSpeech = Adjective
     deriving (Eq, Enum, Read)
 
 instance Show PartOfSpeech where
-  show Adjective = "adj."
-  show Adverb = "adv."
+  show Adjective   = "adj."
+  show Adverb      = "adv."
   show Conjunction = "cnj."
-  show Noun = "n."
-  show Numeral = "num."
+  show Noun        = "n."
+  show Numeral     = "num."
   show Preposition = "prep."
-  show Pronoun = "pro."
-  show Verb = "v."
+  show Pronoun     = "pro."
+  show Verb        = "v."
 
 derivePersistField "PartOfSpeech"
