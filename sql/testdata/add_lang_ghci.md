@@ -2,339 +2,364 @@
 
 ## Langs 
 
-addLang Aboleth
-addLang Alko
-addLang Dragon
-addLang Dwarven
-addLang Elven
-addLang English
-addLang Halfling
-addLang Infernal
-addLang Kobold
-addLang Necril
-addLang OldRunic
-addLang Orkish
-addLang ProtoCreation
-addLang ProtoDragon
-addLang ProtoDwarven
-addLang ProtoElven
-addLang ProtoHuman
-addLang ProtoMaterial
-addLang ProtoMonster
-addLang ProtoOrk
-addLang ProtoTengu
-addLang Sylvan
+runSQLAction $ addLang Aboleth
+runSQLAction $ addLang Alko
+runSQLAction $ addLang Dragon
+runSQLAction $ addLang Dwarven
+runSQLAction $ addLang Elven
+runSQLAction $ addLang English
+runSQLAction $ addLang Halfling
+runSQLAction $ addLang Infernal
+runSQLAction $ addLang Kobold
+runSQLAction $ addLang Necril
+runSQLAction $ addLang OldRunic
+runSQLAction $ addLang Orkish
+runSQLAction $ addLang ProtoCreation
+runSQLAction $ addLang ProtoDragon
+runSQLAction $ addLang ProtoDwarven
+runSQLAction $ addLang ProtoElven
+runSQLAction $ addLang ProtoHuman
+runSQLAction $ addLang ProtoMaterial
+runSQLAction $ addLang ProtoMonster
+runSQLAction $ addLang ProtoOrk
+runSQLAction $ addLang ProtoTengu
+runSQLAction $ addLang Sylvan
 
 ## Words
 
 ### ProtoMaterial
 
-addWord "apó" Adverb ProtoMaterial
-addWord "bʰréH2ter" Noun ProtoMaterial
-addWord "déiwos" Noun ProtoMaterial
-addWord "dék̂m̥t" Numeral ProtoMaterial
-addWord "dʰeĝʰom" Noun ProtoMaterial
-addWord "dʰĝʰemon" Noun ProtoMaterial
-addWord "dʰugH2tér" Noun ProtoMaterial
-addWord "doru" Noun ProtoMaterial
-addWord "dreu" Noun ProtoMaterial
-addWord "dwidk̂m̥̥tiH1" Numeral ProtoMaterial
-addWord "dwóH1" Numeral ProtoMaterial
-addWord "dwóyH1" Numeral ProtoMaterial
-addWord "dyēus" Noun ProtoMaterial
-addWord "egH2" Pronoun ProtoMaterial
-addWord "en" Preposition ProtoMaterial
-addWord "esH2nés" Noun ProtoMaterial
-addWord "ésH2r̥" Noun ProtoMaterial
-addWord "ĝ"     Verb ProtoMaterial
-addWord "ĝ"     Verb ProtoMaterial
-addWord "ĝnéH3"     Verb ProtoMaterial
-addWord "ĝonH2dʰos" Noun ProtoMaterial
-addWord "gʷerH2" Adjective ProtoMaterial
-addWord "gʷʰerm" Adjective ProtoMaterial
-addWord "gʷiH3wo" Adjective ProtoMaterial
-addWord "gʷiH3woteH2" Noun ProtoMaterial
-addWord "H1dn̥t" Noun ProtoMaterial
-addWord "H1neH3mn̥" Noun ProtoMaterial
-addWord "H1néwn̥" Numeral ProtoMaterial
-addWord "H1ok̂tōu" Numeral ProtoMaterial
-addWord "H2enH"     Verb ProtoMaterial
-addWord "H2entá" Preposition ProtoMaterial
-addWord "H2ents" Noun ProtoMaterial
-addWord "H"     Verb ProtoMaterial
-addWord "H2óst" Noun ProtoMaterial
-addWord "H2ster" Noun ProtoMaterial
-addWord "H2weH1n̥to" Noun ProtoMaterial
-addWord "H2yuHn̥" Adjective ProtoMaterial
-addWord "H3okʷ" Noun ProtoMaterial
-addWord "k̂"     Verb ProtoMaterial
-addWord "k̂m̥tóm" Numeral ProtoMaterial
-addWord "kʷe" Conjunction ProtoMaterial
-addWord "kʷe" Adverb ProtoMaterial
-addWord "kʷei" Adverb ProtoMaterial
-addWord "kʷetwóres" Numeral ProtoMaterial
-addWord "kʷid" Pronoun ProtoMaterial
-addWord "leuk" Noun ProtoMaterial
-addWord "medʰyo" Preposition ProtoMaterial
-addWord "medʰyo" Noun ProtoMaterial
-addWord "meĝ" Adjective ProtoMaterial
-addWord "meH1ns" Noun ProtoMaterial
-addWord "méH2tēr" Noun ProtoMaterial
-addWord "m"     Verb ProtoMaterial
-addWord "m"     Verb ProtoMaterial
-addWord "n̥" Adverb ProtoMaterial
-addWord "óinos" Numeral ProtoMaterial
-addWord "péH2wr̥" Noun ProtoMaterial
-addWord "pénkʷe" Numeral ProtoMaterial
-addWord "per" Preposition ProtoMaterial
-addWord "pH2tér" Noun ProtoMaterial
-addWord "p"     Verb ProtoMaterial
-addWord "seH2wol" Noun ProtoMaterial
-addWord "s"     Verb ProtoMaterial
-addWord "sem" Adverb ProtoMaterial
-addWord "sem" Numeral ProtoMaterial
-addWord "sen" Adjective ProtoMaterial
-addWord "sneig"     Verb ProtoMaterial
-addWord "suHnú" Noun ProtoMaterial
-addWord "swék̂s" Numeral ProtoMaterial
-addWord "swe" Pronoun ProtoMaterial
-addWord "swepnos" Noun ProtoMaterial
-addWord "s"     Verb ProtoMaterial
-addWord "swésor" Noun ProtoMaterial
-addWord "tréyes" Numeral ProtoMaterial
-addWord "tu" Pronoun ProtoMaterial
-addWord "upéri" Preposition ProtoMaterial
-addWord "w"     Verb ProtoMaterial
-addWord "w"     Verb ProtoMaterial
-addWord "wī́k̂m̥̥tiH1" Numeral ProtoMaterial
-addWord "wódr̥" Noun ProtoMaterial
-addWord "w"     Verb ProtoMaterial
-addWord "H2weg" Verb ProtoMaterial
-addWord "ĝnéH3sk̂"     Verb ProtoMaterial
-addWord "óiwos" Numeral ProtoMaterial
-addWord "kʷod" Pronoun  ProtoMaterial
-addWord "kʷis" Adverb ProtoMaterial
-addWord "kʷoi" Adverb ProtoMaterial
-addWord "kʷos" Adverb ProtoMaterial
-addWord "giĝnéH1sk̂"     Verb ProtoMaterial
-addWord "ĝn̥néH3"     Verb ProtoMaterial
-addWord "H1dónt"        Noun        ProtoMaterial
-addWord "H1nomn̥"        Noun        ProtoMaterial
-addWord "ĝenH1" Verb ProtoMaterial
-addWord "ĝn̥néH1" Verb ProtoMaterial
-addWord "H2entí" Preposition ProtoMaterial
-addWord "pH2unés" Noun ProtoMaterial
-addWord "pr̥sk̂" Verb ProtoMaterial
-addWord "prek̂" Verb ProtoMaterial
-addWord "sH2un" Noun ProtoMaterial
+runSQLAction $ addWord "apó" Adverb ProtoMaterial
+runSQLAction $ addWord "bʰréH2ter" Noun ProtoMaterial
+runSQLAction $ addWord "déiwos" Noun ProtoMaterial
+runSQLAction $ addWord "dék̂m̥t" Numeral ProtoMaterial
+runSQLAction $ addWord "dʰeĝʰom" Noun ProtoMaterial
+runSQLAction $ addWord "dʰĝʰemon" Noun ProtoMaterial
+runSQLAction $ addWord "dʰugH2tér" Noun ProtoMaterial
+runSQLAction $ addWord "doru" Noun ProtoMaterial
+runSQLAction $ addWord "dreu" Noun ProtoMaterial
+runSQLAction $ addWord "dwidk̂m̥̥tiH1" Numeral ProtoMaterial
+runSQLAction $ addWord "dwóH1" Numeral ProtoMaterial
+runSQLAction $ addWord "dwóyH1" Numeral ProtoMaterial
+runSQLAction $ addWord "dyēus" Noun ProtoMaterial
+runSQLAction $ addWord "egH2" Pronoun ProtoMaterial
+runSQLAction $ addWord "en" Preposition ProtoMaterial
+runSQLAction $ addWord "esH2nés" Noun ProtoMaterial
+runSQLAction $ addWord "ésH2r̥" Noun ProtoMaterial
+runSQLAction $ addWord "ĝ"     Verb ProtoMaterial
+runSQLAction $ addWord "ĝ"     Verb ProtoMaterial
+runSQLAction $ addWord "ĝnéH3"     Verb ProtoMaterial
+runSQLAction $ addWord "ĝonH2dʰos" Noun ProtoMaterial
+runSQLAction $ addWord "gʷerH2" Adjective ProtoMaterial
+runSQLAction $ addWord "gʷʰerm" Adjective ProtoMaterial
+runSQLAction $ addWord "gʷiH3wo" Adjective ProtoMaterial
+runSQLAction $ addWord "gʷiH3woteH2" Noun ProtoMaterial
+runSQLAction $ addWord "H1dn̥t" Noun ProtoMaterial
+runSQLAction $ addWord "H1neH3mn̥" Noun ProtoMaterial
+runSQLAction $ addWord "H1néwn̥" Numeral ProtoMaterial
+runSQLAction $ addWord "H1ok̂tōu" Numeral ProtoMaterial
+runSQLAction $ addWord "H2enH"     Verb ProtoMaterial
+runSQLAction $ addWord "H2entá" Preposition ProtoMaterial
+runSQLAction $ addWord "H2ents" Noun ProtoMaterial
+runSQLAction $ addWord "H"     Verb ProtoMaterial
+runSQLAction $ addWord "H2óst" Noun ProtoMaterial
+runSQLAction $ addWord "H2ster" Noun ProtoMaterial
+runSQLAction $ addWord "H2weH1n̥to" Noun ProtoMaterial
+runSQLAction $ addWord "H2yuHn̥" Adjective ProtoMaterial
+runSQLAction $ addWord "H3okʷ" Noun ProtoMaterial
+runSQLAction $ addWord "k̂"     Verb ProtoMaterial
+runSQLAction $ addWord "k̂m̥tóm" Numeral ProtoMaterial
+runSQLAction $ addWord "kʷe" Conjunction ProtoMaterial
+runSQLAction $ addWord "kʷe" Adverb ProtoMaterial
+runSQLAction $ addWord "kʷei" Adverb ProtoMaterial
+runSQLAction $ addWord "kʷetwóres" Numeral ProtoMaterial
+runSQLAction $ addWord "kʷid" Pronoun ProtoMaterial
+runSQLAction $ addWord "leuk" Noun ProtoMaterial
+runSQLAction $ addWord "medʰyo" Preposition ProtoMaterial
+runSQLAction $ addWord "medʰyo" Noun ProtoMaterial
+runSQLAction $ addWord "meĝ" Adjective ProtoMaterial
+runSQLAction $ addWord "meH1ns" Noun ProtoMaterial
+runSQLAction $ addWord "méH2tēr" Noun ProtoMaterial
+runSQLAction $ addWord "m"     Verb ProtoMaterial
+runSQLAction $ addWord "m"     Verb ProtoMaterial
+runSQLAction $ addWord "n̥" Adverb ProtoMaterial
+runSQLAction $ addWord "óinos" Numeral ProtoMaterial
+runSQLAction $ addWord "péH2wr̥" Noun ProtoMaterial
+runSQLAction $ addWord "pénkʷe" Numeral ProtoMaterial
+runSQLAction $ addWord "per" Preposition ProtoMaterial
+runSQLAction $ addWord "pH2tér" Noun ProtoMaterial
+runSQLAction $ addWord "p"     Verb ProtoMaterial
+runSQLAction $ addWord "seH2wol" Noun ProtoMaterial
+runSQLAction $ addWord "s"     Verb ProtoMaterial
+runSQLAction $ addWord "sem" Adverb ProtoMaterial
+runSQLAction $ addWord "sem" Numeral ProtoMaterial
+runSQLAction $ addWord "sen" Adjective ProtoMaterial
+runSQLAction $ addWord "sneig"     Verb ProtoMaterial
+runSQLAction $ addWord "suHnú" Noun ProtoMaterial
+runSQLAction $ addWord "swék̂s" Numeral ProtoMaterial
+runSQLAction $ addWord "swe" Pronoun ProtoMaterial
+runSQLAction $ addWord "swepnos" Noun ProtoMaterial
+runSQLAction $ addWord "s"     Verb ProtoMaterial
+runSQLAction $ addWord "swésor" Noun ProtoMaterial
+runSQLAction $ addWord "tréyes" Numeral ProtoMaterial
+runSQLAction $ addWord "tu" Pronoun ProtoMaterial
+runSQLAction $ addWord "upéri" Preposition ProtoMaterial
+runSQLAction $ addWord "w"     Verb ProtoMaterial
+runSQLAction $ addWord "w"     Verb ProtoMaterial
+runSQLAction $ addWord "wī́k̂m̥̥tiH1" Numeral ProtoMaterial
+runSQLAction $ addWord "wódr̥" Noun ProtoMaterial
+runSQLAction $ addWord "w"     Verb ProtoMaterial
+runSQLAction $ addWord "H2weg" Verb ProtoMaterial
+runSQLAction $ addWord "ĝnéH3sk̂"     Verb ProtoMaterial
+runSQLAction $ addWord "óiwos" Numeral ProtoMaterial
+runSQLAction $ addWord "kʷod" Pronoun  ProtoMaterial
+runSQLAction $ addWord "kʷis" Adverb ProtoMaterial
+runSQLAction $ addWord "kʷoi" Adverb ProtoMaterial
+runSQLAction $ addWord "kʷos" Adverb ProtoMaterial
+runSQLAction $ addWord "giĝnéH1sk̂"     Verb ProtoMaterial
+runSQLAction $ addWord "ĝn̥néH3"     Verb ProtoMaterial
+runSQLAction $ addWord "H1dónt"        Noun        ProtoMaterial
+runSQLAction $ addWord "H1nomn̥"        Noun        ProtoMaterial
+runSQLAction $ addWord "ĝenH1" Verb ProtoMaterial
+runSQLAction $ addWord "ĝn̥néH1" Verb ProtoMaterial
+runSQLAction $ addWord "H2entí" Preposition ProtoMaterial
+runSQLAction $ addWord "pH2unés" Noun ProtoMaterial
+runSQLAction $ addWord "pr̥sk̂" Verb ProtoMaterial
+runSQLAction $ addWord "prek̂" Verb ProtoMaterial
+runSQLAction $ addWord "sH2un" Noun ProtoMaterial
+runSQLAction $ addWord "ĝénH3" Verb ProtoMaterial
+runSQLAction $ addWord "H2enH1" Verb ProtoMaterial
+runSQLAction $ addWord "H2eug" Verb ProtoMaterial
+runSQLAction $ addWord "k̂leus" Verb ProtoMaterial
+runSQLAction $ addWord "men" Verb ProtoMaterial
+runSQLAction $ addWord "mer" Verb ProtoMaterial
+runSQLAction $ addWord "sekʷ" Verb ProtoMaterial
+runSQLAction $ addWord "sneigʷʰ" Verb ProtoMaterial
+runSQLAction $ addWord "swep" Verb ProtoMaterial
+runSQLAction $ addWord "weid" Verb ProtoMaterial
+runSQLAction $ addWord "wekʷ" Verb ProtoMaterial
+runSQLAction $ addWord "woid" Verb ProtoMaterial
 
 
 ### English
 
-addWord "above" Preposition English
-addWord "across" Preposition English
-addWord "alive" Adjective English
-addWord "and" Conjunction English
-addWord "any" Adverb English
-addWord "a"     Verb English
-addWord "away" Adverb English
-addWord "beyond" Preposition English
-addWord "big" Adjective English
-addWord "blood" Noun English
-addWord "bone" Noun English
-addWord "bonfire" Noun English
-addWord "breat"     Verb English
-addWord "brightness" Noun English
-addWord "brother" Noun English
-addWord "cheek" Noun English
-addWord "daughter" Noun English
-addWord "day" Noun English
-addWord "d"     Verb English
-addWord "dream" Noun English
-addWord "earth" Noun English
-addWord "eight" Numeral English
-addWord "eye" Noun English
-addWord "father" Noun English
-addWord "f"     Verb English
-addWord "five" Numeral English
-addWord "forehead" Noun English
-addWord "four" Numeral English
-addWord "god" Noun English
-addWord "g"     Verb English
-addWord "h"     Verb English
-addWord "heavy" Adjective English
-addWord "hundred" Numeral English
-addWord "incre"     Verb English
-addWord "in" Preposition English
-addWord "I" Pronoun English
-addWord "k"     Verb English
-addWord "life" Noun English
-addWord "light" Noun English
-addWord "middle" Noun English
-addWord "mid" Preposition English
-addWord "month" Noun English
-addWord "moon" Noun English
-addWord "mother" Noun English
-addWord "name" Noun English
-addWord "nine" Numeral English
-addWord "not" Adverb English
-addWord "old" Adjective English
-addWord "one" Numeral English
-addWord "oneself" Pronoun English
-addWord "over" Preposition English
-addWord "person" Noun English
-addWord "recog"     Verb English
-addWord "s"     Verb English
-addWord "s"     Verb English
-addWord "sister" Noun English
-addWord "six" Numeral English
-addWord "s"     Verb English
-addWord "s"     Verb English
-addWord "son" Noun English
-addWord "star" Noun English
-addWord "sun" Noun English
-addWord "ten" Numeral English
-addWord "t"     Verb English
-addWord "three" Numeral English
-addWord "through" Preposition English
-addWord "together" Adverb English
-addWord "tooth" Noun English
-addWord "tree" Noun English
-addWord "twenty" Numeral English
-addWord "two" Numeral English
-addWord "warm" Adjective English
-addWord "water" Noun English
-addWord "what" Pronoun English
-addWord "who" Adverb English
-addWord "wind" Noun English
-addWord "wood" Noun English
-addWord "young" Adjective English
-addWord "you" Pronoun English
-addWord "sky" Noun English
-addWord "chin" Noun English
-addWord "jaw" Noun English
-addWord "ask" Verb English
+runSQLAction $ addWord "above" Preposition English
+runSQLAction $ addWord "across" Preposition English
+runSQLAction $ addWord "alive" Adjective English
+runSQLAction $ addWord "and" Conjunction English
+runSQLAction $ addWord "any" Adverb English
+runSQLAction $ addWord "a"     Verb English
+runSQLAction $ addWord "away" Adverb English
+runSQLAction $ addWord "beyond" Preposition English
+runSQLAction $ addWord "big" Adjective English
+runSQLAction $ addWord "blood" Noun English
+runSQLAction $ addWord "bone" Noun English
+runSQLAction $ addWord "bonfire" Noun English
+runSQLAction $ addWord "breat"     Verb English
+runSQLAction $ addWord "brightness" Noun English
+runSQLAction $ addWord "brother" Noun English
+runSQLAction $ addWord "cheek" Noun English
+runSQLAction $ addWord "daughter" Noun English
+runSQLAction $ addWord "day" Noun English
+runSQLAction $ addWord "d"     Verb English
+runSQLAction $ addWord "dream" Noun English
+runSQLAction $ addWord "earth" Noun English
+runSQLAction $ addWord "eight" Numeral English
+runSQLAction $ addWord "eye" Noun English
+runSQLAction $ addWord "father" Noun English
+runSQLAction $ addWord "f"     Verb English
+runSQLAction $ addWord "five" Numeral English
+runSQLAction $ addWord "forehead" Noun English
+runSQLAction $ addWord "four" Numeral English
+runSQLAction $ addWord "god" Noun English
+runSQLAction $ addWord "g"     Verb English
+runSQLAction $ addWord "h"     Verb English
+runSQLAction $ addWord "heavy" Adjective English
+runSQLAction $ addWord "hundred" Numeral English
+runSQLAction $ addWord "incre"     Verb English
+runSQLAction $ addWord "in" Preposition English
+runSQLAction $ addWord "I" Pronoun English
+runSQLAction $ addWord "k"     Verb English
+runSQLAction $ addWord "life" Noun English
+runSQLAction $ addWord "light" Noun English
+runSQLAction $ addWord "middle" Noun English
+runSQLAction $ addWord "mid" Preposition English
+runSQLAction $ addWord "month" Noun English
+runSQLAction $ addWord "moon" Noun English
+runSQLAction $ addWord "mother" Noun English
+runSQLAction $ addWord "name" Noun English
+runSQLAction $ addWord "nine" Numeral English
+runSQLAction $ addWord "not" Adverb English
+runSQLAction $ addWord "old" Adjective English
+runSQLAction $ addWord "one" Numeral English
+runSQLAction $ addWord "oneself" Pronoun English
+runSQLAction $ addWord "over" Preposition English
+runSQLAction $ addWord "person" Noun English
+runSQLAction $ addWord "recog"     Verb English
+runSQLAction $ addWord "s"     Verb English
+runSQLAction $ addWord "s"     Verb English
+runSQLAction $ addWord "sister" Noun English
+runSQLAction $ addWord "six" Numeral English
+runSQLAction $ addWord "s"     Verb English
+runSQLAction $ addWord "s"     Verb English
+runSQLAction $ addWord "son" Noun English
+runSQLAction $ addWord "star" Noun English
+runSQLAction $ addWord "sun" Noun English
+runSQLAction $ addWord "ten" Numeral English
+runSQLAction $ addWord "t"     Verb English
+runSQLAction $ addWord "three" Numeral English
+runSQLAction $ addWord "through" Preposition English
+runSQLAction $ addWord "together" Adverb English
+runSQLAction $ addWord "tooth" Noun English
+runSQLAction $ addWord "tree" Noun English
+runSQLAction $ addWord "twenty" Numeral English
+runSQLAction $ addWord "two" Numeral English
+runSQLAction $ addWord "warm" Adjective English
+runSQLAction $ addWord "water" Noun English
+runSQLAction $ addWord "what" Pronoun English
+runSQLAction $ addWord "who" Adverb English
+runSQLAction $ addWord "wind" Noun English
+runSQLAction $ addWord "wood" Noun English
+runSQLAction $ addWord "young" Adjective English
+runSQLAction $ addWord "you" Pronoun English
+runSQLAction $ addWord "sky" Noun English
+runSQLAction $ addWord "chin" Noun English
+runSQLAction $ addWord "jaw" Noun English
+runSQLAction $ addWord "ask" Verb English
+runSQLAction $ addWord "know" Verb English
+runSQLAction $ addWord "recognize" Verb English
+runSQLAction $ addWord "increase" Verb English
+runSQLAction $ addWord "grow" Verb English
+runSQLAction $ addWord "breathe" Verb English
+runSQLAction $ addWord "hear" Verb English
+runSQLAction $ addWord "think" Verb English
+runSQLAction $ addWord "die" Verb English
+runSQLAction $ addWord "see" Verb English
+runSQLAction $ addWord "snow" Verb English
+runSQLAction $ addWord "sleep" Verb English
+runSQLAction $ addWord "find" Verb English
+runSQLAction $ addWord "say" Verb English
 
 
 ## Translations
 
 ### From Proto Material
 
-addTranslationFromTo "apó"          Adverb      ProtoMaterial "away"            Adverb      English      Nothing
-addTranslationFromTo "bʰréH2ter"    Noun        ProtoMaterial "brother"         Noun        English      Nothing
-addTranslationFromTo "déiwos"       Noun        ProtoMaterial "day"             Noun        English      Nothing
-addTranslationFromTo "déiwos"       Noun        ProtoMaterial "god"             Noun        English      Nothing
-addTranslationFromTo "déiwos"       Noun        ProtoMaterial "sky"             Noun        English      Nothing
-addTranslationFromTo "dék̂m̥t"        Numeral     ProtoMaterial "ten"             Numeral     English      Nothing
-addTranslationFromTo "dʰeĝʰom"      Noun        ProtoMaterial "earth"           Noun        English      Nothing
-addTranslationFromTo "dʰĝʰemon"     Noun        ProtoMaterial "person"          Noun        English      Nothing
-addTranslationFromTo "dʰugH2tér"    Noun        ProtoMaterial "daughter"        Noun        English      Nothing
-addTranslationFromTo "doru"         Noun        ProtoMaterial "tree"            Noun        English      Nothing
-addTranslationFromTo "doru"         Noun        ProtoMaterial "wood"            Noun        English      Nothing
-addTranslationFromTo "dreu"         Noun        ProtoMaterial "tree"            Noun        English      Nothing
-addTranslationFromTo "dreu"         Noun        ProtoMaterial "wood"            Noun        English      Nothing
-addTranslationFromTo "dwóH1"        Numeral     ProtoMaterial "two"             Numeral     English      Nothing
-addTranslationFromTo "dwóyH1"        Numeral     ProtoMaterial "two"             Numeral     English      Nothing
-addTranslationFromTo "dyēus"        Noun        ProtoMaterial "day"             Noun        English      Nothing
-addTranslationFromTo "dyēus"        Noun        ProtoMaterial "god"             Noun        English      Nothing
-addTranslationFromTo "dyēus"        Noun        ProtoMaterial "sky"             Noun        English      Nothing
-addTranslationFromTo "egH2"         Pronoun     ProtoMaterial "I"               Pronoun     English      Nothing
-addTranslationFromTo "en"           Preposition ProtoMaterial "in"              Preposition English      Nothing
-addTranslationFromTo "esH2nés"      Noun        ProtoMaterial "blood"           Noun        English      Nothing
-addTranslationFromTo "ésH2r̥"      Noun        ProtoMaterial "blood"           Noun        English      Nothing
-addTranslationFromTo "ĝénH3"        Verb        ProtoMaterial "know"            Verb        English      Nothing
-addTranslationFromTo "ĝénH3"        Verb        ProtoMaterial "recognize"            Verb        English      Nothing
-addTranslationFromTo "ĝnéH3sk̂"      Verb        ProtoMaterial "know"       Verb        English      Nothing
-addTranslationFromTo "ĝnéH3sk̂"      Verb        ProtoMaterial "recognize"       Verb        English      Nothing
-addTranslationFromTo "ĝn̥néH3"      Verb        ProtoMaterial "know"       Verb        English      Nothing
-addTranslationFromTo "ĝn̥néH3"      Verb        ProtoMaterial "recognize"       Verb        English      Nothing
-addTranslationFromTo "ĝonH2dʰos"    Noun        ProtoMaterial "cheek"           Noun        English      Nothing
-addTranslationFromTo "ĝonH2dʰos"    Noun        ProtoMaterial "chin"           Noun        English      Nothing
-addTranslationFromTo "ĝonH2dʰos"    Noun        ProtoMaterial "jaw"           Noun        English      Nothing
-addTranslationFromTo "gʷerH2"       Adjective   ProtoMaterial "heavy"           Adjective   English      Nothing
-addTranslationFromTo "gʷʰerm"       Adjective   ProtoMaterial "warm"            Adjective   English      Nothing
-addTranslationFromTo "gʷiH3wo"      Adjective   ProtoMaterial "alive"           Adjective   English      Nothing
-addTranslationFromTo "gʷiH3woteH2"  Noun        ProtoMaterial "life"            Noun        English      Nothing
-addTranslationFromTo "H1dn̥t"        Noun        ProtoMaterial "tooth"           Noun        English      Nothing
-addTranslationFromTo "H1dónt"        Noun        ProtoMaterial "tooth"           Noun        English      Nothing
-addTranslationFromTo "H1neH3mn̥"     Noun        ProtoMaterial "name"            Noun        English      Nothing
-addTranslationFromTo "H1nomn̥"     Noun        ProtoMaterial "name"            Noun        English      Nothing
-addTranslationFromTo "H1néwn̥"       Numeral     ProtoMaterial "nine"            Numeral     English      Nothing
-addTranslationFromTo "H1ok̂tōu"      Numeral     ProtoMaterial "eight"           Numeral     English      Nothing
-addTranslationFromTo "H2enH1"       Verb        ProtoMaterial "breathe"         Verb        English      Nothing
-addTranslationFromTo "H2ents"       Noun        ProtoMaterial "forehead"        Noun        English      Nothing
-addTranslationFromTo "H2eug"        Verb        ProtoMaterial "increase"        Verb        English      Nothing
-addTranslationFromTo "H2eug"        Verb        ProtoMaterial "grow"            Verb        English      Nothing
-addTranslationFromTo "H2weg"        Verb        ProtoMaterial "increase"        Verb        English      Nothing
-addTranslationFromTo "H2weg"        Verb        ProtoMaterial "grow"            Verb        English      Nothing
-addTranslationFromTo "H2óst"        Noun        ProtoMaterial "bone"            Noun        English      Nothing
-addTranslationFromTo "H2ster"       Noun        ProtoMaterial "star"            Noun        English      Nothing
-addTranslationFromTo "H2weH1n̥to"    Noun        ProtoMaterial "wind"            Noun        English      Nothing
-addTranslationFromTo "H2yuHn̥"       Adjective   ProtoMaterial "young"           Adjective   English      Nothing
-addTranslationFromTo "H3okʷ"        Noun        ProtoMaterial "eye"             Noun        English      Nothing
-addTranslationFromTo "k̂leus"        Verb        ProtoMaterial "hear"            Verb        English      Nothing
-addTranslationFromTo "k̂m̥tóm"        Numeral     ProtoMaterial "hundred"         Numeral     English      Nothing
-addTranslationFromTo "kʷe"          Adverb      ProtoMaterial "any"             Adverb      English      Nothing
-addTranslationFromTo "kʷe"          Conjunction ProtoMaterial "and"             Conjunction English      Nothing
-addTranslationFromTo "kʷei"         Adverb      ProtoMaterial "who"             Adverb      English      Nothing
-addTranslationFromTo "kʷis"         Adverb      ProtoMaterial "who"             Adverb      English      Nothing
-addTranslationFromTo "kʷoi"         Adverb      ProtoMaterial "who"             Adverb      English      Nothing
-addTranslationFromTo "kʷos"         Adverb      ProtoMaterial "who"             Adverb      English      Nothing
-addTranslationFromTo "kʷetwóres"    Numeral     ProtoMaterial "four"            Numeral     English      Nothing
-addTranslationFromTo "kʷid"         Pronoun     ProtoMaterial "what"            Pronoun     English      Nothing
-addTranslationFromTo "kʷod"         Pronoun     ProtoMaterial "what"            Pronoun     English      Nothing
-addTranslationFromTo "leuk"         Noun        ProtoMaterial "brightness"      Noun        English      Nothing
-addTranslationFromTo "leuk"         Noun        ProtoMaterial "light"           Noun        English      Nothing
-addTranslationFromTo "medʰyo"       Noun        ProtoMaterial "middle"          Noun        English      Nothing
-addTranslationFromTo "medʰyo"       Preposition ProtoMaterial "mid"             Preposition English      Nothing
-addTranslationFromTo "meĝ"          Adjective   ProtoMaterial "big"             Adjective   English      Nothing
-addTranslationFromTo "meH1ns"       Noun        ProtoMaterial "month"           Noun        English      Nothing
-addTranslationFromTo "meH1ns"       Noun        ProtoMaterial "moon"            Noun        English      Nothing
-addTranslationFromTo "méH2tēr"      Noun        ProtoMaterial "mother"          Noun        English      Nothing
-addTranslationFromTo "men"          Verb        ProtoMaterial "think"           Verb        English      Nothing
-addTranslationFromTo "mer"          Verb        ProtoMaterial "die"             Verb        English      Nothing
-addTranslationFromTo "n̥"            Adverb      ProtoMaterial "not"             Adverb      English      Nothing
-addTranslationFromTo "óinos"        Numeral     ProtoMaterial "one"             Numeral     English      Nothing
-addTranslationFromTo "sem"        Numeral     ProtoMaterial "one"             Numeral     English      Nothing
-addTranslationFromTo "óiwos"        Numeral     ProtoMaterial "one"             Numeral     English      Nothing
-addTranslationFromTo "péH2wr̥"       Noun        ProtoMaterial "bonfire"         Noun        English      Nothing
-addTranslationFromTo "pH2unés"       Noun        ProtoMaterial "bonfire"         Noun        English      Nothing
-addTranslationFromTo "pénkʷe"       Numeral     ProtoMaterial "five"            Numeral     English      Nothing
-addTranslationFromTo "per"          Preposition ProtoMaterial "across"          Preposition English      Nothing
-addTranslationFromTo "per"          Preposition ProtoMaterial "beyond"          Preposition English      Nothing
-addTranslationFromTo "per"          Preposition ProtoMaterial "through"         Preposition English      Nothing
-addTranslationFromTo "pH2tér"       Noun        ProtoMaterial "father"          Noun        English      Nothing
-addTranslationFromTo "prek̂"         Verb        ProtoMaterial "ask"             Verb        English      Nothing
-addTranslationFromTo "pr̥sk̂"         Verb        ProtoMaterial "ask"             Verb        English      Nothing
-addTranslationFromTo "seH2wol"      Noun        ProtoMaterial "sun"             Noun        English      Nothing
-addTranslationFromTo "sH2un"      Noun        ProtoMaterial "sun"             Noun        English      Nothing
-addTranslationFromTo "sekʷ"         Verb        ProtoMaterial "see"             Verb        English      Nothing
-addTranslationFromTo "sem"          Adverb      ProtoMaterial "together"        Adverb      English      Nothing
-addTranslationFromTo "sen"          Adjective   ProtoMaterial "old"             Adjective   English      Nothing
-addTranslationFromTo "sneigʷʰ"      Verb        ProtoMaterial "snow"            Verb        English      Nothing
-addTranslationFromTo "suHnú"        Noun        ProtoMaterial "son"             Noun        English      Nothing
-addTranslationFromTo "swék̂s"        Numeral     ProtoMaterial "six"             Numeral     English      Nothing
-addTranslationFromTo "swepnos"      Noun        ProtoMaterial "dream"           Noun        English      Nothing
-addTranslationFromTo "swe"          Pronoun     ProtoMaterial "oneself"         Pronoun     English      Nothing
-addTranslationFromTo "swep"         Verb        ProtoMaterial "sleep"           Verb        English      Nothing
-addTranslationFromTo "swésor"       Noun        ProtoMaterial "sister"          Noun        English      Nothing
-addTranslationFromTo "tréyes"       Numeral     ProtoMaterial "three"           Numeral     English      Nothing
-addTranslationFromTo "tu"           Pronoun     ProtoMaterial "you"             Pronoun     English      Nothing
-addTranslationFromTo "upéri"        Preposition ProtoMaterial "above"           Preposition English      Nothing
-addTranslationFromTo "upéri"        Preposition ProtoMaterial "over"            Preposition English      Nothing
-addTranslationFromTo "weid"         Verb        ProtoMaterial "find"            Verb        English      Nothing
-addTranslationFromTo "weid"         Verb        ProtoMaterial "see"            Verb        English      Nothing
-addTranslationFromTo "wekʷ"         Verb        ProtoMaterial "say"             Verb        English      Nothing
-addTranslationFromTo "sekʷ"         Verb        ProtoMaterial "say"             Verb        English      Nothing
-addTranslationFromTo "wī́k̂m̥̥tiH1"     Numeral     ProtoMaterial "twenty"          Numeral     English      Nothing
-addTranslationFromTo "wódr̥"         Noun        ProtoMaterial "water"           Noun        English      Nothing
-addTranslationFromTo "woid"         Verb        ProtoMaterial "know"            Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "apó"          Adverb      ProtoMaterial "away"            Adverb      English      Nothing
+runSQLAction $ addTranslationFromTo "bʰréH2ter"    Noun        ProtoMaterial "brother"         Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "déiwos"       Noun        ProtoMaterial "day"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "déiwos"       Noun        ProtoMaterial "god"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "déiwos"       Noun        ProtoMaterial "sky"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "dék̂m̥t"        Numeral     ProtoMaterial "ten"             Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "dʰeĝʰom"      Noun        ProtoMaterial "earth"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "dʰĝʰemon"     Noun        ProtoMaterial "person"          Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "dʰugH2tér"    Noun        ProtoMaterial "daughter"        Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "doru"         Noun        ProtoMaterial "tree"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "doru"         Noun        ProtoMaterial "wood"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "dreu"         Noun        ProtoMaterial "tree"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "dreu"         Noun        ProtoMaterial "wood"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "dwóH1"        Numeral     ProtoMaterial "two"             Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "dwóyH1"        Numeral     ProtoMaterial "two"             Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "dyēus"        Noun        ProtoMaterial "day"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "dyēus"        Noun        ProtoMaterial "god"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "dyēus"        Noun        ProtoMaterial "sky"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "egH2"         Pronoun     ProtoMaterial "I"               Pronoun     English      Nothing
+runSQLAction $ addTranslationFromTo "en"           Preposition ProtoMaterial "in"              Preposition English      Nothing
+runSQLAction $ addTranslationFromTo "esH2nés"      Noun        ProtoMaterial "blood"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "ésH2r̥"      Noun        ProtoMaterial "blood"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "ĝénH3"        Verb        ProtoMaterial "know"            Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "ĝénH3"        Verb        ProtoMaterial "recognize"            Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "ĝnéH3sk̂"      Verb        ProtoMaterial "know"       Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "ĝnéH3sk̂"      Verb        ProtoMaterial "recognize"       Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "ĝn̥néH3"      Verb        ProtoMaterial "know"       Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "ĝn̥néH3"      Verb        ProtoMaterial "recognize"       Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "ĝonH2dʰos"    Noun        ProtoMaterial "cheek"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "ĝonH2dʰos"    Noun        ProtoMaterial "chin"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "ĝonH2dʰos"    Noun        ProtoMaterial "jaw"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "gʷerH2"       Adjective   ProtoMaterial "heavy"           Adjective   English      Nothing
+runSQLAction $ addTranslationFromTo "gʷʰerm"       Adjective   ProtoMaterial "warm"            Adjective   English      Nothing
+runSQLAction $ addTranslationFromTo "gʷiH3wo"      Adjective   ProtoMaterial "alive"           Adjective   English      Nothing
+runSQLAction $ addTranslationFromTo "gʷiH3woteH2"  Noun        ProtoMaterial "life"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "H1dn̥t"        Noun        ProtoMaterial "tooth"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "H1dónt"        Noun        ProtoMaterial "tooth"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "H1neH3mn̥"     Noun        ProtoMaterial "name"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "H1nomn̥"     Noun        ProtoMaterial "name"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "H1néwn̥"       Numeral     ProtoMaterial "nine"            Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "H1ok̂tōu"      Numeral     ProtoMaterial "eight"           Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "H2enH1"       Verb        ProtoMaterial "breathe"         Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "H2ents"       Noun        ProtoMaterial "forehead"        Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "H2eug"        Verb        ProtoMaterial "increase"        Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "H2eug"        Verb        ProtoMaterial "grow"            Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "H2weg"        Verb        ProtoMaterial "increase"        Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "H2weg"        Verb        ProtoMaterial "grow"            Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "H2óst"        Noun        ProtoMaterial "bone"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "H2ster"       Noun        ProtoMaterial "star"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "H2weH1n̥to"    Noun        ProtoMaterial "wind"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "H2yuHn̥"       Adjective   ProtoMaterial "young"           Adjective   English      Nothing
+runSQLAction $ addTranslationFromTo "H3okʷ"        Noun        ProtoMaterial "eye"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "k̂leus"        Verb        ProtoMaterial "hear"            Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "k̂m̥tóm"        Numeral     ProtoMaterial "hundred"         Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "kʷe"          Adverb      ProtoMaterial "any"             Adverb      English      Nothing
+runSQLAction $ addTranslationFromTo "kʷe"          Conjunction ProtoMaterial "and"             Conjunction English      Nothing
+runSQLAction $ addTranslationFromTo "kʷei"         Adverb      ProtoMaterial "who"             Adverb      English      Nothing
+runSQLAction $ addTranslationFromTo "kʷis"         Adverb      ProtoMaterial "who"             Adverb      English      Nothing
+runSQLAction $ addTranslationFromTo "kʷoi"         Adverb      ProtoMaterial "who"             Adverb      English      Nothing
+runSQLAction $ addTranslationFromTo "kʷos"         Adverb      ProtoMaterial "who"             Adverb      English      Nothing
+runSQLAction $ addTranslationFromTo "kʷetwóres"    Numeral     ProtoMaterial "four"            Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "kʷid"         Pronoun     ProtoMaterial "what"            Pronoun     English      Nothing
+runSQLAction $ addTranslationFromTo "kʷod"         Pronoun     ProtoMaterial "what"            Pronoun     English      Nothing
+runSQLAction $ addTranslationFromTo "leuk"         Noun        ProtoMaterial "brightness"      Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "leuk"         Noun        ProtoMaterial "light"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "medʰyo"       Noun        ProtoMaterial "middle"          Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "medʰyo"       Preposition ProtoMaterial "mid"             Preposition English      Nothing
+runSQLAction $ addTranslationFromTo "meĝ"          Adjective   ProtoMaterial "big"             Adjective   English      Nothing
+runSQLAction $ addTranslationFromTo "meH1ns"       Noun        ProtoMaterial "month"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "meH1ns"       Noun        ProtoMaterial "moon"            Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "méH2tēr"      Noun        ProtoMaterial "mother"          Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "men"          Verb        ProtoMaterial "think"           Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "mer"          Verb        ProtoMaterial "die"             Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "n̥"            Adverb      ProtoMaterial "not"             Adverb      English      Nothing
+runSQLAction $ addTranslationFromTo "óinos"        Numeral     ProtoMaterial "one"             Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "sem"        Numeral     ProtoMaterial "one"             Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "óiwos"        Numeral     ProtoMaterial "one"             Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "péH2wr̥"       Noun        ProtoMaterial "bonfire"         Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "pH2unés"       Noun        ProtoMaterial "bonfire"         Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "pénkʷe"       Numeral     ProtoMaterial "five"            Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "per"          Preposition ProtoMaterial "across"          Preposition English      Nothing
+runSQLAction $ addTranslationFromTo "per"          Preposition ProtoMaterial "beyond"          Preposition English      Nothing
+runSQLAction $ addTranslationFromTo "per"          Preposition ProtoMaterial "through"         Preposition English      Nothing
+runSQLAction $ addTranslationFromTo "pH2tér"       Noun        ProtoMaterial "father"          Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "prek̂"         Verb        ProtoMaterial "ask"             Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "pr̥sk̂"         Verb        ProtoMaterial "ask"             Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "seH2wol"      Noun        ProtoMaterial "sun"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "sH2un"      Noun        ProtoMaterial "sun"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "sekʷ"         Verb        ProtoMaterial "see"             Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "sem"          Adverb      ProtoMaterial "together"        Adverb      English      Nothing
+runSQLAction $ addTranslationFromTo "sen"          Adjective   ProtoMaterial "old"             Adjective   English      Nothing
+runSQLAction $ addTranslationFromTo "sneigʷʰ"      Verb        ProtoMaterial "snow"            Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "suHnú"        Noun        ProtoMaterial "son"             Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "swék̂s"        Numeral     ProtoMaterial "six"             Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "swepnos"      Noun        ProtoMaterial "dream"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "swe"          Pronoun     ProtoMaterial "oneself"         Pronoun     English      Nothing
+runSQLAction $ addTranslationFromTo "swep"         Verb        ProtoMaterial "sleep"           Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "swésor"       Noun        ProtoMaterial "sister"          Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "tréyes"       Numeral     ProtoMaterial "three"           Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "tu"           Pronoun     ProtoMaterial "you"             Pronoun     English      Nothing
+runSQLAction $ addTranslationFromTo "upéri"        Preposition ProtoMaterial "above"           Preposition English      Nothing
+runSQLAction $ addTranslationFromTo "upéri"        Preposition ProtoMaterial "over"            Preposition English      Nothing
+runSQLAction $ addTranslationFromTo "weid"         Verb        ProtoMaterial "find"            Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "weid"         Verb        ProtoMaterial "see"            Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "wekʷ"         Verb        ProtoMaterial "say"             Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "sekʷ"         Verb        ProtoMaterial "say"             Verb        English      Nothing
+runSQLAction $ addTranslationFromTo "wī́k̂m̥̥tiH1"     Numeral     ProtoMaterial "twenty"          Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "wódr̥"         Noun        ProtoMaterial "water"           Noun        English      Nothing
+runSQLAction $ addTranslationFromTo "woid"         Verb        ProtoMaterial "know"            Verb        English      Nothing
 
 
 ##### alt Translations
-"dwidk̂m̥̥tiH1" Numeral "two tens"
-"ĝenH1" Verb "to give birth"
-"giĝnéH1sk̂" Verb "to give birth"
-"ĝn̥néH1" Verb "to give birth"
-"H2entá" Preposition "in front of"
-"H2entí" Preposition "in front of"
+runSQLAction $ addTranslationFromAlt "dwidk̂m̥̥tiH1"  Numeral      ProtoMaterial English Nothing "two tens"
+runSQLAction $ addTranslationFromAlt "ĝenH1"       Verb         ProtoMaterial English Nothing "to give birth"
+runSQLAction $ addTranslationFromAlt "giĝnéH1sk̂"   Verb         ProtoMaterial English Nothing "to give birth"
+runSQLAction $ addTranslationFromAlt "ĝn̥néH1"      Verb         ProtoMaterial English Nothing "to give birth"
+runSQLAction $ addTranslationFromAlt "H2entá"      Preposition  ProtoMaterial English Nothing "in front of"
+runSQLAction $ addTranslationFromAlt "H2entí"      Preposition  ProtoMaterial English Nothing "in front of"

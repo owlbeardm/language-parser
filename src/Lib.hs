@@ -21,13 +21,3 @@ test :: IO ()
 test = runSQLAction $ do
   l <- returnLang 1
   mapM_ (print . tshow . entityVal) l
-
-printLangs :: IO ()
-printLangs = runSQLAction $ do
-     langs <- listLangs
-     liftIO $ mapM_ (putStrLn . tshow . entityVal) langs
-
-printWords :: LanguageName -> IO ()
-printWords langName = runSQLAction $ do
-     words <- listWordsByLang langName
-     liftIO $ mapM_ (putStrLn . tshow . entityVal) words

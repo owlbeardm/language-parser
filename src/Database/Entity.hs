@@ -13,8 +13,8 @@
 
 module Database.Entity where
 
-import           ClassyPrelude       (Show, Text, mconcat, show, unpack, (>), length,
-                                      ($))
+import           ClassyPrelude       (Show, Text, length, mconcat, show, unpack,
+                                      ($), (>))
 import           Database.Base
 import           Database.Persist.TH
 
@@ -38,7 +38,3 @@ Translation sql=translation_tbl
 
 instance Show Language where
     show l = mconcat [ show $ languageLname l]
-
-instance Show Word where
-    show w = mconcat [ unpack $ wordWord w, if ((length (wordWord w)) > 7) then "\t" else "\t\t", "'", show $ wordPartOfSpeech w, "'"]
-
