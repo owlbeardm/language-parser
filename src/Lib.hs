@@ -1,63 +1,33 @@
 module Lib
   (
-  persistLowerCaseTbl
+  main
   ) where
 
+
 import           ClassyPrelude
--- import           Control.Applicative
--- import           Data.Pool
--- import           Database.Base
--- import           Database.Language
--- import           Database.PostgreSQL.Simple
--- import           Database.Translation
--- import           Database.Word
-import           Database.Persist.Quasi
-import           Database.Persist.TH
-import           Language.Haskell.TH.Quote
+import           Database.Base
+import           Database.Esqueleto
+import           Database.Language
+import           Database.Translation
+import           Database.Word
 
 -- main :: IO ()
--- main = putStr "hello"
+-- main = runSQLAction $ printMigration migrateAll
 
--- mainPrintL :: (Show a) => (Connection -> IO [a]) -> IO ()
--- mainPrintL action = do
---   pool <- acquirePool
---   a <- withResource pool action
---   mapM_ print a
+main :: IO ()
+main = print "Hello"
 
--- mainPrintML :: (Show a) => (Connection -> IO (Maybe [a])) -> IO ()
--- mainPrintML action = do
---   pool <- acquirePool
---   a <- withResource pool action
---   case a of
---     Just list -> mapM_ print list
---     _         -> print a
+test :: IO ()
+test = runSQLAction $ do
+  l <- returnLang 1
+  mapM_ (print . tshow . entityVal) l
 
--- mainPrintOne :: (Show a) => (Connection -> IO a) -> IO ()
--- mainPrintOne action = do
---   pool <- acquirePool
---   a <- withResource pool action
---   print a
+printLangs :: IO ()
+printLangs = runSQLAction $ do
+     langs <- listLangs
+     liftIO $ mapM_ (putStrLn . tshow . entityVal) langs
 
-
--- acquirePool :: IO (Pool Connection)
--- acquirePool = createPool (connect connInfo) close 1 10 10
---   where
---     connInfo = defaultConnectInfo {connectHost = "172.20.7.103", connectUser = "wiki", connectPassword = "wiki", connectDatabase = "wiki"}
-
--- withConn :: Pool Connection -> (Connection -> IO a) -> IO a
--- withConn  = withResource
-
-lowerTbl :: PersistSettings
-lowerTbl = lowerCaseSettings { psToDBName = psToDBName lowerCaseSettings .  flip mappend "_tbl"}
-
-persistLowerCaseTbl :: QuasiQuoter
-persistLowerCaseTbl = persistWith lowerTbl
-
--- printTranslation :: String -> IO ()
--- printTranslation word = do
---   pool <- acquirePool
---   translations <- withResource pool $ getTranslationsByWord word
---   return $ fmap (getFullTranslationByTranslation pool) translations
-
--- getFullTranslationByTranslation :: Pool Connection -> Translation ->  IO (Maybe FullTranslation)
--- getFullTranslationByTranslation pool trans = withResource pool $ getFullTranslation trans
+printWords :: LanguageName -> IO ()
+printWords langName = runSQLAction $ do
+     words <- listWordsByLang langName
+     liftIO $ mapM_ (putStrLn . tshow . entityVal) words

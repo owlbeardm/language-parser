@@ -1,29 +1,26 @@
-{-# LANGUAGE TemplateHaskell #-}
-
 module Database.Word where
 
-import           ClassyPrelude
+import           ClassyPrelude hiding (Word)
+-- import           Control.Monad.Logger         (LoggingT, NoLoggingT, logErrorN,
+--                                                logErrorNS, runNoLoggingT,
+--                                                runStderrLoggingT)
+import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
+import           Control.Monad.Logger
+import           Control.Monad.Trans.Reader 
+import           Database.Base
+import           Database.Entity
+import           Database.Esqueleto
 import           Database.Persist.TH
 
+addWord :: (MonadIO m) => Text -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
+addWord word pos langName = do
+  lang <- getBy $ LanguageNameUnq langName
+  case lang of 
+    Nothing -> return Nothing
+    (Just l) -> insertUnique $ Word word (entityKey l) pos
 
-data PartOfSpeech = Adjective
-    | Adverb
-    | Conjunction
-    | Noun
-    | Numeral
-    | Preposition
-    | Pronoun
-    | Verb
-    deriving (Eq, Enum, Read, Show)
-
--- instance Show PartOfSpeech where
---   show Adjective   = "adj."
---   show Adverb      = "adv."
---   show Conjunction = "cnj."
---   show Noun        = "n."
---   show Numeral     = "num."
---   show Preposition = "prep."
---   show Pronoun     = "pro."
---   show Verb        = "v."
-
-derivePersistField "PartOfSpeech"
+listWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
+listWordsByLang langName = select $ from $ \(word,lang) -> do
+      where_ (word ^. WordLangId ==. lang ^. LanguageId &&. 
+              lang ^. LanguageLname ==. val langName )
+      return word
