@@ -4,6 +4,7 @@ import           ClassyPrelude hiding (on)
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
+import          Control.Monad.Logger
 
 translate :: Text -> IO ()
 translate wtt =
@@ -45,3 +46,40 @@ translate wtt =
         , tshow frWord
         , "]"
         ]
+
+
+addTranslationFromTo :: (MonadIO m, MonadLogger m) =>
+     Text
+  -> PartOfSpeech
+  -> LanguageName
+  -> Text
+  -> PartOfSpeech
+  -> LanguageName
+  -> Maybe Text
+  -> AppT m (Maybe (Key Translation))
+addTranslationFromTo fromWord fromPos fromLang toWord toPos toLang mComment = do
+    mLangFrom <- getLang fromLang
+    mLangTo <- getLang toLang
+    case (mLangFrom, mLangTo) of
+      (Nothing, _) ->  do 
+        logErrorNS "addTranslationFromTo" "There is no such lang to in the database"
+        return Nothing
+      (_, Nothing) ->  do 
+        logErrorNS "addTranslationFromTo" "There is no such lang to in the database"
+        return Nothing
+      (Just langFrom, Just langTo) -> do
+        mWordFrom <-
+          getBy $ WordWordPosLangIdUnq fromWord fromPos (entityKey langFrom)
+        mWordTo <- getBy $ WordWordPosLangIdUnq toWord toPos (entityKey langTo)
+        case (mWordFrom, mWordTo) of
+          (Nothing, _) ->  do 
+            logErrorNS "addTranslationFromTo" "There is no such lang to in the database"
+            return Nothing
+          (_, Nothing) ->  do 
+            logErrorNS "addTranslationFromTo" "There is no such lang to in the database"
+            return Nothing
+          (Just wordFrom, Just wordTo) -> do
+            id <- insert $ Translation (entityKey wordFrom) (entityKey langTo) (Just (entityKey wordTo)) mComment Nothing
+            return (Just id)
+  where
+    getLang = getBy . LanguageNameUnq

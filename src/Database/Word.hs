@@ -12,11 +12,13 @@ import           Database.Entity
 import           Database.Esqueleto
 import           Database.Persist.TH
 
-addWord :: (MonadIO m) => Text -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
+addWord :: (MonadIO m, MonadLogger m) => Text -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
 addWord word pos langName = do
   lang <- getBy $ LanguageNameUnq langName
   case lang of 
-    Nothing -> return Nothing
+    Nothing -> do
+      logErrorNS "addWord" "There is no such lang in the database"
+      return Nothing 
     (Just l) -> insertUnique $ Word word (entityKey l) pos
 
 listWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]

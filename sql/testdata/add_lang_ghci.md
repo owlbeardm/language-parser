@@ -92,6 +92,7 @@ addWord "p"     Verb ProtoMaterial
 addWord "seH2wol" Noun ProtoMaterial
 addWord "s"     Verb ProtoMaterial
 addWord "sem" Adverb ProtoMaterial
+addWord "sem" Numeral ProtoMaterial
 addWord "sen" Adjective ProtoMaterial
 addWord "sneig"     Verb ProtoMaterial
 addWord "suHnú" Noun ProtoMaterial
@@ -109,19 +110,23 @@ addWord "wī́k̂m̥̥tiH1" Numeral ProtoMaterial
 addWord "wódr̥" Noun ProtoMaterial
 addWord "w"     Verb ProtoMaterial
 addWord "H2weg" Verb ProtoMaterial
-
+addWord "ĝnéH3sk̂"     Verb ProtoMaterial
 addWord "óiwos" Numeral ProtoMaterial
-addWord "kʷod" Adverb  ProtoMaterial
+addWord "kʷod" Pronoun  ProtoMaterial
 addWord "kʷis" Adverb ProtoMaterial
 addWord "kʷoi" Adverb ProtoMaterial
 addWord "kʷos" Adverb ProtoMaterial
 addWord "giĝnéH1sk̂"     Verb ProtoMaterial
-addWord "ĝnéH3sk̂"     Verb ProtoMaterial
 addWord "ĝn̥néH3"     Verb ProtoMaterial
 addWord "H1dónt"        Noun        ProtoMaterial
 addWord "H1nomn̥"        Noun        ProtoMaterial
-
-
+addWord "ĝenH1" Verb ProtoMaterial
+addWord "ĝn̥néH1" Verb ProtoMaterial
+addWord "H2entí" Preposition ProtoMaterial
+addWord "pH2unés" Noun ProtoMaterial
+addWord "pr̥sk̂" Verb ProtoMaterial
+addWord "prek̂" Verb ProtoMaterial
+addWord "sH2un" Noun ProtoMaterial
 
 
 ### English
@@ -208,6 +213,8 @@ addWord "you" Pronoun English
 addWord "sky" Noun English
 addWord "chin" Noun English
 addWord "jaw" Noun English
+addWord "ask" Verb English
+
 
 ## Translations
 
@@ -288,15 +295,19 @@ addTranslationFromTo "men"          Verb        ProtoMaterial "think"           
 addTranslationFromTo "mer"          Verb        ProtoMaterial "die"             Verb        English      Nothing
 addTranslationFromTo "n̥"            Adverb      ProtoMaterial "not"             Adverb      English      Nothing
 addTranslationFromTo "óinos"        Numeral     ProtoMaterial "one"             Numeral     English      Nothing
+addTranslationFromTo "sem"        Numeral     ProtoMaterial "one"             Numeral     English      Nothing
 addTranslationFromTo "óiwos"        Numeral     ProtoMaterial "one"             Numeral     English      Nothing
 addTranslationFromTo "péH2wr̥"       Noun        ProtoMaterial "bonfire"         Noun        English      Nothing
+addTranslationFromTo "pH2unés"       Noun        ProtoMaterial "bonfire"         Noun        English      Nothing
 addTranslationFromTo "pénkʷe"       Numeral     ProtoMaterial "five"            Numeral     English      Nothing
 addTranslationFromTo "per"          Preposition ProtoMaterial "across"          Preposition English      Nothing
 addTranslationFromTo "per"          Preposition ProtoMaterial "beyond"          Preposition English      Nothing
 addTranslationFromTo "per"          Preposition ProtoMaterial "through"         Preposition English      Nothing
 addTranslationFromTo "pH2tér"       Noun        ProtoMaterial "father"          Noun        English      Nothing
 addTranslationFromTo "prek̂"         Verb        ProtoMaterial "ask"             Verb        English      Nothing
+addTranslationFromTo "pr̥sk̂"         Verb        ProtoMaterial "ask"             Verb        English      Nothing
 addTranslationFromTo "seH2wol"      Noun        ProtoMaterial "sun"             Noun        English      Nothing
+addTranslationFromTo "sH2un"      Noun        ProtoMaterial "sun"             Noun        English      Nothing
 addTranslationFromTo "sekʷ"         Verb        ProtoMaterial "see"             Verb        English      Nothing
 addTranslationFromTo "sem"          Adverb      ProtoMaterial "together"        Adverb      English      Nothing
 addTranslationFromTo "sen"          Adjective   ProtoMaterial "old"             Adjective   English      Nothing
@@ -312,17 +323,18 @@ addTranslationFromTo "tu"           Pronoun     ProtoMaterial "you"             
 addTranslationFromTo "upéri"        Preposition ProtoMaterial "above"           Preposition English      Nothing
 addTranslationFromTo "upéri"        Preposition ProtoMaterial "over"            Preposition English      Nothing
 addTranslationFromTo "weid"         Verb        ProtoMaterial "find"            Verb        English      Nothing
+addTranslationFromTo "weid"         Verb        ProtoMaterial "see"            Verb        English      Nothing
 addTranslationFromTo "wekʷ"         Verb        ProtoMaterial "say"             Verb        English      Nothing
+addTranslationFromTo "sekʷ"         Verb        ProtoMaterial "say"             Verb        English      Nothing
 addTranslationFromTo "wī́k̂m̥̥tiH1"     Numeral     ProtoMaterial "twenty"          Numeral     English      Nothing
 addTranslationFromTo "wódr̥"         Noun        ProtoMaterial "water"           Noun        English      Nothing
 addTranslationFromTo "woid"         Verb        ProtoMaterial "know"            Verb        English      Nothing
 
-dwidk̂m̥̥tiH1 | two tens
-ĝenH1 | to give birth
-giĝnéH1sk̂ | to give birth
-ĝn̥néH1 | to give birth
-H2entá | in front of
-H2entí | in front of
 
-
-SELECT "id","word","lang_id","part_of_speech" FROM "word_tbl" WHERE "word"='en' AND "part_of_speech"='Preposition' AND "lang_id"=9820; [PersistText ,PersistText ,PersistInt64 ]
+##### alt Translations
+"dwidk̂m̥̥tiH1" Numeral "two tens"
+"ĝenH1" Verb "to give birth"
+"giĝnéH1sk̂" Verb "to give birth"
+"ĝn̥néH1" Verb "to give birth"
+"H2entá" Preposition "in front of"
+"H2entí" Preposition "in front of"
