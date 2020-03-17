@@ -48,6 +48,46 @@ translate wtt =
         ]
 
 
+listTranslations :: LanguageName -> IO ()
+listTranslations lname =
+  runSQLAction $ do
+    results <-
+      select $
+      from $ \(tr `InnerJoin` frWord `InnerJoin` frLang `InnerJoin` toLang `LeftOuterJoin` mToWord) -> do
+        on (tr ^. TranslationToWordId ==. mToWord ?. WordId)
+        on (tr ^. TranslationToLangId ==. toLang ^. LanguageId)
+        on (frWord ^. WordLangId ==. frLang ^. LanguageId)
+        on (tr ^. TranslationFromWordId ==. frWord ^. WordId)
+        where_
+          (frLang ^. LanguageLname ==. val (lname))
+        orderBy [asc (toLang ^. LanguageId), asc (mToWord ?. WordWord), asc (frWord ^. WordWord)]
+        return (tr, frWord, frLang, toLang, mToWord)
+    liftIO $ mapM_ (putStrLn . showFT . convert) results
+  where
+    convert (tr, frWord, frLang, toLang, mToWord) =
+      ( entityVal tr
+      , entityVal frWord
+      , entityVal frLang
+      , entityVal toLang
+      , map entityVal mToWord)
+    showFT (tr, frWord, frLang, toLang, mToWord) =
+      mconcat
+        [ case mToWord of
+            Just toWord -> tshow toWord
+            _ ->
+              case translationAltTranslation tr of
+                Just a -> a
+                _      -> ""
+        , " ("
+        , tshow toLang
+        , ")\t[from ("
+        , tshow frLang
+        , ") "
+        , tshow frWord
+        , "]"
+        ]
+
+               
 addTranslationFromTo :: (MonadIO m, MonadLogger m) =>
      Text
   -> PartOfSpeech
