@@ -4,7 +4,6 @@ CREATE TABLE word_tbl (
     lang_id bigint NOT NULL,
     part_of_speech text NOT NULL,
     CONSTRAINT word_pk PRIMARY KEY (id),
-    CONSTRAINT word_word_pos_lang_id_unq UNIQUE (word,part_of_speech,lang_id),
     CONSTRAINT word_tbl_lang_id_fkey FOREIGN KEY (lang_id) REFERENCES language_tbl(id)
 );
 
