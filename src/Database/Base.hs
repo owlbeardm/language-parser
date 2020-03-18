@@ -43,6 +43,7 @@ derivePersistField "LanguageName"
 data PartOfSpeech = Adjective
     | Adverb
     | Conjunction
+    | Determiner
     | Noun
     | Numeral
     | Preposition
@@ -55,6 +56,7 @@ conShow :: PartOfSpeech -> Text
 conShow Adjective   = "adj."
 conShow Adverb      = "adv."
 conShow Conjunction = "cnj."
+conShow Determiner  = "det."
 conShow Noun        = "n."
 conShow Numeral     = "num."
 conShow Preposition = "prep."
