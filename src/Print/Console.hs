@@ -15,3 +15,5 @@ printWordsFrom :: LanguageName -> IO ()
 printWordsFrom langName = runSQLAction $ do
      words <- listWordsByLang langName
      liftIO $ mapM_ (putStrLn . showWord . entityVal) words
+     putStr "\n\tTotal: "
+     print $ length words

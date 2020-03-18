@@ -18,12 +18,15 @@ translate wtt =
         on (frWord ^. WordLangId ==. frLang ^. LanguageId)
         on (tr ^. TranslationFromWordId ==. frWord ^. WordId)
         where_
-          ((frWord ^. WordWord ==. val (toLower wtt)) ||.
-           (mToWord ?. WordWord ==. just (val (toLower wtt))) ||.
+          ((frWord ^. WordWord ==. val wtt) ||.
+           (mToWord ?. WordWord ==. just (val wtt)) ||.
            (tr ^. TranslationAltTranslation `like`
-            just (val (toLower (mconcat ["%", wtt, "%"])))))
+            just (val (mconcat ["%", wtt, "%"]))))
+        orderBy [asc (toLang ^. LanguageId), asc (mToWord ?. WordWord), asc (frWord ^. WordWord)]
         return (tr, frWord, frLang, toLang, mToWord)
     liftIO $ mapM_ (putStrLn . showFT . convert) results
+    putStr "\n\tTotal: "
+    print $ length results
   where
     convert (tr, frWord, frLang, toLang, mToWord) =
       ( entityVal tr
@@ -48,6 +51,8 @@ printAllTranslationsByLang lname =
         orderBy [asc (toLang ^. LanguageId), asc (mToWord ?. WordWord), asc (frWord ^. WordWord)]
         return (tr, frWord, frLang, toLang, mToWord)
     liftIO $ mapM_ (putStrLn . showFT . convert) results
+    putStr "\n\tTotal: "
+    print $ length results
   where
     convert (tr, frWord, frLang, toLang, mToWord) =
       ( entityVal tr
@@ -141,7 +146,11 @@ showFT (tr, frWord, frLang, toLang, mToWord) =
         , tshow frLang
         , ") \x1b[0m"
         , showWord frWord
-        , "\x1b[2m]\x1b[0m"
+        , "\x1b[2m] "
+        , case translationComment tr of
+                Just a -> mconcat ["\t\t\"",a,"\""]
+                _      -> ""
+        ,"\x1b[0m"
         ]
   where
     fromPosLength Nothing (Just t) = if length t > 12 then "\t" else "\t\t"
