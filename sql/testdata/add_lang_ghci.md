@@ -344,7 +344,7 @@ runSQLAction $ addTranslationFromTo "swe"          Pronoun     ProtoMaterial "on
 runSQLAction $ addTranslationFromTo "swep"         Verb        ProtoMaterial "sleep"           Verb        English      Nothing
 runSQLAction $ addTranslationFromTo "swésor"       Noun        ProtoMaterial "sister"          Noun        English      Nothing
 runSQLAction $ addTranslationFromTo "tréyes"       Numeral     ProtoMaterial "three"           Numeral     English      Nothing
-runSQLAction $ addTranslationFromTo "tu"           Pronoun     ProtoMaterial "you"             Pronoun     English      Nothing
+runSQLAction $ addTranslationFromTo "tu"           Pronoun     ProtoMaterial "you"             Pronoun     English      "(singular)"
 runSQLAction $ addTranslationFromTo "upéri"        Preposition ProtoMaterial "above"           Preposition English      Nothing
 runSQLAction $ addTranslationFromTo "upéri"        Preposition ProtoMaterial "over"            Preposition English      Nothing
 runSQLAction $ addTranslationFromTo "weid"         Verb        ProtoMaterial "find"            Verb        English      Nothing
