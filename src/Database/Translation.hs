@@ -22,7 +22,7 @@ translate wtt =
            (mToWord ?. WordWord ==. just (val wtt)) ||.
            (tr ^. TranslationAltTranslation `like`
             just (val (mconcat ["%", wtt, "%"]))))
-        orderBy [asc (toLang ^. LanguageId), asc (mToWord ?. WordWord), asc (frWord ^. WordWord)]
+        orderBy [asc (toLang ^. LanguageId), asc (mToWord ?. WordWord), asc (tr ^. TranslationAltTranslation), asc (frWord ^. WordWord)]
         return (tr, frWord, frLang, toLang, mToWord)
     liftIO $ mapM_ (putStrLn . showFT . convert) results
     putStr "\n\tTotal: "
