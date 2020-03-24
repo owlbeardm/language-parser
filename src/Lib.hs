@@ -5,11 +5,13 @@ module Lib
 
 
 import           ClassyPrelude
+import           Control.Monad.Logger
 import           Database.Base
 import           Database.Esqueleto
 import           Database.Language
 import           Database.Translation
 import           Database.Word
+import           Print.Console
 
 -- main :: IO ()
 -- main = runSQLAction $ printMigration migrateAll

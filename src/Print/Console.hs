@@ -10,9 +10,15 @@ import           Database.Language
 import           Database.Translation
 import           Database.Word
 
+-- printList :: (a->Text) -> IO [a] -> IO ()
+-- printList fshow list = do
+--      e <- list
+--      putStrLn $ fshow e
+
 printLangs :: IO ()
 printLangs = runSQLAction $ do
      langs <- listLangs
+     return langs
      liftIO $ mapM_ (putStrLn . tshow . entityVal) langs
 
 printWordsFrom :: LanguageName -> IO ()

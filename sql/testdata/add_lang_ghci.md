@@ -533,7 +533,7 @@ runSQLAction $ addTranslationFromTo "bhlēu" Adjective ProtoMaterial "bad" Adjec
 runSQLAction $ addTranslationFromTo "bhləu" Adjective ProtoMaterial "bad" Adjective English Nothing
 runSQLAction $ addTranslationFromTo "bhlū" Adjective ProtoMaterial "bad" Adjective English Nothing
 runSQLAction $ addTranslationFromTo "bʰréH2ter"    Noun        ProtoMaterial "brother"         Noun        English      Nothing
-runSQLAction $ addTranslationFromTo "deH₃" Verb ProtoMaterial "give" Verb English Nothing
+runSQLAction $ addTranslationFromTo "deH₃"  Verb ProtoMaterial "give" Verb English Nothing
 runSQLAction $ addTranslationFromTo "déiwos"       Noun        ProtoMaterial "day"             Noun        English      Nothing
 runSQLAction $ addTranslationFromTo "déiwos"       Noun        ProtoMaterial "god"             Noun        English      Nothing
 runSQLAction $ addTranslationFromTo "déiwos"       Noun        ProtoMaterial "sky"             Noun        English      Nothing
