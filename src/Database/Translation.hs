@@ -7,7 +7,9 @@ import           Database.Entity
 import           Database.Esqueleto
 import           Database.Word
 
-translate :: Text -> IO ()
+type FullTranslation = (Translation, Database.Entity.Word, Language, Language, Maybe Database.Entity.Word)
+
+translate :: Text -> IO [FullTranslation]
 translate wtt =
   runSQLAction $ do
     results <-
@@ -24,9 +26,7 @@ translate wtt =
             just (val (mconcat ["%", wtt, "%"]))))
         orderBy [asc (toLang ^. LanguageId), asc (mToWord ?. WordWord), asc (tr ^. TranslationAltTranslation), asc (frWord ^. WordWord)]
         return (tr, frWord, frLang, toLang, mToWord)
-    liftIO $ mapM_ (putStrLn . showFT . convert) results
-    putStr "\n\tTotal: "
-    print $ length results
+    return $ map convert results
   where
     convert (tr, frWord, frLang, toLang, mToWord) =
       ( entityVal tr
@@ -36,7 +36,7 @@ translate wtt =
       , map entityVal mToWord)
 
 
-printAllTranslationsByLang :: LanguageName -> IO ()
+printAllTranslationsByLang :: LanguageName -> IO [FullTranslation]
 printAllTranslationsByLang lname =
   runSQLAction $ do
     results <-
@@ -50,9 +50,7 @@ printAllTranslationsByLang lname =
           (frLang ^. LanguageLname ==. val lname)
         orderBy [asc (toLang ^. LanguageId), asc (mToWord ?. WordWord), asc (tr ^. TranslationAltTranslation), asc (frWord ^. WordWord)]
         return (tr, frWord, frLang, toLang, mToWord)
-    liftIO $ mapM_ (putStrLn . showFT . convert) results
-    putStr "\n\tTotal: "
-    print $ length results
+    return $ map convert results
   where
     convert (tr, frWord, frLang, toLang, mToWord) =
       ( entityVal tr
@@ -130,28 +128,3 @@ addTranslationFromAlt fromWord fromPos fromLang toLang mComment altTran = do
   where
     getLang = getBy . LanguageNameUnq
 
-showFT (tr, frWord, frLang, toLang, mToWord) =
-      mconcat
-        [ case mToWord of
-            Just toWord -> showWord toWord
-            _ ->
-              case translationAltTranslation tr of
-                Just a -> a
-                _      -> ""
-        , "\x1b[2m ("
-        , tshow toLang
-        , ") "
-        , fromPosLength mToWord (translationAltTranslation tr)
-        ,"[from ("
-        , tshow frLang
-        , ") \x1b[0m"
-        , showWord frWord
-        , "\x1b[2m] "
-        , case translationComment tr of
-                Just a -> mconcat ["\t\t\"",a,"\""]
-                _      -> ""
-        ,"\x1b[0m"
-        ]
-  where
-    fromPosLength Nothing (Just t) = if length t > 12 then "\t" else "\t\t"
-    fromPosLength (Just w) _ = if length (mconcat [wordWord w, conShow $ wordPartOfSpeech w]) > 11 then "\t" else "\t\t"

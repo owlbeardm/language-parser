@@ -12,8 +12,6 @@ import           Database.Entity
 import           Database.Esqueleto
 import           Database.Persist.TH
 
-showWord w = mconcat [ wordWord w, " \x1b[2m", conShow $ wordPartOfSpeech w, "\x1b[0m"]
-
 addWord :: (MonadIO m, MonadLogger m) => Text -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
 addWord word pos langName = do
   lang <- getBy $ LanguageNameUnq langName

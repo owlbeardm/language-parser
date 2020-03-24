@@ -51,6 +51,9 @@ library:
   - template-haskell
   - resourcet
   - esqueleto
+  - boxes
+  - prettyprinter
+  - prettyprinter-ansi-terminal
   ghc-options:
   - -Wall
   - -Werror

@@ -52,18 +52,6 @@ data PartOfSpeech = Adjective
     deriving (Eq, Enum, Read, Show)
 derivePersistField "PartOfSpeech"
 
-conShow :: PartOfSpeech -> Text
-conShow Adjective   = "adj."
-conShow Adverb      = "adv."
-conShow Conjunction = "cnj."
-conShow Determiner  = "det."
-conShow Noun        = "n."
-conShow Numeral     = "num."
-conShow Preposition = "prep."
-conShow Pronoun     = "pn."
-conShow Verb        = "v."
-conShow a           = tshow a
-
 connStr :: ConnectionString
 connStr = "host=172.20.7.103 dbname=wiki user=wiki password=wiki port=5432"
 

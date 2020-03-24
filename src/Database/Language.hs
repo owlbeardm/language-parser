@@ -1,6 +1,8 @@
 module Database.Language where
 
-import           ClassyPrelude
+import           ClassyPrelude             hiding (Word)
+import           Control.Exception         (throw)
+import           Control.Monad.Trans.Maybe
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
@@ -15,6 +17,30 @@ listLangs = select $ from $ \lang -> return lang
 
 addLang :: (MonadIO m) => LanguageName -> AppT m  (Key Language)
 addLang name = insert $ Language name
+
+getLangByName :: (MonadIO m) => LanguageName -> AppT m  (Maybe (Entity Language))
+getLangByName name =  getBy $ LanguageNameUnq name
+
+getWord :: (MonadIO m) => Entity Language -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
+getWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)
+
+-- getWord' :: (MonadIO m) => LanguageName -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
+-- getWord' langName word pos = do
+--    lang <- getLangByName langName
+--    maybe
+--        (throw ProtoMaterial)
+--        (\l -> getBy $ WordWordPosLangIdUnq word pos (entityKey l))
+--        lang
+
+
+
+-- mauth <- runDb $ do
+--           ma <- runMaybeT $ do
+--                    valid <- ...
+--           case ma of
+--             Just _ -> return ma
+--             Nothing -> liftIO $ throwIO MyException
+
 
 -- type FullTranslation = (Translation, Word, Language, Language, Maybe Word)
 
