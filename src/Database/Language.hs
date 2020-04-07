@@ -18,8 +18,8 @@ listLangs = select $ from $ \lang -> return lang
 addLang :: (MonadIO m) => LanguageName -> AppT m  (Key Language)
 addLang name = insert $ Language name
 
-getLangByName :: (MonadIO m) => LanguageName -> AppT m  (Maybe (Entity Language))
-getLangByName name =  getBy $ LanguageNameUnq name
+getLangByName :: LanguageName -> IO (Maybe (Entity Language))
+getLangByName name = runSQLAction $  getBy $ LanguageNameUnq name
 
 getWord :: (MonadIO m) => Entity Language -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
 getWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)

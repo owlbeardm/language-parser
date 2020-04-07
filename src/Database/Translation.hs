@@ -60,16 +60,15 @@ printAllTranslationsByLang lname =
       , map entityVal mToWord)
 
 
-addTranslationFromTo :: (MonadIO m, MonadLogger m) =>
-     Text
+addTranslationFromTo :: Text
   -> PartOfSpeech
   -> LanguageName
   -> Text
   -> PartOfSpeech
   -> LanguageName
   -> Maybe Text
-  -> AppT m (Maybe (Key Translation))
-addTranslationFromTo fromWord fromPos fromLang toWord toPos toLang mComment = do
+  -> IO (Maybe (Key Translation))
+addTranslationFromTo fromWord fromPos fromLang toWord toPos toLang mComment = runSQLAction $ do
     mLangFrom <- getLang fromLang
     mLangTo <- getLang toLang
     case (mLangFrom, mLangTo) of

@@ -26,3 +26,6 @@ listWordsByLang langName = select $ from $ \(word,lang) -> do
       where_ (word ^. WordLangId ==. lang ^. LanguageId &&.
               lang ^. LanguageLname ==. val langName )
       return word
+
+getWordByWordPosLangIdUnq :: Text -> PartOfSpeech -> Key Language-> IO (Maybe (Entity Word))
+getWordByWordPosLangIdUnq word partOfSpeech langId = runSQLAction $  getBy $ WordWordPosLangIdUnq word partOfSpeech langId
