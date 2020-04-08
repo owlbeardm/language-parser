@@ -34,6 +34,18 @@ Translation sql=translation_tbl
     comment Text Maybe
     altTranslation Text Maybe
     deriving Show
+WordOrigin sql=word_origin_tbl
+    wordId WordId
+    comment Text Maybe
+    evolved_yn Bool
+    migrated_yn Bool
+    combined_yn Bool
+    derivated_yn Bool
+    deriving Show
+WordOriginFrom sql=word_origin_from_tbl
+    wordFromId WordId
+    originId WordOriginId
+    deriving Show
 |]
 
 instance Show Language where
