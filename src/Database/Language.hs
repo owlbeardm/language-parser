@@ -1,8 +1,8 @@
 module Database.Language where
 
 import           ClassyPrelude             hiding (Word)
-import           Control.Exception         (throw)
-import           Control.Monad.Trans.Maybe
+-- import           Control.Exception         (throw)
+-- import           Control.Monad.Trans.Maybe
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
@@ -23,6 +23,13 @@ getLangByName name =  getBy $ LanguageNameUnq name
 
 getWord :: (MonadIO m) => Entity Language -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
 getWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)
+
+insertEvolvedWord :: Text -> PartOfSpeech -> Key Word -> Key Language -> IO (Key Word)
+insertEvolvedWord textToAdd pos wfKey langToKey = runSQLAction $ do
+   wordToKey <- insert $ Word textToAdd langToKey pos
+   wordOriginKey <- insert $ WordOrigin wordToKey Nothing True False False False
+   _ <- insert $ WordOriginFrom wfKey wordOriginKey
+   return wordToKey
 
 -- getWord' :: (MonadIO m) => LanguageName -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
 -- getWord' langName word pos = do

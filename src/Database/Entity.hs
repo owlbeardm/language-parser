@@ -13,7 +13,7 @@
 
 module Database.Entity where
 
-import           ClassyPrelude       (Show, Text, length, mconcat, show, unpack,
+import           ClassyPrelude       (Show, Text, length, mconcat, show, unpack, Bool,
                                       ($), (>))
 import           Database.Base
 import           Database.Persist.TH
@@ -37,10 +37,11 @@ Translation sql=translation_tbl
 WordOrigin sql=word_origin_tbl
     wordId WordId
     comment Text Maybe
-    evolved_yn Bool
-    migrated_yn Bool
-    combined_yn Bool
-    derivated_yn Bool
+    evolvedYn Bool
+    migratedYn Bool
+    combinedYn Bool
+    derivatedYn Bool
+    EvolveLawWordIdUnq wordId
     deriving Show
 WordOriginFrom sql=word_origin_from_tbl
     wordFromId WordId
