@@ -8,3 +8,5 @@ CREATE TABLE word_tbl (
 );
 
 CREATE INDEX wiki_word_word_idx ON word_tbl(word);
+
+-- WordWordPosLangIdUnq word partOfSpeech langId

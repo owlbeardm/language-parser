@@ -1,8 +1,9 @@
 module Database.Language where
 
-import           ClassyPrelude             hiding (Word)
+import           ClassyPrelude        hiding (Word)
 -- import           Control.Exception         (throw)
 -- import           Control.Monad.Trans.Maybe
+import           Control.Monad.Logger
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
@@ -24,12 +25,31 @@ getLangByName name =  getBy $ LanguageNameUnq name
 getWord :: (MonadIO m) => Entity Language -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
 getWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)
 
-insertEvolvedWord :: Text -> PartOfSpeech -> Key Word -> Key Language -> IO (Key Word)
-insertEvolvedWord textToAdd pos wfKey langToKey = runSQLAction $ do
+insertEvolvedWord :: (MonadIO m) => Text -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
+insertEvolvedWord textToAdd pos wfKey langToKey = do
    wordToKey <- insert $ Word textToAdd langToKey pos
    wordOriginKey <- insert $ WordOrigin wordToKey Nothing True False False False
    _ <- insert $ WordOriginFrom wfKey wordOriginKey
    return wordToKey
+
+evolvedWord :: Text -> PartOfSpeech -> LanguageName -> IO (Maybe (Key Word))
+evolvedWord word pos langName = runSQLAction $ do
+   mLang <- getLang langName
+   case mLang of
+      Nothing ->  do
+        logErrorNS "evolvedWord" "There is no such lang from in the database"
+        return Nothing
+      Just lang -> do
+        mWordFrom <- getBy $ WordWordPosLangIdUnq word pos (entityKey lang)
+        case mWordFrom of
+            Nothing ->  do
+               logErrorNS "evolvedWord" "There is no such word from in the database"
+               return Nothing
+            Just wordFrom -> do
+               key <- insertEvolvedWord (wordWord (entityVal wordFrom)) (wordPartOfSpeech (entityVal wordFrom)) (entityKey wordFrom) (entityKey lang)
+               return $ Just key
+   where
+    getLang = getBy . LanguageNameUnq
 
 -- getWord' :: (MonadIO m) => LanguageName -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
 -- getWord' langName word pos = do
