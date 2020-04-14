@@ -1,0 +1,1 @@
+ALTER TABLE word_tbl ADD CONSTRAINT word_pos_lang_id_unq UNIQUE (word,lang_id,part_of_speech);
