@@ -18,8 +18,12 @@ import           Database.Word
 printLangs :: IO ()
 printLangs = runSQLAction $ do
      langs <- listLangs
-     return langs
      liftIO $ mapM_ (putStrLn . tshow . entityVal) langs
+
+printAllTranslations :: LanguageName -> IO ()
+printAllTranslations lname = do
+     trans <- printAllTranslationsByLang lname
+     mapM_ ( putStrLn . tshowFT) trans
 
 printWordsFrom :: LanguageName -> IO ()
 printWordsFrom langName = runSQLAction $ do
@@ -49,8 +53,8 @@ tshowFT (tr, frWord, frLang, toLang, mToWord) = renderStrict . layoutPretty defa
      where
       tshowLang lang = "(" <> annotate italicized "from" <+> pretty (tshow lang) <> ")"
       tshowWord word = pretty (wordWord word)
-           <+> annotate (color Black) ("[" 
-                                           <> pretty (conShow $ wordPartOfSpeech word) 
+           <+> annotate (color Black) ("["
+                                           <> pretty (conShow $ wordPartOfSpeech word)
                                            <> "]")
 
 

@@ -51,6 +51,13 @@ evolvedWord word pos langName = runSQLAction $ do
    where
     getLang = getBy . LanguageNameUnq
 
+
+getAll words by lang
+for each word 
+   if no evolved word than evolve
+      for each word change text
+      for each word new word
+      
 -- getWord' :: (MonadIO m) => LanguageName -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
 -- getWord' langName word pos = do
 --    lang <- getLangByName langName

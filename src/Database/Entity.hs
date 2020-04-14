@@ -50,11 +50,9 @@ WordOriginFrom sql=word_origin_from_tbl
 EvolveLaw sql=evolve_law_tbl
     langFromId
     langToId
-    soundLawId
+    soundRegexFrom
+    soundTo
     priority
-SoundLaw sql=sound_law_tbl
-    ruleFrom
-    ruleTo
 |]
 
 instance Show Language where
