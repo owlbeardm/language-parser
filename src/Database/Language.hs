@@ -1,10 +1,13 @@
 module Database.Language where
 
 import           ClassyPrelude        hiding (Word)
+import qualified Data.Text            as T
+import qualified Text.Regex           as R
 -- import           Control.Exception         (throw)
 -- import           Control.Monad.Trans.Maybe
 import           Control.Monad.Logger
 import           Database.Base
+import           Database.Word
 import           Database.Entity
 import           Database.Esqueleto
 
@@ -32,67 +35,39 @@ insertEvolvedWord textToAdd pos wfKey langToKey = do
    _ <- insert $ WordOriginFrom wfKey wordOriginKey
    return wordToKey
 
-evolvedWord :: Text -> PartOfSpeech -> LanguageName -> IO (Maybe (Key Word))
-evolvedWord word pos langName = runSQLAction $ do
-   mLang <- getLang langName
-   case mLang of
-      Nothing ->  do
-        logErrorNS "evolvedWord" "There is no such lang from in the database"
-        return Nothing
-      Just lang -> do
-        mWordFrom <- getBy $ WordWordPosLangIdUnq word pos (entityKey lang)
-        case mWordFrom of
-            Nothing ->  do
-               logErrorNS "evolvedWord" "There is no such word from in the database"
-               return Nothing
-            Just wordFrom -> do
-               key <- insertEvolvedWord (wordWord (entityVal wordFrom)) (wordPartOfSpeech (entityVal wordFrom)) (entityKey wordFrom) (entityKey lang)
-               return $ Just key
+listEvolveLawsByLangs :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity EvolveLaw]
+listEvolveLawsByLangs langNameFrom langNameTo = select $ from $ \(evolveLaw,langFrom,langTo) -> do
+      where_ (evolveLaw ^. EvolveLawLangFromId ==. langFrom ^. LanguageId &&.
+              langFrom ^. LanguageLname ==. val langNameFrom &&.
+              evolveLaw ^. EvolveLawLangToId ==. langTo ^. LanguageId &&.
+              langTo ^. LanguageLname ==. val langNameTo)
+              --order by prior
+      return evolveLaw
+
+evolveWordText :: Text -> [EvolveLaw] -> Text
+evolveWordText = foldl' changeWord
+
+changeWord :: Text -> EvolveLaw -> Text
+changeWord wordText law = T.pack $ R.subRegex regex word soundTo
    where
-    getLang = getBy . LanguageNameUnq
+      regex = (R.mkRegex . T.unpack . evolveLawSoundRegexFrom) law
+      soundTo = (T.unpack . evolveLawSoundTo) law
+      word = T.unpack wordText
 
+evolvedWord :: (MonadIO m) => [EvolveLaw] -> Entity Word -> Key Language -> AppT m (Key Word)
+evolvedWord laws eWordFrom = insertEvolvedWord evolvedText ((wordPartOfSpeech . entityVal) eWordFrom) (entityKey eWordFrom)
+   where
+      evolvedText = evolveWordText ((wordWord . entityVal) eWordFrom) laws
 
-getAll words by lang
-for each word 
-   if no evolved word than evolve
-      for each word change text
-      for each word new word
-      
--- getWord' :: (MonadIO m) => LanguageName -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
--- getWord' langName word pos = do
---    lang <- getLangByName langName
---    maybe
---        (throw ProtoMaterial)
---        (\l -> getBy $ WordWordPosLangIdUnq word pos (entityKey l))
---        lang
+evolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Key Word])
+evolveLang langNameFrom langNameTo = do
+   words <- listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo
+   evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
+   keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (toSqlKey 1)) words
+   return $ Just keys
 
-
-
--- mauth <- runDb $ do
---           ma <- runMaybeT $ do
---                    valid <- ...
---           case ma of
---             Just _ -> return ma
---             Nothing -> liftIO $ throwIO MyException
-
-
--- type FullTranslation = (Translation, Word, Language, Language, Maybe Word)
-
-
--- mainUnq :: Text -> PartOfSpeech -> LanguageName -> IO ()
--- mainUnq word pos langName =
---   runSQLAction $ do
---     lang <- getBy $ LanguageNameUnq langName
---     case lang of
---       Just l -> do
---         mWord <- getBy $ WordWordPosLangIdUnq word pos (entityKey l)
---         liftIO $ mapM_ (putStrLn . tshow . entityVal) mWord
---       Nothing -> liftIO $ print lang
-
--- mainT :: IO ()
--- mainT =
---   runSQLAction $ do
---     trans <- select $ from $ \tran -> do return tran
---     liftIO $ mapM_ (print . tshow . entityVal) (trans :: [Entity Translation])
-
-
+-- getAll words by lang
+-- for each word
+--    if no evolved word than evolve
+--       for each word change text
+--       for each word new word

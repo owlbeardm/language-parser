@@ -23,6 +23,7 @@ module PhoneticChanges where
 -- translate :: PhoneticWord -> Translation
 -- -- Writing system →   Phonetic Word → Written Word
 -- getWritten :: WritingSystem -> PhoneticWord -> WrittenWord
+
 -- changeWord :: PhoneticWord -> SoundLaw -> PhoneticWord
 -- changeWord word (SoundLaw regex changedPart) =
 --   T.pack (R.subRegex regex (T.unpack word) (T.unpack changedPart))

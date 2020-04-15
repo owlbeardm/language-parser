@@ -55,6 +55,6 @@ derivePersistField "PartOfSpeech"
 connStr :: ConnectionString
 connStr = "host=172.19.7.103 dbname=wiki user=wiki password=wiki port=5432"
 
-runSQLAction :: SqlPersistT (ResourceT (NoLoggingT IO)) a -> IO a
+runSQLAction :: SqlPersistT (ResourceT (LoggingT IO)) a -> IO a
 runSQLAction =
-  runNoLoggingT . runResourceT . withPostgresqlConn connStr . runSqlConn
+  runStderrLoggingT . runResourceT . withPostgresqlConn connStr . runSqlConn
