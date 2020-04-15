@@ -7,9 +7,9 @@ import qualified Text.Regex           as R
 -- import           Control.Monad.Trans.Maybe
 import           Control.Monad.Logger
 import           Database.Base
-import           Database.Word
 import           Database.Entity
 import           Database.Esqueleto
+import           Database.Word
 
 returnLang :: (MonadIO m) => Int64 -> AppT m [Entity Language]
 returnLang i = select $ from $ \lang -> do
@@ -60,11 +60,15 @@ evolvedWord laws eWordFrom = insertEvolvedWord evolvedText ((wordPartOfSpeech . 
       evolvedText = evolveWordText ((wordWord . entityVal) eWordFrom) laws
 
 evolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Key Word])
-evolveLang langNameFrom langNameTo = do
-   words <- listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo
-   evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
-   keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (toSqlKey 1)) words
-   return $ Just keys
+evolveLang langNameFrom langNameTo
+   | langNameFrom == langNameTo
+      = return Nothing
+   | otherwise
+      = do
+      words <- listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo
+      evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
+      keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (toSqlKey 1)) words
+      return $ Just keys
 
 -- getAll words by lang
 -- for each word
