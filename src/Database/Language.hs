@@ -65,10 +65,14 @@ evolveLang langNameFrom langNameTo
       = return Nothing
    | otherwise
       = do
-      words <- listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo
-      evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
-      keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (toSqlKey 1)) words
-      return $ Just keys
+      mLangTo <- getLangByName langNameTo
+      case mLangTo of
+         Nothing -> return Nothing
+         (Just langTo) -> do
+            words <- listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo
+            evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
+            keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (entityKey langTo)) words
+            return $ Just keys
 
 -- getAll words by lang
 -- for each word

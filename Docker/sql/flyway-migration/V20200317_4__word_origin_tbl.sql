@@ -8,5 +8,5 @@ CREATE TABLE word_origin_tbl (
     derivated_yn BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT word_origin_pk PRIMARY KEY (id),
     CONSTRAINT evolve_law_word_id_unq UNIQUE (word_id),
-    CONSTRAINT word_origin_tbl_word_id_fkey FOREIGN KEY (word_id) REFERENCES word_tbl(id)
+    CONSTRAINT word_origin_tbl_word_id_fkey FOREIGN KEY (word_id) REFERENCES word_tbl(id) ON DELETE CASCADE
 );

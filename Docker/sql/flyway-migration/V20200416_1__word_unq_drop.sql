@@ -1,0 +1,1 @@
+ALTER TABLE word_tbl DROP CONSTRAINT word_pos_lang_id_unq;

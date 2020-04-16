@@ -32,6 +32,27 @@ printWordsFrom langName = runSQLAction $ do
      putStr "\n\tTotal: "
      print $ length words
 
+printNotEvolvedWordsFrom :: LanguageName -> LanguageName -> IO ()
+printNotEvolvedWordsFrom langName1 langName2 = runSQLAction $ do
+     words <- listNotEvolvedWordsByLangFromAndTo langName1 langName2
+     liftIO $ mapM_ (putStrLn . tshow . wordWord . entityVal) words
+     putStr "\n\tTotal: "
+     print $ length words
+
+printEvolveLaws :: LanguageName -> LanguageName -> IO ()
+printEvolveLaws langName1 langName2 = runSQLAction $ do
+     laws <- listEvolveLawsByLangs langName1 langName2
+     liftIO $ mapM_ (putStrLn . tshow . entityVal) laws
+     putStr "\n\tTotal: "
+     print $ length laws
+
+cEvolveLangs :: LanguageName -> LanguageName -> IO ()
+cEvolveLangs langName1 langName2 = runSQLAction $ do
+     keys <- evolveLang langName1 langName2
+     liftIO $ mapM_ (putStrLn . tshow) keys
+     putStr "\n\tTotal: "
+     print $ length keys
+
 printTranslate :: Text -> IO ()
 printTranslate wtt = do
   tranl <- translate wtt

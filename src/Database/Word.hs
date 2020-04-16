@@ -1,6 +1,6 @@
 module Database.Word where
 
-import           ClassyPrelude                hiding (Word, on, nothing)
+import           ClassyPrelude                hiding (Word, on, isNothing, groupBy, delete)
 -- import           Control.Monad.Logger         (LoggingT, NoLoggingT, logErrorN,
 --                                                logErrorNS, runNoLoggingT,
 --                                                runStderrLoggingT)
@@ -51,10 +51,24 @@ listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
       on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
       on (word ^. WordId ==. wordOrgFrom ^. WordOriginFromWordFromId)
       on (word ^. WordLangId ==. langFrom ^. LanguageId)
-      where_ (just (wordOrgFrom ^. WordOriginFromWordFromId) ==. nothing &&.
-              langFrom ^. LanguageLname ==. val langNameFrom &&.
-              langTo ^. LanguageLname ==. val langNameTo)
+      where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
+              (isNothing (just (wordOrgFrom ^. WordOriginFromWordFromId)) ||.
+              langTo ^. LanguageLname !=. val langNameTo))
+      groupBy (word ^. WordId)
       return word
+
+deleteEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m ()
+deleteEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
+  delete $
+  from $ \((word `InnerJoin` langFrom) `InnerJoin` (wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo)) -> do
+      on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
+      on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
+      on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
+      on (word ^. WordId ==. wordOrgFrom ^. WordOriginFromWordFromId)
+      on (word ^. WordLangId ==. langFrom ^. LanguageId)
+      where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
+              langTo ^. LanguageLname !=. val langNameTo)
+      
 
 getWord :: (MonadIO m, MonadLogger m) =>
      Text

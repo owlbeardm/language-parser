@@ -1,3 +1,9 @@
+# checks
+## evolving
+SELECT "word_tbl"."id", "word_tbl"."word", "language_tbl"."name", "word_tbl2"."word", "language_tbl2"."name"
+FROM "word_tbl" INNER JOIN "language_tbl" ON "word_tbl"."lang_id" = "language_tbl"."id" LEFT OUTER JOIN ("word_origin_from_tbl" INNER JOIN "word_origin_tbl" ON "word_origin_from_tbl"."origin_id" = "word_origin_tbl"."id" INNER JOIN "word_tbl" AS "word_tbl2" ON "word_origin_tbl"."word_id" = "word_tbl2"."id" INNER JOIN "language_tbl" AS "language_tbl2" ON "word_tbl2"."lang_id" = "language_tbl2"."id") ON "word_tbl"."id" = "word_origin_from_tbl"."word_from_id"
+order by "word_tbl"."id";
+
 # input
 
 ## Langs 
@@ -264,7 +270,7 @@ runSQLAction $ addWord "snōbhri" Adjective ProtoMaterial
 runSQLAction $ addWord "sphē̆i" Adjective ProtoMaterial
 runSQLAction $ addWord "stāi" Noun ProtoMaterial
 runSQLAction $ addWord "steH₂" Verb ProtoMaterial
-runSQLAction $ addWord "stī̆" Noun ProtoMaterial
+runSQLAction $ addWord "stī" Noun ProtoMaterial
 runSQLAction $ addWord "sti̯ā" Noun ProtoMaterial
 runSQLAction $ addWord "su" Adjective ProtoMaterial
 runSQLAction $ addWord "sū" Adjective ProtoMaterial
@@ -305,7 +311,7 @@ runSQLAction $ addWord "werĝ" Verb ProtoMaterial
 runSQLAction $ addWord "wesnés" Noun ProtoMaterial
 runSQLAction $ addWord "wésr̥" Noun ProtoMaterial
 runSQLAction $ addWord "wet" Noun ProtoMaterial
-runSQLAction $ addWord "wī́k̂m̥̥tiH1" Numeral ProtoMaterial
+runSQLAction $ addWord "wīk̂m̥̥tiH1" Numeral ProtoMaterial
 runSQLAction $ addWord "wódr̥" Noun ProtoMaterial
 runSQLAction $ addWord "woid" Verb ProtoMaterial
 runSQLAction $ addWord "yeH₁r" Noun ProtoMaterial
@@ -760,7 +766,7 @@ runSQLAction $ addTranslationFromTo "snōbhri" Adjective ProtoMaterial "thin" Ad
 runSQLAction $ addTranslationFromTo "sphē̆i" Adjective ProtoMaterial "sharp" Adjective English Nothing
 runSQLAction $ addTranslationFromTo "stāi" Noun ProtoMaterial "stone" Noun English Nothing
 runSQLAction $ addTranslationFromTo "steH₂" Verb ProtoMaterial "stand" Verb English Nothing
-runSQLAction $ addTranslationFromTo "stī̆" Noun ProtoMaterial "stone" Noun English Nothing
+runSQLAction $ addTranslationFromTo "stī" Noun ProtoMaterial "stone" Noun English Nothing
 runSQLAction $ addTranslationFromTo "sti̯ā" Noun ProtoMaterial "stone" Noun English Nothing
 runSQLAction $ addTranslationFromTo "su" Adjective ProtoMaterial "good" Adjective English Nothing
 runSQLAction $ addTranslationFromTo "sū" Adjective ProtoMaterial "good" Adjective English Nothing
@@ -801,7 +807,7 @@ runSQLAction $ addTranslationFromTo "werĝ" Verb ProtoMaterial "work" Verb Engli
 runSQLAction $ addTranslationFromTo "wesnés" Noun ProtoMaterial "spring" Noun English Nothing
 runSQLAction $ addTranslationFromTo "wésr̥" Noun ProtoMaterial "spring" Noun English Nothing
 runSQLAction $ addTranslationFromTo "wet" Noun ProtoMaterial "year" Noun English Nothing
-runSQLAction $ addTranslationFromTo "wī́k̂m̥̥tiH1"     Numeral     ProtoMaterial "twenty"          Numeral     English      Nothing
+runSQLAction $ addTranslationFromTo "wīk̂m̥tiH1"     Numeral     ProtoMaterial "twenty"          Numeral     English      Nothing
 runSQLAction $ addTranslationFromTo "wódr̥"         Noun        ProtoMaterial "water"           Noun        English      Nothing
 runSQLAction $ addTranslationFromTo "woid"         Verb        ProtoMaterial "know"            Verb        English      Nothing
 runSQLAction $ addTranslationFromTo "yeH₁r" Noun ProtoMaterial "year" Noun English Nothing
@@ -811,7 +817,7 @@ runSQLAction $ addTranslationFromTo "yḗkʷr̥" Noun ProtoMaterial "liver" Noun
 
 ##### alt Translations
 runSQLAction $ addTranslationFromAlt "bhrentos"    Noun         ProtoMaterial English Nothing "animal horned"
-runSQLAction $ addTranslationFromAlt "dwidk̂m̥̥tiH1"  Numeral      ProtoMaterial English Nothing "two tens"
+runSQLAction $ addTranslationFromAlt "dwidk̂m̥tiH1"  Numeral      ProtoMaterial English Nothing "two tens"
 runSQLAction $ addTranslationFromAlt "ĝenH1"       Verb         ProtoMaterial English Nothing "to give birth"
 runSQLAction $ addTranslationFromAlt "g̑hu̯ē̆r"       Noun         ProtoMaterial English Nothing "animal wild"
 runSQLAction $ addTranslationFromAlt "giĝnéH1sk̂"   Verb         ProtoMaterial English Nothing "to give birth"
