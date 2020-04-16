@@ -3,12 +3,9 @@ module Database.Word where
 import           ClassyPrelude                hiding (Word, delete, groupBy,
                                                isNothing, on)
 import           Control.Monad.Logger
-import           Control.Monad.Trans.Reader
-import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
-import           Database.Persist.TH
 
 addWord :: (MonadIO m, MonadLogger m) => Text -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
 addWord word pos langName = do
@@ -17,7 +14,7 @@ addWord word pos langName = do
     Nothing -> do
       logErrorNS "addWord" "There is no such lang in the database"
       return Nothing
-    (Just l) -> insertUnique $ Word word (entityKey l) pos
+    (Just l) -> insertUnique $ Word word (entityKey l) pos False
 
 listWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
 listWordsByLang langName = select $ from $ \(word,lang) -> do
@@ -69,16 +66,12 @@ getWord wordText posWord fromLang toLang = do
       (_, Nothing) ->  do
         logErrorNS "addTranslationFromTo" "There is no such lang to in the database"
         return Nothing
-      (Just langFrom, Just langTo) -> do
-        mWord <-
-          getBy $ WordWordPosLangIdUnq wordText posWord (entityKey langFrom)
-        return mWord
+      (Just langFrom, Just langTo) -> do 
+        mWord <- getBy $ WordWordPosLangIdUnq wordText posWord (entityKey langFrom)
         case mWord of
           Nothing -> do
             logErrorNS "addTranslationFromTo" "There is no such lang from in the database"
             return Nothing
-          Just word -> do
-            a <- insertUnique $ Word ((wordWord . entityVal) word) (entityKey langTo) ((wordPartOfSpeech . entityVal) word)
-            return a
+          Just word -> insertUnique $ Word ((wordWord . entityVal) word) (entityKey langTo) ((wordPartOfSpeech . entityVal) word) False
   where
     getLang = getBy . LanguageNameUnq

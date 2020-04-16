@@ -2,10 +2,11 @@
 
 module Database.Base where
 
+-- import           Control.Monad.Logger         (NoLoggingT, logErrorN,
+--                                                logErrorNS, runNoLoggingT,
+--                                                runStderrLoggingT)
 import           ClassyPrelude
-import           Control.Monad.Logger         (LoggingT, NoLoggingT, logErrorN,
-                                               logErrorNS, runNoLoggingT,
-                                               runStderrLoggingT)
+import           Control.Monad.Logger         (LoggingT, runStderrLoggingT)
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import           Database.Esqueleto
 import           Database.Persist.Postgresql  (ConnectionString,

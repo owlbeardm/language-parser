@@ -1,11 +1,10 @@
 module Database.Translation where
 
-import           ClassyPrelude        hiding (on)
+import           ClassyPrelude        hiding (on, id)
 import           Control.Monad.Logger
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
-import           Database.Word
 
 type FullTranslation = (Translation, Database.Entity.Word, Language, Language, Maybe Database.Entity.Word)
 

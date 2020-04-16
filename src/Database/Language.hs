@@ -1,13 +1,12 @@
 module Database.Language where
 
-import           ClassyPrelude        hiding (Word)
-import           Control.Monad.Logger
-import qualified Data.Text            as T
+import           ClassyPrelude      hiding (Word, keys, words)
+import qualified Data.Text          as T
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
 import           Database.Word
-import qualified Text.Regex           as R
+import qualified Text.Regex         as R
 
 returnLang :: (MonadIO m) => Int64 -> AppT m [Entity Language]
 returnLang i = select $ from $ \lang -> do
@@ -28,7 +27,7 @@ getWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)
 
 insertEvolvedWord :: (MonadIO m) => Text -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
 insertEvolvedWord textToAdd pos wfKey langToKey = do
-   wordToKey <- insert $ Word textToAdd langToKey pos
+   wordToKey <- insert $ Word textToAdd langToKey pos False
    wordOriginKey <- insert $ WordOrigin wordToKey Nothing True False False False
    _ <- insert $ WordOriginFrom wfKey wordOriginKey
    return wordToKey

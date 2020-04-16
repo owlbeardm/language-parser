@@ -13,8 +13,7 @@
 
 module Database.Entity where
 
-import           ClassyPrelude       (Bool, Show, Text, length, mconcat, show,
-                                      unpack, ($), (>))
+import           ClassyPrelude       (Bool, Show, Text, mconcat, show, ($))
 import           Database.Base
 import           Database.Persist.TH
 

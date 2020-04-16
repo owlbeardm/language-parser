@@ -1,6 +1,6 @@
 module Print.Console where
 
-import           ClassyPrelude                             hiding (words, (<>))
+import           ClassyPrelude                             hiding (words, (<>), keys)
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Prettyprint.Doc.Render.Terminal
 import           Database.Base
@@ -84,7 +84,7 @@ conShow Numeral     = "num."
 conShow Preposition = "prep."
 conShow Pronoun     = "pn."
 conShow Verb        = "v."
-conShow a           = tshow a
+-- conShow a\           = tshow a
 
 --       mconcat
 --         [ case mToWord of
