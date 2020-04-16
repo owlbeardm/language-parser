@@ -5,7 +5,7 @@ insert into evolve_law_tbl(lang_from_id,lang_to_id,priority,sound_regex_from,sou
 (9990,10000,0,'H₂' , 'H2'),
 (9990,10000,0,'H₃' , 'H3'),
 (9990,10000,0,'ē̆'       , 'ē'),
-(9990,10000,0,'ū̆'       , 'ē'),
+(9990,10000,0,'ū̆'       , 'u'),
 
 
 
