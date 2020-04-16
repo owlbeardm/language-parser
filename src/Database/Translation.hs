@@ -23,7 +23,7 @@ translate wtt =
           ((frWord ^. WordWord ==. val wtt) ||.
            (mToWord ?. WordWord ==. just (val wtt)) ||.
            (tr ^. TranslationAltTranslation `like`
-            just (val (mconcat ["%", wtt, "%"]))))
+            just (val (mconcat ["% ", wtt, " %"]))))
         orderBy [asc (toLang ^. LanguageId), asc (frLang ^. LanguageId), asc (mToWord ?. WordWord), asc (tr ^. TranslationAltTranslation), asc (frWord ^. WordWord)]
         return (tr, frWord, frLang, toLang, mToWord)
     return $ map convert results
