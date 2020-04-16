@@ -1,15 +1,13 @@
 module Database.Language where
 
 import           ClassyPrelude        hiding (Word)
-import qualified Data.Text            as T
-import qualified Text.Regex           as R
--- import           Control.Exception         (throw)
--- import           Control.Monad.Trans.Maybe
 import           Control.Monad.Logger
+import qualified Data.Text            as T
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
 import           Database.Word
+import qualified Text.Regex           as R
 
 returnLang :: (MonadIO m) => Int64 -> AppT m [Entity Language]
 returnLang i = select $ from $ \lang -> do
@@ -73,9 +71,3 @@ evolveLang langNameFrom langNameTo
             evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
             keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (entityKey langTo)) words
             return $ Just keys
-
--- getAll words by lang
--- for each word
---    if no evolved word than evolve
---       for each word change text
---       for each word new word

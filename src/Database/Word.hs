@@ -1,9 +1,7 @@
 module Database.Word where
 
-import           ClassyPrelude                hiding (Word, on, isNothing, groupBy, delete)
--- import           Control.Monad.Logger         (LoggingT, NoLoggingT, logErrorN,
---                                                logErrorNS, runNoLoggingT,
---                                                runStderrLoggingT)
+import           ClassyPrelude                hiding (Word, delete, groupBy,
+                                               isNothing, on)
 import           Control.Monad.Logger
 import           Control.Monad.Trans.Reader
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
@@ -26,21 +24,6 @@ listWordsByLang langName = select $ from $ \(word,lang) -> do
       where_ (word ^. WordLangId ==. lang ^. LanguageId &&.
               lang ^. LanguageLname ==. val langName )
       return word
-
--- listNotEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity Word]
--- listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
---   select $
---   from $ \((word,langFrom) `LeftOuterJoin` (wordTo,langTo,wordOrg,wordOrgFrom)) -> do
---       on (word ^. WordId ==. wordOrgFrom ^. WordOriginFromWordFromId)
---       where_ (just (wordOrgFrom ^. WordOriginFromWordFromId) ==. nothing &&.
---               word ^. WordLangId ==. langFrom ^. LanguageId &&.
---               langFrom ^. LanguageLname ==. val langNameFrom &&.
---               wordTo ^. WordLangId ==. langTo ^. LanguageId &&.
---               langTo ^. LanguageLname ==. val langNameTo &&.
---               wordOrg ^. WordOriginWordId ==. wordTo ^. WordId &&.
---               wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
---       return word
-
 
 listNotEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity Word]
 listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
@@ -68,7 +51,7 @@ deleteEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
       on (word ^. WordLangId ==. langFrom ^. LanguageId)
       where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
               langTo ^. LanguageLname !=. val langNameTo)
-      
+
 
 getWord :: (MonadIO m, MonadLogger m) =>
      Text

@@ -3,6 +3,7 @@ CREATE TABLE word_tbl (
     word text NOT NULL,
     lang_id bigint NOT NULL,
     part_of_speech text NOT NULL,
+    forgotten BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT word_pk PRIMARY KEY (id),
     CONSTRAINT word_tbl_lang_id_fkey FOREIGN KEY (lang_id) REFERENCES language_tbl(id)
 );
