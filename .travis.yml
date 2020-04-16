@@ -40,6 +40,6 @@ script:
 - stack build
 
 after_failure:
-  - curl -X POST https://api.telegram.org/bot759756758:$TELEGRAM_NOTIFY/sendMessage -d chat_id=54774234 -d "text=OwlbearDM language parser *build failed* for \`$TRAVIS_BRANCH\` [#$TRAVIS_BUILD_NUMBER]($TRAVIS_BUILD_WEB_URL). %0D %0D $TRAVIS_COMMIT_MESSAGE" -d "parse_mode=Markdown"
+  - curl -X POST https://api.telegram.org/bot759756758:$TELEGRAM_NOTIFY/sendMessage -d chat_id=54774234 -d "text=OwlbearDM language parser \`build failed\` for *$TRAVIS_BRANCH* [#$TRAVIS_BUILD_NUMBER]($TRAVIS_BUILD_WEB_URL). %0D %0D $TRAVIS_COMMIT_MESSAGE" -d "parse_mode=Markdown"
 after_success:
-  - curl -X POST https://api.telegram.org/bot759756758:$TELEGRAM_NOTIFY/sendMessage -d chat_id=54774234 -d "text=OwlbearDM language parser *build success!* for \`$TRAVIS_BRANCH\` [#$TRAVIS_BUILD_NUMBER]($TRAVIS_BUILD_WEB_URL). %0D %0D $TRAVIS_COMMIT_MESSAGE" -d "parse_mode=Markdown"
+  - curl -X POST https://api.telegram.org/bot759756758:$TELEGRAM_NOTIFY/sendMessage -d chat_id=54774234 -d "text=OwlbearDM language parser \`build success!\` for *$TRAVIS_BRANCH* [#$TRAVIS_BUILD_NUMBER]($TRAVIS_BUILD_WEB_URL). %0D %0D $TRAVIS_COMMIT_MESSAGE" -d "parse_mode=Markdown"
