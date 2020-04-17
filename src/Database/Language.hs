@@ -22,10 +22,10 @@ addLang name = insert $ Language name
 getLangByName :: (MonadIO m) => LanguageName -> AppT m  (Maybe (Entity Language))
 getLangByName name =  getBy $ LanguageNameUnq name
 
-getWord :: (MonadIO m) => Entity Language -> Text -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
+getWord :: (MonadIO m) => Entity Language -> WordText -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
 getWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)
 
-insertEvolvedWord :: (MonadIO m) => Text -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
+insertEvolvedWord :: (MonadIO m) => WordText -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
 insertEvolvedWord textToAdd pos wfKey langToKey = do
    wordToKey <- insert $ Word textToAdd langToKey pos False
    wordOriginKey <- insert $ WordOrigin wordToKey Nothing True False False False
@@ -41,10 +41,10 @@ listEvolveLawsByLangs langNameFrom langNameTo = select $ from $ \(evolveLaw,lang
               --order by prior
       return evolveLaw
 
-evolveWordText :: Text -> [EvolveLaw] -> Text
+evolveWordText :: WordText -> [EvolveLaw] -> WordText
 evolveWordText = foldl' changeWord
 
-changeWord :: Text -> EvolveLaw -> Text
+changeWord :: WordText -> EvolveLaw -> WordText
 changeWord wordText law = T.pack $ R.subRegex regex word soundTo
    where
       regex = (R.mkRegex . T.unpack . evolveLawSoundRegexFrom) law

@@ -7,7 +7,7 @@ import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
 
-addWord :: (MonadIO m, MonadLogger m) => Text -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
+addWord :: (MonadIO m, MonadLogger m) => WordText -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
 addWord word pos langName = do
   lang <- getBy $ LanguageNameUnq langName
   case lang of
@@ -51,7 +51,7 @@ deleteEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
 
 
 getWord :: (MonadIO m, MonadLogger m) =>
-     Text
+     WordText
   -> PartOfSpeech
   -> LanguageName
   -> LanguageName

@@ -8,7 +8,7 @@ import           Database.Esqueleto
 
 type FullTranslation = (Translation, Database.Entity.Word, Language, Language, Maybe Database.Entity.Word)
 
-translate :: Text -> IO [FullTranslation]
+translate :: WordText -> IO [FullTranslation]
 translate wtt =
   runSQLAction $ do
     results <-
@@ -60,13 +60,13 @@ printAllTranslationsByLang lname =
 
 
 addTranslationFromTo :: (MonadIO m, MonadLogger m) =>
-     Text
+     WordText
   -> PartOfSpeech
   -> LanguageName
-  -> Text
+  -> WordText
   -> PartOfSpeech
   -> LanguageName
-  -> Maybe Text
+  -> Maybe Comment
   -> AppT m (Maybe (Key Translation))
 addTranslationFromTo fromWord fromPos fromLang toWord toPos toLang mComment = do
     mLangFrom <- getLang fromLang
@@ -97,11 +97,11 @@ addTranslationFromTo fromWord fromPos fromLang toWord toPos toLang mComment = do
 
 
 addTranslationFromAlt :: (MonadIO m, MonadLogger m) =>
-     Text
+     WordText
   -> PartOfSpeech
   -> LanguageName
   -> LanguageName
-  -> Maybe Text
+  -> Maybe Comment
   -> Text
   -> AppT m (Maybe (Key Translation))
 addTranslationFromAlt fromWord fromPos fromLang toLang mComment altTran = do
