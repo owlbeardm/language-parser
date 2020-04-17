@@ -13,16 +13,17 @@
 
 module Database.Entity where
 
-import           ClassyPrelude       (Bool, Show, Text, mconcat, show, ($))
+import           ClassyPrelude       (Bool, Show, Text, mconcat, show, ($), Maybe, MonadIO)
 import           Data.Int
 import           Database.Base
 import           Database.Persist.TH
+import           Database.Esqueleto
 
-type WordText = Text
-type Comment = Text
+type WordText   = Text
+type Comment    = Text
 type SoundRegex = Text
-type Sound = Text
-type Priority = Int64
+type Sound      = Text
+type Priority   = Int64
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Language sql=language_tbl
@@ -65,3 +66,7 @@ EvolveLaw sql=evolve_law_tbl
 
 instance Show Language where
     show l = mconcat [ show $ languageLname l]
+
+findLangByName :: (MonadIO m) => LanguageName -> AppT m  (Maybe (Entity Language))
+findLangByName name =  getBy $ LanguageNameUnq name
+

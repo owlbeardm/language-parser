@@ -1,20 +1,35 @@
 module Database.Word where
 
-import           ClassyPrelude                hiding (Word, delete, groupBy,
-                                               isNothing, on)
+import           ClassyPrelude        hiding (Word, delete, groupBy, isNothing,
+                                       on)
 import           Control.Monad.Logger
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
 
-addWord :: (MonadIO m, MonadLogger m) => WordText -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
-addWord word pos langName = do
-  lang <- getBy $ LanguageNameUnq langName
+addWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech -> Bool ->  AppT m (Key Word)
+addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten
+
+addWordByLangName :: (MonadIO m, MonadLogger m) => LanguageName -> WordText -> PartOfSpeech ->  AppT m (Maybe (Key Word))
+addWordByLangName langName word pos  = do
+  lang <- findLangByName langName
   case lang of
     Nothing -> do
-      logErrorNS "addWord" "There is no such lang in the database"
+      logErrorNS "addWordByLangName" "There is no such lang in the database"
       return Nothing
-    (Just l) -> insertUnique $ Word word (entityKey l) pos False
+    (Just l) -> do 
+      key <- addWord word (entityKey l) pos False
+      return $ Just key
+
+addEvolvedWord :: (MonadIO m) => WordText -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
+addEvolvedWord textToAdd pos wfKey langToKey = do
+   wordToKey <- addWord textToAdd langToKey pos False
+   wordOriginKey <- insert $ WordOrigin wordToKey Nothing True False False False
+   _ <- insert $ WordOriginFrom wfKey wordOriginKey
+   return wordToKey
+
+findWord :: (MonadIO m) => Entity Language -> WordText -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
+findWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)
 
 listWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
 listWordsByLang langName = select $ from $ \(word,lang) -> do
@@ -50,28 +65,29 @@ deleteEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
               langTo ^. LanguageLname !=. val langNameTo)
 
 
-getWord :: (MonadIO m, MonadLogger m) =>
-     WordText
-  -> PartOfSpeech
-  -> LanguageName
-  -> LanguageName
-  -> AppT m (Maybe (Key Word))
-getWord wordText posWord fromLang toLang = do
-    mLangFrom <- getLang fromLang
-    mLangTo <- getLang toLang
-    case (mLangFrom, mLangTo) of
-      (Nothing, _) ->  do
-        logErrorNS "addTranslationFromTo" "There is no such lang from in the database"
-        return Nothing
-      (_, Nothing) ->  do
-        logErrorNS "addTranslationFromTo" "There is no such lang to in the database"
-        return Nothing
-      (Just langFrom, Just langTo) -> do 
-        mWord <- getBy $ WordWordPosLangIdUnq wordText posWord (entityKey langFrom)
-        case mWord of
-          Nothing -> do
-            logErrorNS "addTranslationFromTo" "There is no such lang from in the database"
-            return Nothing
-          Just word -> insertUnique $ Word ((wordWord . entityVal) word) (entityKey langTo) ((wordPartOfSpeech . entityVal) word) False
-  where
-    getLang = getBy . LanguageNameUnq
+-- ???
+-- insertWord :: (MonadIO m, MonadLogger m) =>
+--      WordText
+--   -> PartOfSpeech
+--   -> LanguageName
+--   -> LanguageName
+--   -> AppT m (Maybe (Key Word))
+-- insertWord wordText posWord fromLang toLang = do
+--     mLangFrom <- getLang fromLang
+--     mLangTo <- getLang toLang
+--     case (mLangFrom, mLangTo) of
+--       (Nothing, _) ->  do
+--         logErrorNS "addTranslationFromTo" "There is no such lang from in the database"
+--         return Nothing
+--       (_, Nothing) ->  do
+--         logErrorNS "addTranslationFromTo" "There is no such lang to in the database"
+--         return Nothing
+--       (Just langFrom, Just langTo) -> do
+--         mWord <- getBy $ WordWordPosLangIdUnq wordText posWord (entityKey langFrom)
+--         case mWord of
+--           Nothing -> do
+--             logErrorNS "addTranslationFromTo" "There is no such lang from in the database"
+--             return Nothing
+--           Just word -> insertUnique $ Word ((wordWord . entityVal) word) (entityKey langTo) ((wordPartOfSpeech . entityVal) word) False
+--   where
+--     getLang = getBy . LanguageNameUnq

@@ -17,5 +17,5 @@ import           Database.Language
 
 main :: IO ()
 main = runSQLAction $ do
-  l <- returnLang 1
+  l <- findLangById 1
   mapM_ (print . tshow . entityVal) l

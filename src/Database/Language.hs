@@ -8,8 +8,8 @@ import           Database.Esqueleto
 import           Database.Word
 import qualified Text.Regex         as R
 
-returnLang :: (MonadIO m) => Int64 -> AppT m [Entity Language]
-returnLang i = select $ from $ \lang -> do
+findLangById :: (MonadIO m) => Int64 -> AppT m [Entity Language]
+findLangById i = select $ from $ \lang -> do
    where_ (lang ^. LanguageId ==. val (toSqlKey i))
    return lang
 
@@ -18,12 +18,6 @@ listLangs = select $ from $ \lang -> return lang
 
 addLang :: (MonadIO m) => LanguageName -> AppT m  (Key Language)
 addLang name = insert $ Language name
-
-getLangByName :: (MonadIO m) => LanguageName -> AppT m  (Maybe (Entity Language))
-getLangByName name =  getBy $ LanguageNameUnq name
-
-getWord :: (MonadIO m) => Entity Language -> WordText -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
-getWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)
 
 insertEvolvedWord :: (MonadIO m) => WordText -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
 insertEvolvedWord textToAdd pos wfKey langToKey = do
@@ -44,6 +38,7 @@ listEvolveLawsByLangs langNameFrom langNameTo = select $ from $ \(evolveLaw,lang
 evolveWordText :: WordText -> [EvolveLaw] -> WordText
 evolveWordText = foldl' changeWord
 
+-- |The 'square' function squares an integer.
 changeWord :: WordText -> EvolveLaw -> WordText
 changeWord wordText law = T.pack $ R.subRegex regex word soundTo
    where
@@ -62,7 +57,7 @@ evolveLang langNameFrom langNameTo
       = return Nothing
    | otherwise
       = do
-      mLangTo <- getLangByName langNameTo
+      mLangTo <- findLangByName langNameTo
       case mLangTo of
          Nothing -> return Nothing
          (Just langTo) -> do
