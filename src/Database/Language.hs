@@ -65,3 +65,18 @@ evolveLang langNameFrom langNameTo
             evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
             keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (entityKey langTo)) words
             return $ Just keys
+
+-- reEvolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Key Word])
+reEvolveLang langNameFrom langNameTo
+   | langNameFrom == langNameTo
+      = return Nothing
+   | otherwise
+      = do
+      mLangTo <- findLangByName langNameTo
+      case mLangTo of
+         Nothing -> return Nothing
+         (Just langTo) -> do
+            evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
+            words <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
+            let keys = map (\x -> evolveWordText (wordWord (entityVal x)) (map entityVal evolveLaws)) words
+            return $ Just keys

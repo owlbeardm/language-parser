@@ -20,6 +20,34 @@ printAllTranslations lname = do
      trans <- printAllTranslationsByLang lname
      mapM_ ( putStrLn . tshowFT) trans
 
+printEList :: (Show a) => IO [Entity a] -> IO ()
+printEList action = do
+     entityList <- action
+     liftIO $ mapM_ (putStrLn . tshow . entityVal) entityList
+     putStr "\n\tTotal: "
+     print $ length entityList
+
+printEMList :: (Show a) => IO (Maybe [Entity a]) -> IO ()
+printEMList action = do
+     mEntityList <- action
+     case mEntityList of
+          Nothing -> putStr "Nothing"
+          (Just entityList) -> printEList $ pure entityList
+
+printList :: (Show a) => IO [a] -> IO ()
+printList action = do
+     entityList <- action
+     liftIO $ mapM_ (putStrLn . tshow) entityList
+     putStr "\n\tTotal: "
+     print $ length entityList
+
+printMList :: (Show a) => IO (Maybe [a]) -> IO ()
+printMList action = do
+     mEntityList <- action
+     case mEntityList of
+          Nothing -> putStr "Nothing"
+          (Just entityList) -> printList $ pure entityList
+
 printWordList :: IO [Entity Word] -> IO ()
 printWordList action = do
      words <- action
