@@ -1,6 +1,6 @@
 module Database.Translation where
 
-import           ClassyPrelude        hiding (on, id)
+import           ClassyPrelude        hiding (id, on)
 import           Control.Monad.Logger
 import           Database.Base
 import           Database.Entity

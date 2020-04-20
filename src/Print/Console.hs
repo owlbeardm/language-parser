@@ -1,6 +1,6 @@
 module Print.Console where
 
-import           ClassyPrelude                             hiding (words, (<>), keys)
+import           ClassyPrelude                             hiding (words, (<>), keys, Word)
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Prettyprint.Doc.Render.Terminal
 import           Database.Base
@@ -20,10 +20,17 @@ printAllTranslations lname = do
      trans <- printAllTranslationsByLang lname
      mapM_ ( putStrLn . tshowFT) trans
 
+printWordList :: IO [Entity Word] -> IO ()
+printWordList action = do
+     words <- action
+     liftIO $ mapM_ (putStrLn . tshowWord . entityVal) words
+     putStr "\n\tTotal: "
+     print $ length words
+
 printWordsFrom :: LanguageName -> IO ()
 printWordsFrom langName = runSQLAction $ do
      words <- listWordsByLang langName
-     liftIO $ mapM_ (putStrLn . tshow . wordWord . entityVal) words
+     liftIO $ mapM_ (putStrLn . tshowWord . entityVal) words
      putStr "\n\tTotal: "
      print $ length words
 
@@ -57,18 +64,24 @@ printTranslate wtt = do
 tshowFT :: FullTranslation -> Text
 tshowFT (tr, frWord, frLang, toLang, mToWord) = renderStrict . layoutPretty defaultLayoutOptions $
       annotate (color Blue) (case mToWord of
-            Just toWord -> tshowWord toWord
+            Just toWord -> annShowWord toWord
             _ ->
               case translationAltTranslation tr of
                 Just a -> pretty a
                 _      -> "")
       <+> annotate (color Black) (tshowLang toLang
-                                  <+> annotate (color Green) (tshowWord frWord)
+                                  <+> annotate (color Green) (annShowWord frWord)
                                   <+> tshowLang frLang)
       <+> annotate (color Black) (pretty $ translationComment tr)
      where
       tshowLang lang = "(" <> annotate italicized "from" <+> pretty (tshow lang) <> ")"
-      tshowWord word = pretty (wordWord word)
+      annShowWord word = pretty (wordWord word)
+           <+> annotate (color Black) ("["
+                                           <> pretty (conShow $ wordPartOfSpeech word)
+                                           <> "]")
+tshowWord :: Word -> Text
+tshowWord word = renderStrict . layoutPretty defaultLayoutOptions $ 
+           annotate (color Blue) (pretty (wordWord word))
            <+> annotate (color Black) ("["
                                            <> pretty (conShow $ wordPartOfSpeech word)
                                            <> "]")
