@@ -13,7 +13,7 @@
 
 module Database.Entity where
 
-import           ClassyPrelude       (Bool, Show, Text, mconcat, show, ($), Maybe, MonadIO)
+import           ClassyPrelude       (Bool, Show, Text, mconcat, show, ($), Maybe, MonadIO, Eq)
 import           Data.Int
 import           Database.Base
 import           Database.Persist.TH
@@ -35,6 +35,7 @@ Word sql=word_tbl
     partOfSpeech PartOfSpeech
     forgotten Bool
     WordWordPosLangIdUnq word partOfSpeech langId
+    deriving Eq
 Translation sql=translation_tbl
     fromWordId WordId
     toLangId LanguageId
