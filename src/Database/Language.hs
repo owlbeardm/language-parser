@@ -1,6 +1,6 @@
 module Database.Language where
 
-import           ClassyPrelude      hiding (Word, keys, words)
+import           ClassyPrelude      hiding (Word, keys, on, words)
 import qualified Data.Text          as T
 import           Database.Base
 import           Database.Entity
@@ -66,17 +66,28 @@ evolveLang langNameFrom langNameTo
             keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (entityKey langTo)) words
             return $ Just keys
 
--- reEvolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Key Word])
-reEvolveLang langNameFrom langNameTo
-   | langNameFrom == langNameTo
-      = return Nothing
-   | otherwise
-      = do
-      mLangTo <- findLangByName langNameTo
-      case mLangTo of
-         Nothing -> return Nothing
-         (Just langTo) -> do
-            evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
-            words <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
-            let keys = map (\x -> evolveWordText (wordWord (entityVal x)) (map entityVal evolveLaws)) words
-            return $ Just keys
+-- reEvolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Int64])
+-- reEvolveLang langNameFrom langNameTo
+--    | langNameFrom == langNameTo
+--       = return Nothing
+--    | otherwise
+--       = do
+--          evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
+--          words <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
+--          wordsToUpdate <- listEvolvedWordsToKeysByWordFromAndTo
+--          result <- mapM updateWord $ makeWordsWithNewText words evolveLaws
+--          return (Just result)
+--    where
+--       makeWordsWithNewText words evolveLaws = zip words $ makeNewText evolveLaws words
+--       makeNewText evolveLaws = map (\x -> evolveWordText (wordWord (entityVal x)) (map entityVal evolveLaws))
+
+-- updateWord :: (MonadIO m) => (Entity Word, Text) -> LanguageName -> AppT m Int64
+-- updateWord (enWord, text) langNameTo =
+--    updateCount $
+--    \(wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
+--      on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
+--      on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
+--      on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
+--      on (val (entityKey enWord) ==. wordOrgFrom ^. WordOriginFromWordFromId)
+--      set wordTo [ WordWord =. val text ]
+--      where_ (langTo ^. LanguageLname ==. val langNameTo)

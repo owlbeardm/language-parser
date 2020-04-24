@@ -58,6 +58,18 @@ listEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
       groupBy (word ^. WordId)
       return word
 
+listEvolvedWordsToKeysByWordFromAndTo :: (MonadIO m) => Entity Word -> LanguageName -> AppT m [Entity Word]
+listEvolvedWordsToKeysByWordFromAndTo wordFrom langNameTo = 
+   select $
+   from $ \(wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
+      on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
+      on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
+      on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
+      on (val (entityKey wordFrom) ==. wordOrgFrom ^. WordOriginFromWordFromId)
+      where_ (langTo ^. LanguageLname ==. val langNameTo)
+      groupBy (wordTo ^. WordId)
+      return (wordTo)
+
 deleteEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m ()
 deleteEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
   delete $
