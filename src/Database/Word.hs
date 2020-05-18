@@ -1,8 +1,9 @@
 module Database.Word where
 
 import           ClassyPrelude        hiding (Word, delete, groupBy, isNothing,
-                                       on)
+                                       on, (\\))
 import           Control.Monad.Logger
+import           Data.List            ((\\))
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
@@ -17,7 +18,7 @@ addWordByLangName langName word pos  = do
     Nothing -> do
       logErrorNS "addWordByLangName" "There is no such lang in the database"
       return Nothing
-    (Just l) -> do 
+    (Just l) -> do
       key <- addWord word (entityKey l) pos False
       return $ Just key
 
@@ -38,19 +39,36 @@ listWordsByLang langName = select $ from $ \(word,lang) -> do
       return word
 
 listNotEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity Word]
-listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
+listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo = do
+  wordsAll <- listWordsByLang langNameFrom
+  wordsEvolved <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
+  return $ wordsAll \\ wordsEvolved
+
+listEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity Word]
+listEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
   select $
-  from $ \((word `InnerJoin` langFrom) `LeftOuterJoin` (wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo)) -> do
+  from $ \(word `InnerJoin` langFrom `InnerJoin` wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
       on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
       on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
       on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
       on (word ^. WordId ==. wordOrgFrom ^. WordOriginFromWordFromId)
       on (word ^. WordLangId ==. langFrom ^. LanguageId)
       where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
-              (isNothing (just (wordOrgFrom ^. WordOriginFromWordFromId)) ||.
-              langTo ^. LanguageLname !=. val langNameTo))
+              langTo ^. LanguageLname ==. val langNameTo)
       groupBy (word ^. WordId)
       return word
+
+listEvolvedWordsToKeysByWordFromAndTo :: (MonadIO m) => Entity Word -> LanguageName -> AppT m [Entity Word]
+listEvolvedWordsToKeysByWordFromAndTo wordFrom langNameTo = 
+   select $
+   from $ \(wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
+      on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
+      on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
+      on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
+      on (val (entityKey wordFrom) ==. wordOrgFrom ^. WordOriginFromWordFromId)
+      where_ (langTo ^. LanguageLname ==. val langNameTo)
+      groupBy (wordTo ^. WordId)
+      return (wordTo)
 
 deleteEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m ()
 deleteEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
