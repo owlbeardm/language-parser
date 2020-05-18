@@ -7,6 +7,7 @@ import           Database.Entity
 import           Database.Esqueleto
 
 type FullTranslation = (Translation, Database.Entity.Word, Language, Language, Maybe Database.Entity.Word)
+type WordTranslation = (Translation, Language, Maybe Database.Entity.Word)
 
 translate :: WordText -> IO [FullTranslation]
 translate wtt =
@@ -31,6 +32,26 @@ translate wtt =
       ( entityVal tr
       , entityVal frWord
       , entityVal frLang
+      , entityVal toLang
+      , map entityVal mToWord)
+
+
+getWordTranslations :: (MonadIO m) => Entity Database.Entity.Word -> AppT m [WordTranslation]
+getWordTranslations enWord = do
+    results <-
+      select $
+      from $ \(tr `InnerJoin` frWord `InnerJoin` toLang `LeftOuterJoin` mToWord) -> do
+        on (tr ^. TranslationToWordId ==. mToWord ?. WordId)
+        on (tr ^. TranslationToLangId ==. toLang ^. LanguageId)
+        on (tr ^. TranslationFromWordId ==. frWord ^. WordId)
+        where_
+          (frWord ^. WordId ==. val (entityKey enWord))
+        orderBy [asc (toLang ^. LanguageId), asc (mToWord ?. WordWord), asc (tr ^. TranslationAltTranslation)]
+        return (tr, toLang, mToWord)
+    return $ map convert results
+  where
+    convert (tr, toLang, mToWord) =
+      ( entityVal tr
       , entityVal toLang
       , map entityVal mToWord)
 

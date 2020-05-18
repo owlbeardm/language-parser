@@ -47,19 +47,3 @@ let other2 = ["selo, (3J|0", "", tr2, "", orig2, "", phraz2]
 let text2 = vsep [wdl2, "      " <+> align (vsep other2)]
 
 text = vsep ["",text1,"",text2,""]
-
-
-
-
-
- /село/ n. from Proto-Monster
-	selo, (3J|0
-	
-	hamlet from English (whereas a деревня is a hamlet)
-	village from English (technically, a village is a село)
-	rural areas from English (напри. вливание в развитие села — injections into rural areas)
-	
-	from Proto-Material **сило** (sit, дер), from Proto-Creation **зило** (sit, дер)
-	
-	Ну что это за село вообще!  
-
