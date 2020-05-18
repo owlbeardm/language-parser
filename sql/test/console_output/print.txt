@@ -1,0 +1,65 @@
+hamlet [n.] (from English) село [n.] (from ProtoMonster) whereas a деревня is a hamlet
+mount [v.] (from English) село [v.] (from ProtoMonster) на коня, в боевую машину, на "броню"
+sit [v.] (from English) село [v.] (from ProtoMonster) 
+sit up [v.] (from English) село [v.] (from ProtoMonster) из лежачего положения
+village [n.] (from English) село [n.] (from ProtoMonster) technically, a village is a село
+rural areas (from English) село [n.] (from ProtoMonster) напри. вливание в развитие села — injections into rural areas aza
+
+let ppr = \x -> putStrLn $  renderStrict . layoutPretty defaultLayoutOptions $ x
+
+let wdl1 = (annotate (color Green) (" /" <+> "село" <+> "/")) <+> annotate (color Black) ("\t" <+> "[" <> "n." <> "]" <+> (annotate italicized "from") <+> "Proto-Monster")
+
+let tr11 = (annotate (color Blue) "hamlet") <+> annotate (color Black) ((annotate italicized "from") <+> "English" <+> "(" <> "whereas a деревня is a hamlet" <> ")")
+let tr12 = (annotate (color Blue) "village") <+> annotate (color Black) ((annotate italicized "from") <+> "English" <+> "(" <> "technically, a village is a село" <> ")")
+let tr13 = (annotate (color Blue) "rural areas") <+> annotate (color Black) ((annotate italicized "from") <+> "English" <+> "(" <> "напри. вливание в развитие села — injections into rural areas" <> ")")
+let tr1 = vsep [tr11, tr12, tr13]
+
+
+let orig11 = (annotate italicized "from") <+> "Proto-Material" <+> (annotate bold "сило") <+> "(" <> "sit, дер" <> ")"
+let orig12 = (annotate italicized "from") <+> "Proto-Creation" <+> (annotate bold "зило") <+> "(" <> "sit, дер" <> ")"
+let orig1 = annotate (color Black) $ hsep (punctuate comma [orig11, orig12])
+
+let phraz11 = "Любовь местных властей общественную работу на селе сваливать на тех же учителей."
+let phraz12 = "Но как всему на свете есть конец, то и мы наконец добрались до какого-то села, где оставили экипажи и при них человека, а другого взяли с собой."
+let phraz1 = annotate (color Black) $ vsep [phraz11, phraz12]
+
+let other1 = ["selo, (3J|0", "", tr1, "", orig1, "", phraz1]
+let text1 = vsep [wdl1, "      " <+> align (vsep other1)]
+
+
+let wdl2 = (annotate (color Green) (" /" <+> "село" <+> "/")) <+> annotate (color Black) ("\t" <+> "[" <> "v." <> "]" <+> (annotate italicized "from") <+> "Proto-Monster")
+
+let tr21 = (annotate (color Blue) "mount") <+> annotate (color Black) ((annotate italicized "from") <+> "English" <+> "(" <> "на коня, в боевую машину, на \"броню\"" <> ")")
+let tr22 = (annotate (color Blue) "sit") <+> annotate (color Black) ((annotate italicized "from") <+> "English")
+let tr23 = (annotate (color Blue) "sit up") <+> annotate (color Black) ((annotate italicized "from") <+> "English" <+> "(" <> "из лежачего положения" <> ")")
+let tr2 = vsep [tr21, tr22, tr23]
+
+let orig21 = (annotate italicized "from") <+> "Proto-Material" <+> (annotate bold "сило") <+> "(" <> "sit, дер" <> ")"
+let orig22 = (annotate italicized "from") <+> "Proto-Creation" <+> (annotate bold "зило") <+> "(" <> "sit, дер" <> ")"
+let orig2 = annotate (color Black) $ hsep (punctuate comma [orig21, orig22])
+
+let phraz21 = "Граф уже был в дуврском порту и готовился сесть на корабль, как вдруг на пристани появились двое братьев девицы Гамильтон."
+let phraz22 = "Увидев товарищей в беде, другие самолеты либо сядут и сразу заберут их со льдины, либо сбросят им на парашюте продукты, если посадка в этот момент будет невозможна. Увидев товарищей в беде, другие самолеты либо сядут и сразу заберут их со льдины, либо сбросят им на парашюте продукты, если посадка в этот момент будет невозможна. Увидев товарищей в беде, другие самолеты либо сядут и сразу заберут их со льдины, либо сбросят им на парашюте продукты, если посадка в этот момент будет невозможна."
+let phraz23 = "― Сядь, ― молвил Пилат и указал на кресло."
+let phraz2 = annotate (color Black) $ vsep [phraz21, phraz22, phraz23]
+
+let other2 = ["selo, (3J|0", "", tr2, "", orig2, "", phraz2]
+let text2 = vsep [wdl2, "      " <+> align (vsep other2)]
+
+text = vsep ["",text1,"",text2,""]
+
+
+
+
+
+ /село/ n. from Proto-Monster
+	selo, (3J|0
+	
+	hamlet from English (whereas a деревня is a hamlet)
+	village from English (technically, a village is a село)
+	rural areas from English (напри. вливание в развитие села — injections into rural areas)
+	
+	from Proto-Material **сило** (sit, дер), from Proto-Creation **зило** (sit, дер)
+	
+	Ну что это за село вообще!  
+
