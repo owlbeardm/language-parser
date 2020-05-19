@@ -1,12 +1,11 @@
 module Database.Translation where
 
-import           ClassyPrelude        hiding (id, on, groupBy)
+import           ClassyPrelude        hiding (groupBy, id, on, words)
 import           Control.Monad.Logger
 import           Database.Base
 import           Database.Entity
-import           Database.Word
-import           Database.Language
 import           Database.Esqueleto
+import           Database.Language
 
 type FullTranslation = (Translation, Database.Entity.Word, Language, Language, Maybe Database.Entity.Word)
 type WordTranslation = (Translation, Language, Maybe Database.Entity.Word)
@@ -51,7 +50,7 @@ getFullWordDescription words = do
 
 findWordsByTranslation :: (MonadIO m) => Text -> AppT m [Entity Database.Entity.Word]
 findWordsByTranslation translationText =
-      select $ 
+      select $
       from $ \(tr `InnerJoin` frWord `LeftOuterJoin` mToWord) -> do
         on (tr ^. TranslationToWordId ==. mToWord ?. WordId)
         on (tr ^. TranslationFromWordId ==. frWord ^. WordId)

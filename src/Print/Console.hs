@@ -1,6 +1,7 @@
 module Print.Console where
 
-import           ClassyPrelude                             hiding (words, (<>), keys, Word)
+import           ClassyPrelude                             hiding (Word, keys,
+                                                            words, (<>))
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Prettyprint.Doc.Render.Terminal
 import           Database.Base
@@ -57,7 +58,7 @@ cEvolveLangs langName1 langName2 = runSQLAction $ do
 
 
 tshowWord :: Word -> Text
-tshowWord = tshowPretty prettyWord 
+tshowWord = tshowPretty prettyWord
 
 tshowPretty :: (a -> Doc AnsiStyle) -> a -> Text
 tshowPretty prettS value = renderStrict . layoutPretty defaultLayoutOptions $ prettS value
@@ -72,18 +73,18 @@ prettyWordDescription (word, langs, trans) = vsep [
      where
           printLangList ls = annotate (color Black) (
                annotate italicized "from"
-               <+> hsep (punctuate comma (map (annotate bold . pretty . tshow) ls)))     
+               <+> hsep (punctuate comma (map (annotate bold . pretty . tshow) ls)))
 
-prettyWord :: Word -> Doc AnsiStyle           
-prettyWord word = 
-     "" 
+prettyWord :: Word -> Doc AnsiStyle
+prettyWord word =
+     ""
      <+> annotate (color Green) ( "/" <+> pretty (wordWord word) <+> "/")
      <+> annotate (color Black) (brackets $ annotate bold $ pretty (conShow $ wordPartOfSpeech word))
 
 prettyWT :: WordTranslation -> Doc AnsiStyle
-prettyWT (translation, toLang, mToWord) = 
+prettyWT (translation, toLang, mToWord) =
           annotate (color Blue) (case mToWord of
-               Just toWord -> pretty (wordWord toWord) 
+               Just toWord -> pretty (wordWord toWord)
                _ ->
                     case translationAltTranslation translation of
                          Just a -> pretty a
