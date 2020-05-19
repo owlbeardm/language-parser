@@ -13,6 +13,11 @@ findLangById i = select $ from $ \lang -> do
    where_ (lang ^. LanguageId ==. val (toSqlKey i))
    return lang
 
+findLangByKey :: (MonadIO m) => Key Language -> AppT m [Entity Language]
+findLangByKey k = select $ from $ \lang -> do
+   where_ (lang ^. LanguageId ==. val k)
+   return lang
+
 listLangs :: (MonadIO m) => AppT m [Entity Language]
 listLangs = select $ from $ \lang -> return lang
 

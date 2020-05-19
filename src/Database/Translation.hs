@@ -1,13 +1,16 @@
 module Database.Translation where
 
-import           ClassyPrelude        hiding (id, on)
+import           ClassyPrelude        hiding (id, on, groupBy)
 import           Control.Monad.Logger
 import           Database.Base
 import           Database.Entity
+import           Database.Word
+import           Database.Language
 import           Database.Esqueleto
 
 type FullTranslation = (Translation, Database.Entity.Word, Language, Language, Maybe Database.Entity.Word)
 type WordTranslation = (Translation, Language, Maybe Database.Entity.Word)
+type WordDescription = (Database.Entity.Word, [Language], [WordTranslation])
 
 translate :: WordText -> IO [FullTranslation]
 translate wtt =
@@ -35,6 +38,30 @@ translate wtt =
       , entityVal toLang
       , map entityVal mToWord)
 
+translateWord :: (MonadIO m) => Text -> AppT m [WordDescription]
+translateWord translationText = do
+  words <- findWordsByTranslation translationText
+  getFullWordDescription words
+
+getFullWordDescription :: (MonadIO m) => [Entity Database.Entity.Word] -> AppT m [WordDescription]
+getFullWordDescription words = do
+    translations <- mapM getWordTranslations words
+    langs <- mapM (findLangByKey . wordLangId . entityVal) words
+    return $ zip3 (map entityVal words) (map (map entityVal) langs) translations
+
+findWordsByTranslation :: (MonadIO m) => Text -> AppT m [Entity Database.Entity.Word]
+findWordsByTranslation translationText =
+      select $ 
+      from $ \(tr `InnerJoin` frWord `LeftOuterJoin` mToWord) -> do
+        on (tr ^. TranslationToWordId ==. mToWord ?. WordId)
+        on (tr ^. TranslationFromWordId ==. frWord ^. WordId)
+        where_
+          ((mToWord ?. WordWord ==. just (val translationText)) ||.
+           (tr ^. TranslationAltTranslation `like`
+            just (val (mconcat ["% ", translationText, " %"]))))
+        orderBy [asc (frWord ^. WordLangId), asc (frWord ^. WordWord)]
+        groupBy (frWord ^. WordId)
+        return frWord
 
 getWordTranslations :: (MonadIO m) => Entity Database.Entity.Word -> AppT m [WordTranslation]
 getWordTranslations enWord = do

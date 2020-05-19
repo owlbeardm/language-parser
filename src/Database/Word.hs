@@ -8,6 +8,11 @@ import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
 
+findWordById :: (MonadIO m) => Int64 -> AppT m [Entity Word]
+findWordById i = select $ from $ \word -> do
+   where_ (word ^. WordId ==. val (toSqlKey i))
+   return word
+
 addWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech -> Bool ->  AppT m (Key Word)
 addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten
 
@@ -31,6 +36,13 @@ addEvolvedWord textToAdd pos wfKey langToKey = do
 
 findWord :: (MonadIO m) => Entity Language -> WordText -> PartOfSpeech -> AppT m  (Maybe (Entity Word))
 findWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)
+
+findWordsByText :: (MonadIO m) => WordText-> AppT m  [Entity Word]
+findWordsByText text = 
+    select $ 
+    from $ \(word) -> do
+      where_ (word ^. WordWord ==. val text)
+      return word
 
 listWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
 listWordsByLang langName = select $ from $ \(word,lang) -> do
