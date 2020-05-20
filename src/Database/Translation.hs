@@ -6,10 +6,15 @@ import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
 import           Database.Language
+import           Database.Word
 
 type FullTranslation = (Translation, Database.Entity.Word, Language, Language, Maybe Database.Entity.Word)
 type WordTranslation = (Translation, Language, Maybe Database.Entity.Word)
-type WordDescription = (Database.Entity.Word, [Language], [WordTranslation])
+type WordAndLang = (Database.Entity.Word, Language)
+type WordSource = (WordAndLang, [WordTranslation])
+                  -- ([(Database.Entity.Word, Language)], [WordTranslation])
+type WordDescription = (Database.Entity.Word, [Language], [WordTranslation], [WordSource])
+                      --  (Database.Entity.Word, [Language], [WordTranslation], [])
 
 translate :: WordText -> IO [FullTranslation]
 translate wtt =
@@ -22,10 +27,9 @@ translate wtt =
         on (frWord ^. WordLangId ==. frLang ^. LanguageId)
         on (tr ^. TranslationFromWordId ==. frWord ^. WordId)
         where_
-          ((frWord ^. WordWord ==. val wtt) ||.
-           (mToWord ?. WordWord ==. just (val wtt)) ||.
-           (tr ^. TranslationAltTranslation `like`
-            just (val (mconcat ["% ", wtt, " %"]))))
+          ((frWord ^. WordWord ==. val wtt)
+           ||. (mToWord ?. WordWord ==. just (val wtt)) ||.
+           (tr ^. TranslationAltTranslation `like` just (val (mconcat ["% ", wtt, " %"]))))
         orderBy [asc (toLang ^. LanguageId), asc (frLang ^. LanguageId), asc (mToWord ?. WordWord), asc (tr ^. TranslationAltTranslation), asc (frWord ^. WordWord)]
         return (tr, frWord, frLang, toLang, mToWord)
     return $ map convert results
@@ -46,7 +50,18 @@ getFullWordDescription :: (MonadIO m) => [Entity Database.Entity.Word] -> AppT m
 getFullWordDescription words = do
     translations <- mapM getWordTranslations words
     langs <- mapM (findLangByKey . wordLangId . entityVal) words
-    return $ zip3 (map entityVal words) (map (map entityVal) langs) translations
+    origins <- mapM getAllWordOrigins words
+    shortTranslations <- (mapM . mapM) getWordTranslationsFromOrigins origins
+    return $ zip4 (map entityVal words) (map (map entityVal) langs) translations (zipOrigins origins shortTranslations)
+  where
+    removeEntityFromWordAndLang (entW, entLang) = (entityVal entW, entityVal entLang)
+    getWordTranslationsFromOrigins (entW, _) = getWordTranslations entW
+    makeOrigins = (map . map) removeEntityFromWordAndLang
+    tempZip origins = zip (makeOrigins origins)
+    makeZipInside (x, y) = zip x y
+    zipOrigins origins shortTranslations = map makeZipInside (tempZip origins shortTranslations)
+
+    
 
 findWordsByTranslation :: (MonadIO m) => Text -> AppT m [Entity Database.Entity.Word]
 findWordsByTranslation translationText =
@@ -55,9 +70,11 @@ findWordsByTranslation translationText =
         on (tr ^. TranslationToWordId ==. mToWord ?. WordId)
         on (tr ^. TranslationFromWordId ==. frWord ^. WordId)
         where_
-          ((mToWord ?. WordWord ==. just (val translationText)) ||.
-           (tr ^. TranslationAltTranslation `like`
-            just (val (mconcat ["% ", translationText, " %"]))))
+          ((mToWord ?. WordWord ==. just (val translationText))
+           ||. (tr ^. TranslationAltTranslation `like` just (val (mconcat ["% ", translationText, " %"])))
+           ||. (tr ^. TranslationAltTranslation `like` just (val (mconcat [translationText, " %"])))
+           ||. (tr ^. TranslationAltTranslation `like` just (val (mconcat ["% ", translationText])))
+           )
         orderBy [asc (frWord ^. WordLangId), asc (frWord ^. WordWord)]
         groupBy (frWord ^. WordId)
         return frWord

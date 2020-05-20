@@ -64,16 +64,39 @@ tshowPretty :: (a -> Doc AnsiStyle) -> a -> Text
 tshowPretty prettS value = renderStrict . layoutPretty defaultLayoutOptions $ prettS value
 
 prettyWordDescription :: WordDescription -> Doc AnsiStyle
-prettyWordDescription (word, langs, trans) = vsep [
+prettyWordDescription (word, langs, trans, wordAndLangsOrigins) = vsep [
                "",
                prettyWord word <+> printLangList langs,
-               "",
-               "       " <+> align (vsep (map prettyWT trans)),
+               if null trans then mempty else vsep ["", "       " <+> align (vsep (map prettyWT trans))],
+               if null wordAndLangsOrigins 
+                    then mempty 
+                    else annotate (color Black) $ vsep ["", "       " <+> align (hsep (punctuate semi (map prettyWordSource wordAndLangsOrigins)))],
                ""]
      where
           printLangList ls = annotate (color Black) (
                annotate italicized "from"
                <+> hsep (punctuate comma (map (annotate bold . pretty . tshow) ls)))
+
+prettyShortTranslation :: WordTranslation -> Doc AnsiStyle
+prettyShortTranslation (translation, _, mWord) = annotate (colorDull Blue) (
+     case mWord of
+          Just word -> pretty (wordWord word)
+          _ -> case translationAltTranslation translation of
+               Just alt -> pretty alt
+               _ -> mempty)
+
+prettyWordSource :: WordSource -> Doc AnsiStyle
+prettyWordSource (wordAndLang, translations) = 
+     prettyWordAndLang wordAndLang
+     <+> if null translations
+          then mempty
+          else (parens . hsep . punctuate comma . map prettyShortTranslation) translations
+
+prettyWordAndLang :: WordAndLang -> Doc AnsiStyle
+prettyWordAndLang (word, lang) = annotate (color Black) (
+     annotate italicized "from"
+     <+> annotate bold (pretty (tshow lang))
+     <+> annotate (colorDull Green) ( "/" <+> pretty (wordWord word) <+> "/"))
 
 prettyWord :: Word -> Doc AnsiStyle
 prettyWord word =

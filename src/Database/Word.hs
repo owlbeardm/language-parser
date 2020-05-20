@@ -38,8 +38,8 @@ findWord :: (MonadIO m) => Entity Language -> WordText -> PartOfSpeech -> AppT m
 findWord eLang word pos = getBy $ WordWordPosLangIdUnq word pos (entityKey eLang)
 
 findWordsByText :: (MonadIO m) => WordText-> AppT m  [Entity Word]
-findWordsByText text = 
-    select $ 
+findWordsByText text =
+    select $
     from $ \(word) -> do
       where_ (word ^. WordWord ==. val text)
       return word
@@ -71,7 +71,7 @@ listEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
       return word
 
 listEvolvedWordsToKeysByWordFromAndTo :: (MonadIO m) => Entity Word -> LanguageName -> AppT m [Entity Word]
-listEvolvedWordsToKeysByWordFromAndTo wordFrom langNameTo = 
+listEvolvedWordsToKeysByWordFromAndTo wordFrom langNameTo =
    select $
    from $ \(wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
       on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
@@ -80,7 +80,7 @@ listEvolvedWordsToKeysByWordFromAndTo wordFrom langNameTo =
       on (val (entityKey wordFrom) ==. wordOrgFrom ^. WordOriginFromWordFromId)
       where_ (langTo ^. LanguageLname ==. val langNameTo)
       groupBy (wordTo ^. WordId)
-      return (wordTo)
+      return wordTo
 
 deleteEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m ()
 deleteEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
@@ -94,6 +94,31 @@ deleteEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
       where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
               langTo ^. LanguageLname !=. val langNameTo)
 
+getAllWordOrigins :: (MonadIO m) => Entity Word -> AppT m [(Entity Word, Entity Language)]
+getAllWordOrigins word = do
+  mOrigin <- getWordOrigin word
+  case mOrigin of
+    (Just origin) -> do
+      wordsAndLangs <- getWordFromWordLang origin
+      otherWordsAndLangs <- mapM getOthersWordLangs wordsAndLangs
+      return $ mconcat [wordsAndLangs, mconcat otherWordsAndLangs]
+    _             -> 
+      return []
+  where 
+    getOthersWordLangs (eWord, _) = getAllWordOrigins eWord
+
+
+getWordOrigin :: (MonadIO m) => Entity Word ->  AppT m (Maybe (Entity WordOrigin))
+getWordOrigin word = getBy $ EvolveLawWordIdUnq (entityKey word)
+
+getWordFromWordLang :: (MonadIO m) => Entity WordOrigin -> AppT m [(Entity Word, Entity Language)]
+getWordFromWordLang wordOrigin =
+  select $
+  from $ \(wordOriginFrom `InnerJoin` word `InnerJoin` lang) -> do
+    on (lang ^. LanguageId ==. word ^. WordLangId)
+    on (word ^. WordId ==. wordOriginFrom ^. WordOriginFromWordFromId)
+    where_ (wordOriginFrom ^. WordOriginFromOriginId ==. val (entityKey wordOrigin))
+    return (word, lang)
 
 -- ???
 -- insertWord :: (MonadIO m, MonadLogger m) =>
