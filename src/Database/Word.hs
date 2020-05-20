@@ -50,9 +50,16 @@ listWordsByLang langName = select $ from $ \(word,lang) -> do
               lang ^. LanguageLname ==. val langName )
       return word
 
+listNotForgottenWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
+listNotForgottenWordsByLang langName = select $ from $ \(word,lang) -> do
+      where_ (word ^. WordLangId ==. lang ^. LanguageId &&.
+              word ^. WordForgotten ==. val True &&.
+              lang ^. LanguageLname ==. val langName )
+      return word
+
 listNotEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity Word]
 listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo = do
-  wordsAll <- listWordsByLang langNameFrom
+  wordsAll <- listNotForgottenWordsByLang langNameFrom
   wordsEvolved <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
   return $ wordsAll \\ wordsEvolved
 
