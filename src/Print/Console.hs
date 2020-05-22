@@ -57,6 +57,17 @@ cEvolveLangs langName1 langName2 = runSQLAction $ do
      print $ length keys
 
 
+
+cReEvolveLangs :: LanguageName -> LanguageName -> IO ()
+cReEvolveLangs langName1 langName2 = runSQLAction $ do
+     keys <- reEvolveLang langName1 langName2
+     case keys of
+          Just ks -> do
+                mapM_ (putStrLn . tshow) ks
+                putStr "\n\tTotal: "
+                print $ length ks
+          _ -> putStrLn "Nothing"
+
 tshowWord :: Word -> Text
 tshowWord = tshowPretty prettyWord
 

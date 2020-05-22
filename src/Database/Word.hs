@@ -53,7 +53,7 @@ listWordsByLang langName = select $ from $ \(word,lang) -> do
 listNotForgottenWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
 listNotForgottenWordsByLang langName = select $ from $ \(word,lang) -> do
       where_ (word ^. WordLangId ==. lang ^. LanguageId &&.
-              word ^. WordForgotten ==. val True &&.
+              word ^. WordForgotten ==. val False &&.
               lang ^. LanguageLname ==. val langName )
       return word
 
@@ -126,6 +126,17 @@ getWordFromWordLang wordOrigin =
     on (word ^. WordId ==. wordOriginFrom ^. WordOriginFromWordFromId)
     where_ (wordOriginFrom ^. WordOriginFromOriginId ==. val (entityKey wordOrigin))
     return (word, lang)
+
+getEvolvedWord :: (MonadIO m) => LanguageName -> Entity Word -> AppT m [Entity Word]
+getEvolvedWord langNameTo wordFrom = 
+  select $
+  from $ \(wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
+    on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
+    on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
+    on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
+    where_ (langTo ^. LanguageLname ==. val langNameTo &&.
+            val (entityKey wordFrom) ==. wordOrgFrom ^. WordOriginFromWordFromId)
+    return wordTo
 
 -- ???
 -- insertWord :: (MonadIO m, MonadLogger m) =>

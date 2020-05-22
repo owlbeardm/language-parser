@@ -71,28 +71,26 @@ evolveLang langNameFrom langNameTo
             keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (entityKey langTo)) words
             return $ Just keys
 
--- reEvolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Int64])
--- reEvolveLang langNameFrom langNameTo
---    | langNameFrom == langNameTo
---       = return Nothing
---    | otherwise
---       = do
---          evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
---          words <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
---          wordsToUpdate <- listEvolvedWordsToKeysByWordFromAndTo
---          result <- mapM updateWord $ makeWordsWithNewText words evolveLaws
---          return (Just result)
---    where
---       makeWordsWithNewText words evolveLaws = zip words $ makeNewText evolveLaws words
---       makeNewText evolveLaws = map (\x -> evolveWordText (wordWord (entityVal x)) (map entityVal evolveLaws))
+reEvolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Int64])
+reEvolveLang langNameFrom langNameTo
+   | langNameFrom == langNameTo
+      = return Nothing
+   | otherwise
+      = do
+         evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
+         words <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
+         -- TODO: what to do, if it gets multiple results?
+         wordsToUpdate <- mapM (getEvolvedWord langNameTo) words
+         result <- mapM updateWord $ makeWordsWithNewText (mconcat wordsToUpdate) words evolveLaws
+         return (Just result)
+   where
+      makeWordsWithNewText words wordFrom evolveLaws = zip words $ makeNewText evolveLaws wordFrom
+      makeNewText evolveLaws = map (\x -> evolveWordText (wordWord (entityVal x)) (map entityVal evolveLaws))
 
--- updateWord :: (MonadIO m) => (Entity Word, Text) -> LanguageName -> AppT m Int64
--- updateWord (enWord, text) langNameTo =
---    updateCount $
---    \(wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
---      on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
---      on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
---      on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
---      on (val (entityKey enWord) ==. wordOrgFrom ^. WordOriginFromWordFromId)
---      set wordTo [ WordWord =. val text ]
---      where_ (langTo ^. LanguageLname ==. val langNameTo)
+updateWord :: (MonadIO m) => (Entity Word, Text) -> AppT m Int64
+updateWord (enWord, text) =
+   updateCount $
+   \word -> do
+     set word [ WordWord =. val text ]
+     where_ (val (entityKey enWord) ==. word ^. WordId &&.
+             val text !=. word ^. WordWord)
