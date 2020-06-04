@@ -48,6 +48,7 @@ listWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
 listWordsByLang langName = select $ from $ \(word,lang) -> do
       where_ (word ^. WordLangId ==. lang ^. LanguageId &&.
               lang ^. LanguageLname ==. val langName )
+      orderBy [asc (word ^. WordLangId), asc (word ^. WordWord)]
       return word
 
 listNotForgottenWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
