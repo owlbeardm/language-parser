@@ -51,22 +51,34 @@ printEvolveLaws langName1 langName2 = runSQLAction $ do
 
 cEvolveLangs :: LanguageName -> LanguageName -> IO ()
 cEvolveLangs langName1 langName2 = runSQLAction $ do
-     keys <- evolveLang langName1 langName2
-     liftIO $ mapM_ (putStrLn . tshow) keys
+     size <- evolveLang langName1 langName2
      putStr "\n\tTotal: "
-     print $ length keys
+     mapM_ (putStrLn . tshowPretty prettyEvolveResult) size
+     putStr "\n"
 
+cEvolveAllLangWithAll :: IO ()
+cEvolveAllLangWithAll = runSQLAction $ do
+     sizes <- evolveAllLangWithAll
+     liftIO $ mapM_ (putStrLn . tshowPretty prettyEvolveResult) sizes
+     putStr "\n"
 
 
 cReEvolveLangs :: LanguageName -> LanguageName -> IO ()
 cReEvolveLangs langName1 langName2 = runSQLAction $ do
-     keys <- reEvolveLang langName1 langName2
-     case keys of
-          Just ks -> do
-                mapM_ (putStrLn . tshow) ks
-                putStr "\n\tTotal: "
-                print $ length ks
-          _ -> putStrLn "Nothing"
+     size <- reEvolveLang langName1 langName2
+     liftIO $ mapM_ (putStrLn . tshowPretty prettyEvolveResult) size
+     putStr "\n"
+
+prettyEvolveResult :: (Int, LanguageName, LanguageName) -> Doc AnsiStyle
+prettyEvolveResult (result, langFrom, langTo) =
+     annotate (color Black) "evolved"
+     <+> pretty (tshow result)
+     <+> annotate (color Black) (
+          "from"
+          <+> annotate bold (pretty (tshow langFrom))
+          <+> "to"
+          <+> annotate bold (pretty (tshow langTo))
+     )
 
 tshowWord :: Word -> Text
 tshowWord = tshowPretty prettyWord
@@ -79,8 +91,8 @@ prettyWordDescription (word, langs, trans, wordAndLangsOrigins) = vsep [
                "",
                prettyWord word <+> printLangList langs,
                if null trans then mempty else vsep ["", "       " <+> align (vsep (map prettyWT trans))],
-               if null wordAndLangsOrigins 
-                    then mempty 
+               if null wordAndLangsOrigins
+                    then mempty
                     else annotate (color Black) $ vsep ["", "       " <+> align (hsep (punctuate semi (map prettyWordSource wordAndLangsOrigins)))],
                ""]
      where
@@ -94,10 +106,10 @@ prettyShortTranslation (translation, _, mWord) = annotate (colorDull Blue) (
           Just word -> pretty (wordWord word)
           _ -> case translationAltTranslation translation of
                Just alt -> pretty alt
-               _ -> mempty)
+               _        -> mempty)
 
 prettyWordSource :: WordSource -> Doc AnsiStyle
-prettyWordSource (wordAndLang, translations) = 
+prettyWordSource (wordAndLang, translations) =
      prettyWordAndLang wordAndLang
      <+> if null translations
           then mempty

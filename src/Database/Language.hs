@@ -1,6 +1,7 @@
 module Database.Language where
 
 import           ClassyPrelude      hiding (Word, keys, on, words)
+import           Control.Monad      (zipWithM)
 import qualified Data.Text          as T
 import           Database.Base
 import           Database.Entity
@@ -56,7 +57,7 @@ evolvedWord laws eWordFrom = insertEvolvedWord evolvedText ((wordPartOfSpeech . 
    where
       evolvedText = evolveWordText ((wordWord . entityVal) eWordFrom) laws
 
-evolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Key Word])
+evolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))
 evolveLang langNameFrom langNameTo
    | langNameFrom == langNameTo
       = return Nothing
@@ -68,10 +69,13 @@ evolveLang langNameFrom langNameTo
          (Just langTo) -> do
             words <- listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo
             evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
-            keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (entityKey langTo)) words
-            return $ Just keys
+            if null evolveLaws
+               then return Nothing
+               else (do
+                  keys <- mapM (\x -> evolvedWord (map entityVal evolveLaws) x (entityKey langTo)) words
+                  return $ Just (length keys, langNameFrom, langNameTo))
 
-reEvolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Int64])
+reEvolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))
 reEvolveLang langNameFrom langNameTo
    | langNameFrom == langNameTo
       = return Nothing
@@ -79,11 +83,10 @@ reEvolveLang langNameFrom langNameTo
       = do
          evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
          words <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
-         -- TODO: what to do, if it gets multiple results?
          wordsToUpdate <- mapM (getEvolvedWord langNameTo) words
          let wordsTupels = (unzip . mconcat) $ zipWordsWordsTo words wordsToUpdate
          result <- mapM updateWord $ uncurry makeWordsWithNewText wordsTupels evolveLaws
-         return (Just result)
+         return $ Just ((sum . map fromIntegral) result, langNameFrom, langNameTo)
    where
       zipWordsWordsTo = zipWith (curry cycleWords)
       cycleWords (word, wordsTo) = zip (repeat word) wordsTo
@@ -97,3 +100,18 @@ updateWord (enWord, text) =
      set word [ WordWord =. val text ]
      where_ (val (entityKey enWord) ==. word ^. WordId &&.
              val text !=. word ^. WordWord)
+
+-- evolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Key Word])
+-- evolveLang langNameFrom langNameTo
+
+evolveLangWithAll :: (MonadIO m) => LanguageName -> [LanguageName] -> AppT m [(Int, LanguageName, LanguageName)]
+evolveLangWithAll lang langs = do
+   keys <- mapM (evolveLang lang) langs
+   return $ catMaybes keys
+
+evolveAllLangWithAll :: (MonadIO m) => AppT m [(Int, LanguageName, LanguageName)]
+evolveAllLangWithAll = do
+   langs <- listLangs
+   let langNames = map (languageLname . entityVal) langs
+   result <- zipWithM evolveLangWithAll langNames (repeat langNames)
+   return $ mconcat result

@@ -1,7 +1,7 @@
 module Print.File where
 
 import           ClassyPrelude                             hiding (Word, keys,
-                                                            words, (<>))
+                                                            lines, words, (<>))
 import           Control.Monad                             (liftM2)
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Prettyprint.Doc.Render.Terminal
@@ -9,7 +9,6 @@ import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
 import           Database.Language
-import           Database.Translation
 import           Database.Word
 
 printLangsGML :: IO ()
