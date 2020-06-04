@@ -81,10 +81,13 @@ reEvolveLang langNameFrom langNameTo
          words <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
          -- TODO: what to do, if it gets multiple results?
          wordsToUpdate <- mapM (getEvolvedWord langNameTo) words
-         result <- mapM updateWord $ makeWordsWithNewText (mconcat wordsToUpdate) words evolveLaws
+         let wordsTupels = (unzip . mconcat) $ zipWordsWordsTo words wordsToUpdate
+         result <- mapM updateWord $ uncurry makeWordsWithNewText wordsTupels evolveLaws
          return (Just result)
    where
-      makeWordsWithNewText words wordFrom evolveLaws = zip words $ makeNewText evolveLaws wordFrom
+      zipWordsWordsTo = zipWith (curry cycleWords)
+      cycleWords (word, wordsTo) = zip (repeat word) wordsTo
+      makeWordsWithNewText wordFrom words evolveLaws = zip words $ makeNewText evolveLaws wordFrom
       makeNewText evolveLaws = map (\x -> evolveWordText (wordWord (entityVal x)) (map entityVal evolveLaws))
 
 updateWord :: (MonadIO m) => (Entity Word, Text) -> AppT m Int64
