@@ -5,8 +5,9 @@ module Database.Base where
 -- import           Control.Monad.Logger         (NoLoggingT, logErrorN,
 --                                                logErrorNS, runNoLoggingT,
 --                                                runStderrLoggingT)
+-- import           Control.Monad.Logger         (LoggingT, runStderrLoggingT)
 import           ClassyPrelude
-import           Control.Monad.Logger         (LoggingT, runStderrLoggingT)
+import           Control.Monad.Logger         (NoLoggingT, runNoLoggingT)
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import           Database.Esqueleto
 import           Database.Persist.Postgresql  (ConnectionString,
@@ -56,6 +57,8 @@ derivePersistField "PartOfSpeech"
 connStr :: ConnectionString
 connStr = "host=172.19.7.103 dbname=wiki user=wiki password=wiki port=5432"
 
-runSQLAction :: SqlPersistT (ResourceT (LoggingT IO)) a -> IO a
+runSQLAction :: SqlPersistT (ResourceT (NoLoggingT IO)) a -> IO a
 runSQLAction =
-  runStderrLoggingT . runResourceT . withPostgresqlConn connStr . runSqlConn
+  runNoLoggingT . runResourceT . withPostgresqlConn connStr . runSqlConn
+
+
