@@ -51,6 +51,14 @@ listWordsByLang langName = select $ from $ \(word,lang) -> do
       orderBy [asc (word ^. WordLangId), asc (word ^. WordWord)]
       return word
 
+listWordsByLangAndSound :: (MonadIO m) => LanguageName -> Text -> AppT m [Entity Word]
+listWordsByLangAndSound langName sound = select $ from $ \(word,lang) -> do
+      where_ (word ^. WordLangId ==. lang ^. LanguageId &&.
+              lang ^. LanguageLname ==. val langName &&.
+              (word ^. WordWord `like` val (mconcat ["%", sound, "%"])))
+      orderBy [asc (word ^. WordLangId), asc (word ^. WordWord)]
+      return word
+
 listNotForgottenWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
 listNotForgottenWordsByLang langName = select $ from $ \(word,lang) -> do
       where_ (word ^. WordLangId ==. lang ^. LanguageId &&.
@@ -139,29 +147,16 @@ getEvolvedWord langNameTo wordFrom =
             val (entityKey wordFrom) ==. wordOrgFrom ^. WordOriginFromWordFromId)
     return wordTo
 
--- ???
--- insertWord :: (MonadIO m, MonadLogger m) =>
---      WordText
---   -> PartOfSpeech
---   -> LanguageName
---   -> LanguageName
---   -> AppT m (Maybe (Key Word))
--- insertWord wordText posWord fromLang toLang = do
---     mLangFrom <- getLang fromLang
---     mLangTo <- getLang toLang
---     case (mLangFrom, mLangTo) of
---       (Nothing, _) ->  do
---         logErrorNS "addTranslationFromTo" "There is no such lang from in the database"
---         return Nothing
---       (_, Nothing) ->  do
---         logErrorNS "addTranslationFromTo" "There is no such lang to in the database"
---         return Nothing
---       (Just langFrom, Just langTo) -> do
---         mWord <- getBy $ WordWordPosLangIdUnq wordText posWord (entityKey langFrom)
---         case mWord of
---           Nothing -> do
---             logErrorNS "addTranslationFromTo" "There is no such lang from in the database"
---             return Nothing
---           Just word -> insertUnique $ Word ((wordWord . entityVal) word) (entityKey langTo) ((wordPartOfSpeech . entityVal) word) False
---   where
---     getLang = getBy . LanguageNameUnq
+listWordsSoundsFromLang :: (MonadIO m) => LanguageName -> AppT m Text
+listWordsSoundsFromLang langName = do
+  wrds <- listWordsByLang langName
+  return $ getWordsSounds wrds
+
+getWordsSounds :: [Entity Word] -> Text
+getWordsSounds = pack . remove . unpack . sort . mconcat . map (wordWord . entityVal)
+  where 
+    remove []  = []
+    remove [x] = [x]
+    remove (x1:x2:xs)
+      | x1 == x2  = remove (x1:xs)
+      | otherwise = x1 : remove (x2:xs)

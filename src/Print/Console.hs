@@ -24,6 +24,19 @@ printWordsFrom langName = runSQLAction $ do
      putStr "\n\tTotal: "
      print $ length words
 
+printWordsFromBySound :: LanguageName -> Text -> IO ()
+printWordsFromBySound langName sound = runSQLAction $ do
+     words <- listWordsByLangAndSound langName sound
+     fullDescr <- getFullWordDescription words
+     liftIO $ mapM_ (putStrLn . tshowPretty prettyWordDescription) fullDescr
+     putStr "\n\tTotal: "
+     print $ length words
+
+printWordsSoundsFromLang :: LanguageName -> IO ()
+printWordsSoundsFromLang langName = runSQLAction $ do
+     sounds <- listWordsSoundsFromLang langName
+     putStrLn sounds
+
 printLookupWord :: Text -> IO ()
 printLookupWord text = runSQLAction $ do
      words <- findWordsByText text
