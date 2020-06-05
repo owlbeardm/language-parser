@@ -16,8 +16,8 @@ findWordById i = select $ from $ \word -> do
 addWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech -> Bool ->  AppT m (Key Word)
 addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten
 
-addWordByLangName :: (MonadIO m, MonadLogger m) => LanguageName -> WordText -> PartOfSpeech ->  AppT m (Maybe (Key Word))
-addWordByLangName langName word pos  = do
+addWordByLangName :: (MonadIO m, MonadLogger m) =>  WordText -> PartOfSpeech -> LanguageName ->  AppT m (Maybe (Key Word))
+addWordByLangName  word pos langName = do
   lang <- findLangByName langName
   case lang of
     Nothing -> do
