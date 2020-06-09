@@ -118,9 +118,9 @@ getAllWordOrigins word = do
       wordsAndLangs <- getWordFromWordLang origin
       otherWordsAndLangs <- mapM getOthersWordLangs wordsAndLangs
       return $ mconcat [wordsAndLangs, mconcat otherWordsAndLangs]
-    _             -> 
+    _             ->
       return []
-  where 
+  where
     getOthersWordLangs (eWord, _) = getAllWordOrigins eWord
 
 
@@ -137,7 +137,7 @@ getWordFromWordLang wordOrigin =
     return (word, lang)
 
 getEvolvedWord :: (MonadIO m) => LanguageName -> Entity Word -> AppT m [Entity Word]
-getEvolvedWord langNameTo wordFrom = 
+getEvolvedWord langNameTo wordFrom =
   select $
   from $ \(wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
     on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
