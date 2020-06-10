@@ -34,8 +34,13 @@ printWordsFromBySound langName sound = runSQLAction $ do
 
 printWordsSoundsFromLang :: LanguageName -> IO ()
 printWordsSoundsFromLang langName = runSQLAction $ do
-     sounds <- listWordsSoundsFromLang langName
+     sounds <- listWordsInfo langName getWordsSounds
      putStrLn sounds
+
+printWordsConstClusters :: LanguageName -> IO ()
+printWordsConstClusters langName = runSQLAction $ do
+     clstr <- listWordsInfo langName getWordsConstClusters
+     mapM_ putStrLn clstr
 
 printLookupWord :: Text -> IO ()
 printLookupWord text = runSQLAction $ do

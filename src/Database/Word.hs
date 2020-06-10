@@ -7,6 +7,7 @@ import           Data.List            ((\\))
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
+import           Language.Sounds
 
 findWordById :: (MonadIO m) => Int64 -> AppT m [Entity Word]
 findWordById i = select $ from $ \word -> do
@@ -147,10 +148,10 @@ getEvolvedWord langNameTo wordFrom =
             val (entityKey wordFrom) ==. wordOrgFrom ^. WordOriginFromWordFromId)
     return wordTo
 
-listWordsSoundsFromLang :: (MonadIO m) => LanguageName -> AppT m Text
-listWordsSoundsFromLang langName = do
+listWordsInfo :: (MonadIO m) => LanguageName -> ([Entity Word] -> a) -> AppT m a
+listWordsInfo langName infoGetter = do
   wrds <- listWordsByLang langName
-  return $ getWordsSounds wrds
+  return $ infoGetter wrds
 
 getWordsSounds :: [Entity Word] -> Text
 getWordsSounds = pack . remove . unpack . sort . mconcat . map (wordWord . entityVal)
@@ -160,3 +161,6 @@ getWordsSounds = pack . remove . unpack . sort . mconcat . map (wordWord . entit
     remove (x1:x2:xs)
       | x1 == x2  = remove (x1:xs)
       | otherwise = x1 : remove (x2:xs)
+
+getWordsConstClusters :: [Entity Word] -> [Text]
+getWordsConstClusters = getConsonantClusters . map (wordWord . entityVal)
