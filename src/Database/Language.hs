@@ -38,6 +38,7 @@ listEvolveLawsByLangs langNameFrom langNameTo = select $ from $ \(evolveLaw,lang
               langFrom ^. LanguageLname ==. val langNameFrom &&.
               evolveLaw ^. EvolveLawLangToId ==. langTo ^. LanguageId &&.
               langTo ^. LanguageLname ==. val langNameTo)
+      orderBy [asc (evolveLaw ^. EvolveLawId)]
               --order by prior
       return evolveLaw
 

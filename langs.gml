@@ -2,54 +2,40 @@ graph
 [
    node
    [
-      id 1
-      label "ProtoMaterial"
+      id 9820
+      label "Titan"
    ]
    node
    [
-      id 2
-      label "ProtoMonster"
+      id 9830
+      label "English"
    ]
    node
    [
-      id 3
+      id 17620
       label "ProtoDragon"
    ]
    node
    [
-      id 4
-      label "Dragon"
+      id 27510
+      label "SlaveRunic"
    ]
    node
    [
-      id 5
-      label "English"
+      id 27520
+      label "OldRunic"
    ]
 
+
 edge
 [
-   source 1
-   target 2
+   source 9820
+   target 17620
 ]
 edge
 [
-   source 1
-   target 3
-]
-
-
-
-
-
-
-
-
-
-
-edge
-[
-   source 3
-   target 4
+   source 9820
+   target 27510
 ]
 
 
@@ -57,6 +43,20 @@ edge
 
 
 
+
+
+
+
+
+
+
+
+
+edge
+[
+   source 27510
+   target 27520
+]
 
 
 
