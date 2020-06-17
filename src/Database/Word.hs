@@ -163,4 +163,7 @@ getWordsSounds = pack . remove . unpack . sort . mconcat . map (wordWord . entit
       | otherwise = x1 : remove (x2:xs)
 
 getWordsConstClusters :: [Entity Word] -> [Text]
-getWordsConstClusters = getConsonantClusters . map (wordWord . entityVal)
+getWordsConstClusters = getConsonantClustersFiltered id . map (wordWord . entityVal)
+
+getWordsConstStartingClusters :: [Entity Word] -> [Text]
+getWordsConstStartingClusters = getConsonantClustersFiltered firstOne . map (wordWord . entityVal)

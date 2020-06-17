@@ -42,6 +42,11 @@ printWordsConstClusters langName = runSQLAction $ do
      clstr <- listWordsInfo langName getWordsConstClusters
      mapM_ putStrLn clstr
 
+printWordsConstStartingClusters :: LanguageName -> IO ()
+printWordsConstStartingClusters langName = runSQLAction $ do
+     clstr <- listWordsInfo langName getWordsConstStartingClusters
+     mapM_ putStrLn clstr
+
 printLookupWord :: Text -> IO ()
 printLookupWord text = runSQLAction $ do
      words <- findWordsByText text
