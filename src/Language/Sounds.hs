@@ -5,7 +5,7 @@ import           ClassyPrelude
 import qualified          Data.Text      as T
 
 vovels :: Text
-vovels = "iyɨʉɯuɪʏɪ̈ʊ̈ʊeøɘɵɤoəɛœɜɞʌɔæɐaɶäɒ̈ɑɒūúāáīíḗ"
+vovels = "iyɨʉɯuɪʏɪ̈ʊ̈ʊeøɘɵɤoəɛœɜɞʌɔæɐaɶäɒ̈ɑɒūúāáīíḗee̯"
 
 
 isVowel :: Char -> Bool
@@ -14,8 +14,8 @@ isVowel v = isJust $ T.findIndex (== v) vovels
 splitOnAnyOf :: [Text] -> Text -> [Text]
 splitOnAnyOf ds xs = foldl' (\ys d -> ys >>= T.splitOn d) [xs] ds
 
-getConsonantClustersFiltered :: ([Text] -> [Text]) -> [Text] -> [Text]
-getConsonantClustersFiltered fltr = remove . sortBy clSort . mconcat . map (fltr . splitOnAnyOf (T.group vovels))
+getConsonantClustersFiltered :: (Text -> [Text] -> [Text]) -> [Text] -> [Text]
+getConsonantClustersFiltered fltr = remove . sortBy clSort . mconcat . map (splitAndFilterWord fltr)
   where 
     remove []  = []
     remove [x] = [x]
@@ -26,29 +26,19 @@ getConsonantClustersFiltered fltr = remove . sortBy clSort . mconcat . map (fltr
       | length a > length b = GT
       | length a < length b = LT
       | otherwise = compare a b
+    splitAndFilterWord f w = (f w . splitOnAnyOf (T.group vovels)) w
 
-firstOne :: [Text] -> [Text]
-firstOne lst = [(head . impureNonNull) lst | (not . null) lst]
+filterFirstCluster :: Text -> [Text] -> [Text]
+filterFirstCluster wrd lst 
+  | null wrd = []
+  | take 1 wrd `isInfixOf` vovels = []
+  | otherwise = [(head . impureNonNull) lst | (not . null) lst]
 
--- getSpecConsonantClusters :: ([Text] -> a Text) -> [Text] -> [a Text]
--- getSpecConsonantClusters filterClust = remove . sortBy clSort . filterClust . map (splitOnAnyOf (T.group vovels))
---   where 
---     remove []  = []
---     remove [x] = [x]
---     remove (x1:x2:xs)
---       | x1 == x2  = remove (x1:xs)
---       | otherwise = x1 : remove (x2:xs)
---     clSort a b
---       | length a > length b = GT
---       | length a < length b = LT
---       | otherwise = compare a b
+filterLastCluster :: Text -> [Text] -> [Text]
+filterLastCluster wrd lst 
+  | null wrd = []
+  | T.takeEnd 1 wrd `isInfixOf` vovels = []
+  | otherwise = [(head . impureNonNull . reverse) lst | (not . null) lst]
 
--- head' :: [a] -> Maybe a
--- head' []     = Nothing
--- head' (x:xs) = Just x
-
-
--- Ordering = LT | EQ | GT
-
-
-
+filterAllClusters :: Text -> [Text] -> [Text]
+filterAllClusters _ lst  = lst
