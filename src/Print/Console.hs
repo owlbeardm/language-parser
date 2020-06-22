@@ -85,8 +85,14 @@ cEvolveLangs langName1 langName2 = runSQLAction $ do
      putStr "\n"
 
 cEvolveAllLangWithAll :: IO ()
-cEvolveAllLangWithAll = runSQLAction $ do
-     sizes <- evolveAllLangWithAll
+cEvolveAllLangWithAll = runSQLAction $ cdoAllLangWithAll evolveLang 
+
+cReEvolveAllLangWithAll :: IO ()
+cReEvolveAllLangWithAll = runSQLAction $ cdoAllLangWithAll reEvolveLang 
+
+cdoAllLangWithAll :: (MonadIO m) => (LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))) -> ReaderT SqlBackend m ()
+cdoAllLangWithAll doLang = do
+     sizes <- doAllLangWithAll doLang
      liftIO $ mapM_ (putStrLn . tshowPretty prettyEvolveResult) sizes
      putStr "\n"
 

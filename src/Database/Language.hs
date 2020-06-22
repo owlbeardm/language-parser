@@ -105,14 +105,22 @@ updateWord (enWord, text) =
 -- evolveLang :: (MonadIO m) => LanguageName -> LanguageName -> AppT m (Maybe [Key Word])
 -- evolveLang langNameFrom langNameTo
 
-evolveLangWithAll :: (MonadIO m) => LanguageName -> [LanguageName] -> AppT m [(Int, LanguageName, LanguageName)]
-evolveLangWithAll lang langs = do
-   keys <- mapM (evolveLang lang) langs
+-- reEvolveLang :: (MonadIO m) =>
+
+doLangWithAll :: (MonadIO m) => (LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))) -> LanguageName -> [LanguageName] -> AppT m [(Int, LanguageName, LanguageName)]
+doLangWithAll doLang lang langs  = do
+   keys <- mapM (doLang lang) langs
    return $ catMaybes keys
 
-evolveAllLangWithAll :: (MonadIO m) => AppT m [(Int, LanguageName, LanguageName)]
-evolveAllLangWithAll = do
+doAllLangWithAll :: (MonadIO m) => (LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))) -> AppT m [(Int, LanguageName, LanguageName)]
+doAllLangWithAll doLang = do
    langs <- listLangs
    let langNames = map (languageLname . entityVal) langs
-   result <- zipWithM evolveLangWithAll langNames (repeat langNames)
+   result <- zipWithM (doLangWithAll doLang) langNames (repeat langNames)
    return $ mconcat result
+
+evolveAllLangWithAll :: (MonadIO m) => AppT m [(Int, LanguageName, LanguageName)]
+evolveAllLangWithAll = doAllLangWithAll evolveLang
+
+reEvolveAllLangWithAll :: (MonadIO m) => AppT m [(Int, LanguageName, LanguageName)]
+reEvolveAllLangWithAll = doAllLangWithAll reEvolveLang
