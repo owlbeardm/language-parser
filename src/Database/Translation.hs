@@ -13,7 +13,7 @@ type WordTranslation = (Translation, Language, Maybe Database.Entity.Word)
 type WordAndLang = (Database.Entity.Word, Language)
 type WordSource = (WordAndLang, [WordTranslation])
                   -- ([(Database.Entity.Word, Language)], [WordTranslation])
-type WordDescription = (Database.Entity.Word, [Language], [WordTranslation], [WordSource])
+type WordDescription = (Entity Database.Entity.Word, [Language], [WordTranslation], [WordSource])
                       --  (Database.Entity.Word, [Language], [WordTranslation], [])
 
 translate :: WordText -> IO [FullTranslation]
@@ -52,7 +52,7 @@ getFullWordDescription words = do
     langs <- mapM (findLangByKey . wordLangId . entityVal) words
     origins <- mapM getAllWordOrigins words
     shortTranslations <- (mapM . mapM) getWordTranslationsFromOrigins origins
-    return $ zip4 (map entityVal words) (map (map entityVal) langs) translations (zipOrigins origins shortTranslations)
+    return $ zip4 words (map (map entityVal) langs) translations (zipOrigins origins shortTranslations)
   where
     removeEntityFromWordAndLang (entW, entLang) = (entityVal entW, entityVal entLang)
     getWordTranslationsFromOrigins (entW, _) = getWordTranslations entW
@@ -191,3 +191,23 @@ addTranslationFromAlt fromWord fromPos fromLang toLang mComment altTran = do
   where
     getLang = getBy . LanguageNameUnq
 
+addTranslationFromToByKeys :: (MonadIO m, MonadLogger m) =>
+     Int64
+  -> Int64
+  -> Maybe Comment
+  -> AppT m (Maybe (Key Translation))
+addTranslationFromToByKeys fromKWord toKWord mComment = do
+    mWFrom <- findWordById fromKWord
+    mWTo <- findWordById toKWord
+    case (mWFrom, mWTo) of
+      (Nothing, _) ->  do
+        logErrorNS "addTranslationFromToByKeys" "There is no such word from in the database"
+        return Nothing
+      (_, Nothing) ->  do
+        logErrorNS "addTranslationFromToByKeys" "There is no such word to in the database"
+        return Nothing
+      (Just wFrom, Just wTo) -> do
+        id <- insert $ Translation (entityKey wFrom) ((wordLangId . entityVal) wTo) (Just (entityKey wTo)) mComment Nothing
+        return (Just id)
+  -- where
+    -- getLang = getBy . LanguageNameUnq

@@ -9,10 +9,15 @@ import           Database.Entity
 import           Database.Esqueleto
 import           Language.Sounds
 
-findWordById :: (MonadIO m) => Int64 -> AppT m [Entity Word]
-findWordById i = select $ from $ \word -> do
+findWordById_ :: (MonadIO m) => Int64 -> AppT m [Entity Word]
+findWordById_ i = select $ from $ \word -> do
    where_ (word ^. WordId ==. val (toSqlKey i))
    return word
+
+findWordById :: (MonadIO m) => Int64 -> AppT m (Maybe (Entity Word))
+findWordById i = do
+  wordsById <- findWordById_ i
+  return $ if null wordsById then Nothing else Just ((head . impureNonNull) wordsById)
 
 addWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech -> Bool ->  AppT m (Key Word)
 addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten

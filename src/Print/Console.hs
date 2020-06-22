@@ -117,7 +117,7 @@ tshowPretty prettS value = renderStrict . layoutPretty defaultLayoutOptions $ pr
 prettyWordDescription :: WordDescription -> Doc AnsiStyle
 prettyWordDescription (word, langs, trans, wordAndLangsOrigins) = vsep [
                "",
-               prettyWord word <+> printLangList langs,
+               prettyEWord word <+> printLangList langs,
                if null trans then mempty else vsep ["", "       " <+> align (vsep (map prettyWT trans))],
                if null wordAndLangsOrigins
                     then mempty
@@ -154,6 +154,13 @@ prettyWord word =
      ""
      <+> annotate (color Green) ( "/" <+> pretty (wordWord word) <+> "/")
      <+> annotate (color Black) (brackets $ annotate bold $ pretty (conShow $ wordPartOfSpeech word))
+
+prettyEWord :: Entity Word -> Doc AnsiStyle
+prettyEWord eWord =
+     ""
+     <+> annotate (color Green) ( "/" <+> pretty ((wordWord . entityVal) eWord) <+> "/")
+     <+> annotate (color Black) (brackets $ annotate bold $ pretty (conShow $ (wordPartOfSpeech . entityVal) eWord))
+     <+> annotate (color Black) (parens $ (pretty . show . unSqlBackendKey . unWordKey . entityKey) eWord)
 
 prettyWT :: WordTranslation -> Doc AnsiStyle
 prettyWT (translation, toLang, mToWord) =
