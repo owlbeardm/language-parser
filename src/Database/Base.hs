@@ -41,6 +41,7 @@ data LanguageName = Aboleth
                   | Sylvan
                   | Titan
                   | SlaveRunic
+                  | PrimalMagic
     deriving (Eq, Enum, Read, Show)
 derivePersistField "LanguageName"
 
