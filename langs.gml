@@ -25,6 +25,26 @@ graph
       id 27520
       label "OldRunic"
    ]
+   node
+   [
+      id 47440
+      label "Necril"
+   ]
+   node
+   [
+      id 59220
+      label "PrimalMagic"
+   ]
+   node
+   [
+      id 67760
+      label "OldDragon"
+   ]
+   node
+   [
+      id 76380
+      label "Dragon"
+   ]
 
 
 edge
@@ -52,11 +72,83 @@ edge
 
 
 
+
+
+
+
+
+
+edge
+[
+   source 17620
+   target 67760
+]
+
+
+
+
+
 edge
 [
    source 27510
    target 27520
 ]
+
+
+
+
+
+
+
+
+
+edge
+[
+   source 27520
+   target 47440
+]
+edge
+[
+   source 27520
+   target 59220
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+edge
+[
+   source 67760
+   target 76380
+]
+
+
+
+
 
 
 
