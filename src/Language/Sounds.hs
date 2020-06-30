@@ -5,7 +5,7 @@ import           ClassyPrelude
 import qualified          Data.Text      as T
 
 vovels :: Text
-vovels = "iyɨʉɯuɪʏɪ̈ʊ̈ʊeøɘɵɤoəɛœɜɞʌɔæɐaɶäɒ̈ɑɒūúāáīíḗee̯"
+vovels = "iyɨʉɯuɪʏɪ̈ʊ̈ʊeøɘɵɤoəɛœɜɞʌɔæɐaɶäɒ̈ɑɒūúāáīíḗee̯ː"
 
 
 isVowel :: Char -> Bool

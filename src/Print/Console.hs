@@ -58,6 +58,12 @@ printLookupWord text = runSQLAction $ do
      fullDescr <- getFullWordDescription words
      liftIO $ mapM_ (putStrLn . tshowPretty prettyWordDescription) fullDescr
 
+printLookupWordByAncestor :: Text -> IO ()
+printLookupWordByAncestor text = runSQLAction $ do
+     words <- findWordsByAncestorText text
+     fullDescr <- getFullWordDescription words
+     liftIO $ mapM_ (putStrLn . tshowPretty prettyWordDescription) fullDescr
+
 printTranslate :: Text -> IO ()
 printTranslate translationText = runSQLAction $ do
   translations <- translateWord translationText

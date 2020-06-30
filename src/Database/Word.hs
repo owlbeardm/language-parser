@@ -50,6 +50,16 @@ findWordsByText text =
       where_ (word ^. WordWord ==. val text)
       return word
 
+findWordsByAncestorText :: (MonadIO m) => WordText-> AppT m  [Entity Word]
+findWordsByAncestorText textAnc =
+    select $
+    from $ \(word `InnerJoin` wordOrig `InnerJoin` wordOrigFrom `InnerJoin` wordAnc) -> do
+      on (wordOrigFrom ^. WordOriginFromWordFromId ==. wordAnc ^. WordId)
+      on (wordOrig ^. WordOriginId ==. wordOrigFrom ^. WordOriginFromOriginId)
+      on (word ^. WordId ==. wordOrig ^. WordOriginWordId)
+      where_ (wordAnc ^. WordWord ==. val textAnc)
+      return word
+
 listWordsByLang :: (MonadIO m) => LanguageName -> AppT m [Entity Word]
 listWordsByLang langName = select $ from $ \(word,lang) -> do
       where_ (word ^. WordLangId ==. lang ^. LanguageId &&.
