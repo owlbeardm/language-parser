@@ -45,18 +45,71 @@ graph
       id 76380
       label "Dragon"
    ]
+   node
+   [
+      id 85250
+      label "LizardFolk"
+   ]
+
+
 
 
 edge
 [
    source 9820
    target 17620
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+   ]
 ]
+
 edge
 [
    source 9820
    target 27510
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+   ]
 ]
+
+
+
+
+
+
+
+
+edge
+[
+   source 9820
+   target 67760
+   graphics
+   [
+      style "dotted"
+      targetArrow "standard"
+   ]
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -82,7 +135,20 @@ edge
 [
    source 17620
    target 67760
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+   ]
 ]
+
+
+
+
+
+
+
+
 
 
 
@@ -92,7 +158,24 @@ edge
 [
    source 27510
    target 27520
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+   ]
 ]
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -106,12 +189,58 @@ edge
 [
    source 27520
    target 47440
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+   ]
 ]
+
 edge
 [
    source 27520
    target 59220
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+   ]
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -144,7 +273,55 @@ edge
 [
    source 67760
    target 76380
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+   ]
 ]
+
+edge
+[
+   source 67760
+   target 85250
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+   ]
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

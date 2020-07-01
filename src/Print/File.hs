@@ -34,18 +34,32 @@ castProd = liftM2 (,)
 prettyLangToLangEdge :: (MonadIO m) =>  (Entity Language, Entity Language) -> AppT m (Doc AnsiStyle)
 prettyLangToLangEdge (langFrom, langTo) = do
      evolved <- listEvolvedWordsByLangFromAndTo (getLangName langFrom) (getLangName langTo)
-     return $ if null evolved
-          then mempty
-          else prettyEdge langFrom langTo
+     combined <- listCombinedWordsByLangFromAndTo (getLangName langFrom) (getLangName langTo)
+     let prettyEdgeLL ws = prettyEdge langFrom langTo ((not . null) ws)
+     return $ vsep [
+          prettyEdgeLL evolved "\"standard\"",
+          prettyEdgeLL combined "\"dotted\""
+          ]
      where
           getLangName = languageLname . entityVal
 
-prettyEdge :: Entity Language -> Entity Language -> Doc AnsiStyle
-prettyEdge langF langT = vsep ["edge",
+
+prettyEdge :: Entity Language -> Entity Language -> Bool -> Text -> Doc AnsiStyle
+prettyEdge _     _     False _       = mempty
+prettyEdge langF langT _     eStyle  = 
+     vsep ["edge",
                                lbracket,
                                "  " <+> (align . vsep) [
                                     "source" <+> (pretty . tshow . fromSqlKey . entityKey) langF,
-                                    "target" <+> (pretty . tshow . fromSqlKey . entityKey) langT],
+                                    "target" <+> (pretty . tshow . fromSqlKey . entityKey) langT,
+                                    "graphics",
+                                    lbracket,
+                                    "  " <+> (align . vsep) [
+                                         "style"  <+> pretty eStyle,
+                                         "targetArrow \"standard\""
+                                        ],
+                                    rbracket
+                                    ],
                                rbracket
                               ]
 

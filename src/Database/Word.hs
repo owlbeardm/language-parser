@@ -88,6 +88,22 @@ listNotEvolvedWordsByLangFromAndTo langNameFrom langNameTo = do
   wordsEvolved <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
   return $ wordsAll \\ wordsEvolved
 
+
+listCombinedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity Word]
+listCombinedWordsByLangFromAndTo langNameFrom langNameTo =
+  select $
+  from $ \(word `InnerJoin` langFrom `InnerJoin` wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
+      on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
+      on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
+      on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
+      on (word ^. WordId ==. wordOrgFrom ^. WordOriginFromWordFromId)
+      on (word ^. WordLangId ==. langFrom ^. LanguageId)
+      where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
+              langTo ^. LanguageLname ==. val langNameTo &&.
+              wordOrg ^. WordOriginCombinedYn ==. val True)
+      groupBy (word ^. WordId)
+      return word
+
 listEvolvedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity Word]
 listEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
   select $
@@ -98,7 +114,8 @@ listEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
       on (word ^. WordId ==. wordOrgFrom ^. WordOriginFromWordFromId)
       on (word ^. WordLangId ==. langFrom ^. LanguageId)
       where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
-              langTo ^. LanguageLname ==. val langNameTo)
+              langTo ^. LanguageLname ==. val langNameTo &&.
+              wordOrg ^. WordOriginEvolvedYn ==. val True)
       groupBy (word ^. WordId)
       return word
 
@@ -110,7 +127,8 @@ listEvolvedWordsToKeysByWordFromAndTo wordFrom langNameTo =
       on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
       on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
       on (val (entityKey wordFrom) ==. wordOrgFrom ^. WordOriginFromWordFromId)
-      where_ (langTo ^. LanguageLname ==. val langNameTo)
+      where_ (langTo ^. LanguageLname ==. val langNameTo &&.
+              wordOrg ^. WordOriginEvolvedYn ==. val True)
       groupBy (wordTo ^. WordId)
       return wordTo
 
@@ -124,7 +142,8 @@ deleteEvolvedWordsByLangFromAndTo langNameFrom langNameTo =
       on (word ^. WordId ==. wordOrgFrom ^. WordOriginFromWordFromId)
       on (word ^. WordLangId ==. langFrom ^. LanguageId)
       where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
-              langTo ^. LanguageLname !=. val langNameTo)
+              langTo ^. LanguageLname !=. val langNameTo &&.
+              wordOrg ^. WordOriginEvolvedYn ==. val True)
 
 getAllWordOrigins :: (MonadIO m) => Entity Word -> AppT m [(Entity Word, Entity Language)]
 getAllWordOrigins word = do
@@ -160,7 +179,8 @@ getEvolvedWord langNameTo wordFrom =
     on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
     on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
     where_ (langTo ^. LanguageLname ==. val langNameTo &&.
-            val (entityKey wordFrom) ==. wordOrgFrom ^. WordOriginFromWordFromId)
+            val (entityKey wordFrom) ==. wordOrgFrom ^. WordOriginFromWordFromId &&.
+              wordOrg ^. WordOriginEvolvedYn ==. val True)
     return wordTo
 
 listWordsInfo :: (MonadIO m) => LanguageName -> ([Entity Word] -> a) -> AppT m a

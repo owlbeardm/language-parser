@@ -9,10 +9,15 @@ import           Database.Esqueleto
 import           Database.Word
 import qualified Text.Regex         as R
 
-findLangById :: (MonadIO m) => Int64 -> AppT m [Entity Language]
-findLangById i = select $ from $ \lang -> do
+findLangById_ :: (MonadIO m) => Int64 -> AppT m [Entity Language]
+findLangById_ i = select $ from $ \lang -> do
    where_ (lang ^. LanguageId ==. val (toSqlKey i))
    return lang
+
+findLangById :: (MonadIO m) => Int64 -> AppT m (Maybe (Entity Language))
+findLangById i = do
+  langsById <- findLangById_ i
+  return $ if null langsById then Nothing else Just ((head . impureNonNull) langsById)
 
 findLangByKey :: (MonadIO m) => Key Language -> AppT m [Entity Language]
 findLangByKey k = select $ from $ \lang -> do
@@ -30,6 +35,13 @@ insertEvolvedWord textToAdd pos wfKey langToKey = do
    wordToKey <- insert $ Word textToAdd langToKey pos False
    wordOriginKey <- insert $ WordOrigin wordToKey Nothing True False False False
    _ <- insert $ WordOriginFrom wfKey wordOriginKey
+   return wordToKey
+
+insertCombinedWord :: (MonadIO m) => WordText -> PartOfSpeech -> Key Language -> [Key Word] -> AppT m (Key Word)
+insertCombinedWord textToAdd pos langToKey wKeys = do
+   wordToKey <- insert $ Word textToAdd langToKey pos False
+   wordOriginKey <- insert $ WordOrigin wordToKey Nothing False False True False
+   _ <- mapM (\wk -> insert $ WordOriginFrom wk wordOriginKey) wKeys
    return wordToKey
 
 listEvolveLawsByLangs :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity EvolveLaw]
@@ -52,6 +64,19 @@ changeWord wordText law = T.pack $ R.subRegex regex word soundTo
       regex = (R.mkRegex . T.unpack . evolveLawSoundRegexFrom) law
       soundTo = (T.unpack . evolveLawSoundTo) law
       word = T.unpack wordText
+
+combineWord :: (MonadIO m) => WordText -> PartOfSpeech -> LanguageName -> [Int64] -> AppT m (Maybe (Key Word))
+combineWord text pos langN wids = do
+   mLang <- findLangByName langN
+   case mLang of
+         Nothing -> return Nothing
+         (Just langE) -> do
+            wds <- mapM findWordById wids
+            if Nothing `elem` wds
+               then return Nothing 
+               else do
+                  cmbW <- insertCombinedWord text pos (entityKey langE) (map entityKey (catMaybes wds))
+                  return $ Just cmbW
 
 evolvedWord :: (MonadIO m) => [EvolveLaw] -> Entity Word -> Key Language -> AppT m (Key Word)
 evolvedWord laws eWordFrom = insertEvolvedWord evolvedText ((wordPartOfSpeech . entityVal) eWordFrom) (entityKey eWordFrom)
