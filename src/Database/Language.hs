@@ -73,7 +73,7 @@ combineWord text pos langN wids = do
          (Just langE) -> do
             wds <- mapM findWordById wids
             if Nothing `elem` wds
-               then return Nothing 
+               then return Nothing
                else do
                   cmbW <- insertCombinedWord text pos (entityKey langE) (map entityKey (catMaybes wds))
                   return $ Just cmbW
@@ -149,3 +149,16 @@ evolveAllLangWithAll = doAllLangWithAll evolveLang
 
 reEvolveAllLangWithAll :: (MonadIO m) => AppT m [(Int, LanguageName, LanguageName)]
 reEvolveAllLangWithAll = doAllLangWithAll reEvolveLang
+
+
+traceWordEvolve :: (MonadIO m) => WordText -> [LanguageName] -> AppT m [WordText]
+traceWordEvolve _   []         = return []
+traceWordEvolve wrd [_]        = return [wrd]
+traceWordEvolve wrd (l1:l2:xs) = do
+   ewrd <- evolvedWrd l1 l2 wrd
+   left <- traceWordEvolve ewrd (l2:xs)
+   return (wrd:left)
+   where
+      evolvedWrd ll1 ll2 wwrd = do
+         laws <- listEvolveLawsByLangs ll1 ll2
+         return $ evolveWordText wwrd (map entityVal laws)
