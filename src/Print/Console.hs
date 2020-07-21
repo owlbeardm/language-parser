@@ -83,6 +83,11 @@ printEvolveLaws langName1 langName2 = runSQLAction $ do
      putStr "\n\tTotal: "
      print $ length laws
 
+printTraceWordEvolve :: WordText -> [LanguageName] -> IO ()
+printTraceWordEvolve wrd lngs = runSQLAction $ do
+     wrds <- traceWordEvolve wrd lngs
+     mapM_ ( putStrLn . tshowPretty pretty) wrds
+
 cEvolveLangs :: LanguageName -> LanguageName -> IO ()
 cEvolveLangs langName1 langName2 = runSQLAction $ do
      size <- evolveLang langName1 langName2
