@@ -37,16 +37,16 @@ prettyLangToLangEdge (langFrom, langTo) = do
      combined <- listCombinedWordsByLangFromAndTo (getLangName langFrom) (getLangName langTo)
      let prettyEdgeLL ws = prettyEdge langFrom langTo ((not . null) ws)
      return $ vsep [
-          prettyEdgeLL evolved "\"standard\"",
-          prettyEdgeLL combined "\"dotted\""
+          prettyEdgeLL evolved "\"standard\"" "2",
+          prettyEdgeLL combined "\"dotted\"" "1"
           ]
      where
           getLangName = languageLname . entityVal
 
 
-prettyEdge :: Entity Language -> Entity Language -> Bool -> Text -> Doc AnsiStyle
-prettyEdge _     _     False _       = mempty
-prettyEdge langF langT _     eStyle  = 
+prettyEdge :: Entity Language -> Entity Language -> Bool -> Text -> Text -> Doc AnsiStyle
+prettyEdge _     _     False _      _       = mempty
+prettyEdge langF langT _     eStyle eWidth  =
      vsep ["edge",
                                lbracket,
                                "  " <+> (align . vsep) [
@@ -56,7 +56,8 @@ prettyEdge langF langT _     eStyle  =
                                     lbracket,
                                     "  " <+> (align . vsep) [
                                          "style"  <+> pretty eStyle,
-                                         "targetArrow \"standard\""
+                                         "targetArrow \"standard\"",
+                                         "width" <+> pretty eWidth
                                         ],
                                     rbracket
                                     ],
@@ -68,6 +69,18 @@ prettyLang lang = vsep ["node",
                         lbracket,
                         "  " <+> (align . vsep) [
                              "id" <+> (pretty . tshow . fromSqlKey . entityKey) lang,
-                             "label" <+> (dquotes . pretty . tshow . entityVal) lang],
-                        rbracket
-                       ]
+                             "label" <+> (dquotes . pretty . tshow . entityVal) lang,
+                             "graphics",
+                             lbracket,
+                             "  " <+> (align . vsep) [
+                                  "type" <+> (dquotes . pretty) ("rectangle" :: Text),
+                                  "fill" <+> (dquotes . pretty) ("#FFCC00" :: Text)],
+                             rbracket,
+                             "LabelGraphics",
+                             lbracket,
+                             "  " <+> (align . vsep) [
+                                   "text" <+> (dquotes . pretty . tshow . entityVal) lang,
+                                   "fontSize 14"
+                                   ],
+                             rbracket],
+                         rbracket]
