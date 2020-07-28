@@ -21,14 +21,20 @@ data LanguageName = Aboleth
                   | Alko
                   | Dragon
                   | Dwarven
+                  | EastEmpire
                   | Elven
                   | English
                   | Halfling
                   | Infernal
                   | Kobold
+                  | LizardFolk
                   | Necril
+                  | OldDragon
+                  | OldEmpire
                   | OldRunic
+                  | OldWestCoast
                   | Orkish
+                  | PrimalMagic
                   | ProtoCreation
                   | ProtoDragon
                   | ProtoDwarven
@@ -38,12 +44,10 @@ data LanguageName = Aboleth
                   | ProtoMonster
                   | ProtoOrk
                   | ProtoTengu
+                  | SlaveRunic
                   | Sylvan
                   | Titan
-                  | SlaveRunic
-                  | PrimalMagic
-                  | OldDragon
-                  | LizardFolk
+                  | WestCoast
     deriving (Eq, Enum, Read, Show)
 derivePersistField "LanguageName"
 
