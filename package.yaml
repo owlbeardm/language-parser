@@ -37,7 +37,7 @@ library:
   dependencies:
   - scotty
   - text
-  - regex-compat
+  - regex-compat-tdfa
   - directory
   - scotty
   - postgresql-simple
@@ -74,7 +74,7 @@ executables:
     - language-parser
     - scotty
     - text
-    - regex-compat
+    # - regex-compat
     - directory
     - scotty
     - postgresql-simple
