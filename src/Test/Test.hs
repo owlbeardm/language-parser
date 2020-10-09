@@ -1,7 +1,7 @@
 module Test.Test where
 
 import           ClassyPrelude
-import           Text.Regex.Base
+-- import           Text.Regex.Base
 import           Text.Regex.PCRE
 -- ("qu","u","itquuit",[])
 replaceAll :: String -> String -> String -> String
