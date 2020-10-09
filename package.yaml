@@ -35,6 +35,8 @@ dependencies:
 library:
   source-dirs: src
   dependencies:
+  - regex-base
+  - regex-pcre-builtin
   - scotty
   - text
   - regex-compat-tdfa

@@ -7,7 +7,9 @@ import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
 import           Database.Word
-import qualified Text.Regex         as R
+-- import qualified Text.Regex         as R
+-- import           Text.Regex.Base
+import           Text.Regex.PCRE
 
 findLangById_ :: (MonadIO m) => Int64 -> AppT m [Entity Language]
 findLangById_ i = select $ from $ \lang -> do
@@ -59,11 +61,22 @@ evolveWordText = foldl' changeWord
 
 -- |The 'square' function squares an integer.
 changeWord :: WordText -> EvolveLaw -> WordText
-changeWord wordText law = T.pack $ R.subRegex regex word soundTo
+changeWord wordText law = T.pack $ replaceAll regex soundTo word
    where
-      regex = (R.mkRegex . T.unpack . evolveLawSoundRegexFrom) law
+      regex = (T.unpack . evolveLawSoundRegexFrom) law
       soundTo = (T.unpack . evolveLawSoundTo) law
       word = T.unpack wordText
+
+replaceAll :: String -> String -> String -> String
+replaceAll _ _ [] = ""
+replaceAll rexp target source  =
+    let res :: (String,String,String,[String])
+        res = (source =~ rexp)
+        rpAll = replaceAll rexp target
+    in first4 res ++ target ++ rpAll (third4 res)
+    where
+        first4 (a,_,_,_) = a
+        third4 (_,_,c,_) = c
 
 combineWord :: (MonadIO m) => WordText -> PartOfSpeech -> LanguageName -> [Int64] -> AppT m (Maybe (Key Word))
 combineWord text pos langN wids = do
