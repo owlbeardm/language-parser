@@ -73,9 +73,12 @@ replaceAll rexp target source  =
     let res :: (String,String,String,[String])
         res = (source =~ rexp)
         rpAll = replaceAll rexp target
-    in first4 res ++ target ++ rpAll (third4 res)
+    in if null (second4 res)
+        then source
+        else first4 res ++ target ++ rpAll (third4 res)
     where
         first4 (a,_,_,_) = a
+        second4 (_,b,_,_) = b
         third4 (_,_,c,_) = c
 
 combineWord :: (MonadIO m) => WordText -> PartOfSpeech -> LanguageName -> [Int64] -> AppT m (Maybe (Key Word))

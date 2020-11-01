@@ -37,6 +37,7 @@ library:
   dependencies:
   - regex-base
   - regex-pcre-builtin
+  - regex
   - scotty
   - text
   - regex-compat-tdfa

@@ -19,6 +19,7 @@ type AppT = ReaderT SqlBackend
 
 data LanguageName = Aboleth
                   | Alko
+                  | ClassicalArcane
                   | Dragon
                   | Dwarven
                   | EastEmpire
