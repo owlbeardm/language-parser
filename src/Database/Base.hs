@@ -23,6 +23,7 @@ data LanguageName = Aboleth
                   | Dragon
                   | Dwarven
                   | EastEmpire
+                  | EastKingdom
                   | Elven
                   | English
                   | Halfling
@@ -32,6 +33,7 @@ data LanguageName = Aboleth
                   | Necril
                   | OldDragon
                   | OldEmpire
+                  | OldEastKingdom
                   | OldRunic
                   | OldWestCoast
                   | Orkish
