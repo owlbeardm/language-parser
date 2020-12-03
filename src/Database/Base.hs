@@ -22,8 +22,6 @@ data LanguageName = Aboleth
                   | ClassicalArcane
                   | Dragon
                   | Dwarven
-                  | EastEmpire
-                  | EastKingdom
                   | Elven
                   | English
                   | Halfling
@@ -31,11 +29,13 @@ data LanguageName = Aboleth
                   | Kobold
                   | LizardFolk
                   | Necril
+                  | Nerlendic
+                  | Nitholan
+                  | NitholanEmpire
                   | OldDragon
-                  | OldEmpire
-                  | OldEastKingdom
+                  | OldNerlendic
+                  | OldNitholan
                   | OldRunic
-                  | OldWestCoast
                   | Orkish
                   | PrimalMagic
                   | ProtoCreation
@@ -47,10 +47,10 @@ data LanguageName = Aboleth
                   | ProtoMonster
                   | ProtoOrk
                   | ProtoTengu
+                  | Queran
                   | SlaveRunic
                   | Sylvan
                   | Titan
-                  | WestCoast
     deriving (Eq, Enum, Read, Show)
 derivePersistField "LanguageName"
 
