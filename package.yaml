@@ -61,6 +61,7 @@ library:
   - -Wincomplete-uni-patterns
   - -Wredundant-constraints
   - -Wno-unused-top-binds
+  - -O2
 
 executables:
   language-parser-exe:
