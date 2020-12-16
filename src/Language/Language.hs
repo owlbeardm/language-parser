@@ -9,7 +9,7 @@ import qualified Text.Regex      as R
 evolveWordText :: WordText -> [EvolveLaw] -> WordText
 evolveWordText = foldl' changeWord
 
--- |The 'square' function squares an integer.
+-- |The 'changeWord' function changes a word.
 changeWord :: WordText -> EvolveLaw -> WordText
 changeWord wordText law = T.pack $ R.subRegex regex word soundTo
    where
