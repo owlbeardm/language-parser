@@ -10,6 +10,10 @@ import           Database.Esqueleto
 import           Database.Language
 import           Database.Translation
 import           Database.Word
+import           Language.Word
+
+square :: Int -> Int
+square x = x * x
 
 printLangs :: IO ()
 printLangs = runSQLAction $ do
@@ -96,10 +100,10 @@ cEvolveLangs langName1 langName2 = runSQLAction $ do
      putStr "\n"
 
 cEvolveAllLangWithAll :: IO ()
-cEvolveAllLangWithAll = runSQLAction $ cdoAllLangWithAll evolveLang 
+cEvolveAllLangWithAll = runSQLAction $ cdoAllLangWithAll evolveLang
 
 cReEvolveAllLangWithAll :: IO ()
-cReEvolveAllLangWithAll = runSQLAction $ cdoAllLangWithAll reEvolveLang 
+cReEvolveAllLangWithAll = runSQLAction $ cdoAllLangWithAll reEvolveLang
 
 cdoAllLangWithAll :: (MonadIO m) => (LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))) -> ReaderT SqlBackend m ()
 cdoAllLangWithAll doLang = do

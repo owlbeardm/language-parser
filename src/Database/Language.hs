@@ -2,12 +2,11 @@ module Database.Language where
 
 import           ClassyPrelude      hiding (Word, keys, on, words)
 import           Control.Monad      (zipWithM)
-import qualified Data.Text          as T
 import           Database.Base
 import           Database.Entity
 import           Database.Esqueleto
 import           Database.Word
-import qualified Text.Regex         as R
+import           Language.Language
 
 findLangById_ :: (MonadIO m) => Int64 -> AppT m [Entity Language]
 findLangById_ i = select $ from $ \lang -> do
@@ -53,17 +52,6 @@ listEvolveLawsByLangs langNameFrom langNameTo = select $ from $ \(evolveLaw,lang
       orderBy [asc (evolveLaw ^. EvolveLawId)]
               --order by prior
       return evolveLaw
-
-evolveWordText :: WordText -> [EvolveLaw] -> WordText
-evolveWordText = foldl' changeWord
-
--- |The 'square' function squares an integer.
-changeWord :: WordText -> EvolveLaw -> WordText
-changeWord wordText law = T.pack $ R.subRegex regex word soundTo
-   where
-      regex = (R.mkRegex . T.unpack . evolveLawSoundRegexFrom) law
-      soundTo = (T.unpack . evolveLawSoundTo) law
-      word = T.unpack wordText
 
 combineWord :: (MonadIO m) => WordText -> PartOfSpeech -> LanguageName -> [Int64] -> AppT m (Maybe (Key Word))
 combineWord text pos langN wids = do

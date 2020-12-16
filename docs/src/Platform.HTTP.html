@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Platform.HTTP</span><span>
+</span><a name="line-2"></a><span>      </span><span class="hs-special">(</span><span>
+</span><a name="line-3"></a><span>      </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-4"></a><span>
+</span><a name="line-5"></a><span class="hs-comment">-- import           ClassyPrelude</span><span>
+</span><a name="line-6"></a><span>
+</span><a name="line-7"></a><span class="hs-comment">-- -- import           Network.Wai        (Response)</span><span>
+</span><a name="line-8"></a><span class="hs-comment">-- import           System.Environment</span><span>
+</span><a name="line-9"></a><span>
+</span><a name="line-10"></a><span class="hs-comment">-- type App r m = (MonadIO m)</span><span>
+</span><a name="line-11"></a><span>
+</span><a name="line-12"></a><span>
+</span><a name="line-13"></a><span class="hs-comment">-- main :: (App r m) =&gt; (m Response -&gt; IO Response) -&gt; IO ()</span><span>
+</span><a name="line-14"></a><span class="hs-comment">-- main runner = do</span><span>
+</span><a name="line-15"></a><span class="hs-comment">--   port &lt;- acquirePort</span><span>
+</span><a name="line-16"></a><span class="hs-comment">--   mayTLSSetting &lt;- acquireTLSSetting</span><span>
+</span><a name="line-17"></a><span class="hs-comment">--   scottyT port runner routes</span><span>
+</span><a name="line-18"></a><span class="hs-comment">--   where</span><span>
+</span><a name="line-19"></a><span class="hs-comment">--     acquirePort = do</span><span>
+</span><a name="line-20"></a><span class="hs-comment">--       port &lt;- fromMaybe &quot;&quot; &lt;$&gt; lookupEnv &quot;PORT&quot;</span><span>
+</span><a name="line-21"></a><span class="hs-comment">--       return . fromMaybe 3000 $ readMay port</span><span>
+</span><a name="line-22"></a><span class="hs-comment">--     acquireTLSSetting = do</span><span>
+</span><a name="line-23"></a><span class="hs-comment">--       env &lt;- (&gt;&gt;= readMay) &lt;$&gt; lookupEnv &quot;ENABLE_HTTPS&quot;</span><span>
+</span><a name="line-24"></a><span class="hs-comment">--       let enableHttps = fromMaybe True env</span><span>
+</span><a name="line-25"></a><span class="hs-comment">--       return $ if enableHttps</span><span>
+</span><a name="line-26"></a><span class="hs-comment">--         then Just $ tlsSettings &quot;secrets/tls/certificate.pem&quot; &quot;secrets/tls/key.pem&quot;</span><span>
+</span><a name="line-27"></a><span class="hs-comment">--         else Nothing</span><span>
+</span><a name="line-28"></a></pre></body></html>
