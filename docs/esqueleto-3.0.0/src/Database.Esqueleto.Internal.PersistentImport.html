@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-comment">-- | Re-export &quot;Database.Persist.Sql&quot; without any clashes with</span><span>
+</span><a name="line-2"></a><span class="hs-comment">-- @esqueleto@.</span><span>
+</span><a name="line-3"></a><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Database.Esqueleto.Internal.PersistentImport</span><span>
+</span><a name="line-4"></a><span class="hs-comment">-- NOTE: switch back to a module export once https://gitlab.haskell.org/ghc/ghc/merge_requests/276</span><span>
+</span><a name="line-5"></a><span class="hs-comment">-- has been merged. See https://github.com/bitemyapp/esqueleto/issues/110 for more details</span><span>
+</span><a name="line-6"></a><span>  </span><span class="hs-special">(</span><span> </span><span class="hs-identifier hs-var">toJsonText</span><span class="hs-special">,</span><span>
+</span><a name="line-7"></a><span>  </span><span class="hs-identifier hs-var">entityIdFromJSON</span><span class="hs-special">,</span><span>
+</span><a name="line-8"></a><span>  </span><span class="hs-identifier hs-var">entityIdToJSON</span><span class="hs-special">,</span><span>
+</span><a name="line-9"></a><span>  </span><span class="hs-identifier hs-var">entityValues</span><span class="hs-special">,</span><span>
+</span><a name="line-10"></a><span>  </span><span class="hs-identifier hs-var">fromPersistValueJSON</span><span class="hs-special">,</span><span>
+</span><a name="line-11"></a><span>  </span><span class="hs-identifier hs-var">keyValueEntityFromJSON</span><span class="hs-special">,</span><span>
+</span><a name="line-12"></a><span>  </span><span class="hs-identifier hs-var">keyValueEntityToJSON</span><span class="hs-special">,</span><span>
+</span><a name="line-13"></a><span>  </span><span class="hs-identifier hs-var">toPersistValueJSON</span><span class="hs-special">,</span><span>
+</span><a name="line-14"></a><span>  </span><span class="hs-identifier hs-var">selectKeys</span><span class="hs-special">,</span><span>
+</span><a name="line-15"></a><span>  </span><span class="hs-identifier hs-var">belongsTo</span><span class="hs-special">,</span><span>
+</span><a name="line-16"></a><span>  </span><span class="hs-identifier hs-var">belongsToJust</span><span class="hs-special">,</span><span>
+</span><a name="line-17"></a><span>  </span><span class="hs-identifier hs-var">getEntity</span><span class="hs-special">,</span><span>
+</span><a name="line-18"></a><span>  </span><span class="hs-identifier hs-var">getJust</span><span class="hs-special">,</span><span>
+</span><a name="line-19"></a><span>  </span><span class="hs-identifier hs-var">getJustEntity</span><span class="hs-special">,</span><span>
+</span><a name="line-20"></a><span>  </span><span class="hs-identifier hs-var">insertEntity</span><span class="hs-special">,</span><span>
+</span><a name="line-21"></a><span>  </span><span class="hs-identifier hs-var">insertRecord</span><span class="hs-special">,</span><span>
+</span><a name="line-22"></a><span>  </span><span class="hs-identifier hs-var">liftPersist</span><span class="hs-special">,</span><span>
+</span><a name="line-23"></a><span>  </span><span class="hs-identifier hs-var">checkUnique</span><span class="hs-special">,</span><span>
+</span><a name="line-24"></a><span>  </span><span class="hs-identifier hs-var">getByValue</span><span class="hs-special">,</span><span>
+</span><a name="line-25"></a><span>  </span><span class="hs-identifier hs-var">insertBy</span><span class="hs-special">,</span><span>
+</span><a name="line-26"></a><span>  </span><span class="hs-identifier hs-var">insertUniqueEntity</span><span class="hs-special">,</span><span>
+</span><a name="line-27"></a><span>  </span><span class="hs-identifier hs-var">onlyUnique</span><span class="hs-special">,</span><span>
+</span><a name="line-28"></a><span>  </span><span class="hs-identifier hs-var">replaceUnique</span><span class="hs-special">,</span><span>
+</span><a name="line-29"></a><span>  </span><span class="hs-identifier hs-var">transactionSave</span><span class="hs-special">,</span><span>
+</span><a name="line-30"></a><span>  </span><span class="hs-identifier hs-var">transactionUndo</span><span class="hs-special">,</span><span>
+</span><a name="line-31"></a><span>  </span><span class="hs-identifier hs-var">defaultAttribute</span><span class="hs-special">,</span><span>
+</span><a name="line-32"></a><span>  </span><span class="hs-identifier hs-var">mkColumns</span><span class="hs-special">,</span><span>
+</span><a name="line-33"></a><span>  </span><span class="hs-identifier hs-var">getMigration</span><span class="hs-special">,</span><span>
+</span><a name="line-34"></a><span>  </span><span class="hs-identifier hs-var">migrate</span><span class="hs-special">,</span><span>
+</span><a name="line-35"></a><span>  </span><span class="hs-identifier hs-var">parseMigration</span><span class="hs-special">,</span><span>
+</span><a name="line-36"></a><span>  </span><span class="hs-identifier hs-var">parseMigration'</span><span class="hs-special">,</span><span>
+</span><a name="line-37"></a><span>  </span><span class="hs-identifier hs-var">printMigration</span><span class="hs-special">,</span><span>
+</span><a name="line-38"></a><span>  </span><span class="hs-identifier hs-var">runMigration</span><span class="hs-special">,</span><span>
+</span><a name="line-39"></a><span>  </span><span class="hs-identifier hs-var">runMigrationSilent</span><span class="hs-special">,</span><span>
+</span><a name="line-40"></a><span>  </span><span class="hs-identifier hs-var">runMigrationUnsafe</span><span class="hs-special">,</span><span>
+</span><a name="line-41"></a><span>  </span><span class="hs-identifier hs-var">showMigration</span><span class="hs-special">,</span><span>
+</span><a name="line-42"></a><span>  </span><span class="hs-identifier hs-var">decorateSQLWithLimitOffset</span><span class="hs-special">,</span><span>
+</span><a name="line-43"></a><span>  </span><span class="hs-identifier hs-var">fieldDBName</span><span class="hs-special">,</span><span>
+</span><a name="line-44"></a><span>  </span><span class="hs-identifier hs-var">fromSqlKey</span><span class="hs-special">,</span><span>
+</span><a name="line-45"></a><span>  </span><span class="hs-identifier hs-var">getFieldName</span><span class="hs-special">,</span><span>
+</span><a name="line-46"></a><span>  </span><span class="hs-identifier hs-var">getTableName</span><span class="hs-special">,</span><span>
+</span><a name="line-47"></a><span>  </span><span class="hs-identifier hs-var">tableDBName</span><span class="hs-special">,</span><span>
+</span><a name="line-48"></a><span>  </span><span class="hs-identifier hs-var">toSqlKey</span><span class="hs-special">,</span><span>
+</span><a name="line-49"></a><span>  </span><span class="hs-identifier hs-var">withRawQuery</span><span class="hs-special">,</span><span>
+</span><a name="line-50"></a><span>  </span><span class="hs-identifier hs-var">getStmtConn</span><span class="hs-special">,</span><span>
+</span><a name="line-51"></a><span>  </span><span class="hs-identifier hs-var">rawExecute</span><span class="hs-special">,</span><span>
+</span><a name="line-52"></a><span>  </span><span class="hs-identifier hs-var">rawExecuteCount</span><span class="hs-special">,</span><span>
+</span><a name="line-53"></a><span>  </span><span class="hs-identifier hs-var">rawQuery</span><span class="hs-special">,</span><span>
+</span><a name="line-54"></a><span>  </span><span class="hs-identifier hs-var">rawQueryRes</span><span class="hs-special">,</span><span>
+</span><a name="line-55"></a><span>  </span><span class="hs-identifier hs-var">rawSql</span><span class="hs-special">,</span><span>
+</span><a name="line-56"></a><span>  </span><span class="hs-identifier hs-var">askLogFunc</span><span class="hs-special">,</span><span>
+</span><a name="line-57"></a><span>  </span><span class="hs-identifier hs-var">close'</span><span class="hs-special">,</span><span>
+</span><a name="line-58"></a><span>  </span><span class="hs-identifier hs-var">createSqlPool</span><span class="hs-special">,</span><span>
+</span><a name="line-59"></a><span>  </span><span class="hs-identifier hs-var">liftSqlPersistMPool</span><span class="hs-special">,</span><span>
+</span><a name="line-60"></a><span>  </span><span class="hs-identifier hs-var">runSqlConn</span><span class="hs-special">,</span><span>
+</span><a name="line-61"></a><span>  </span><span class="hs-identifier hs-var">runSqlPersistM</span><span class="hs-special">,</span><span>
+</span><a name="line-62"></a><span>  </span><span class="hs-identifier hs-var">runSqlPersistMPool</span><span class="hs-special">,</span><span>
+</span><a name="line-63"></a><span>  </span><span class="hs-identifier hs-var">runSqlPool</span><span class="hs-special">,</span><span>
+</span><a name="line-64"></a><span>  </span><span class="hs-identifier hs-var">withSqlConn</span><span class="hs-special">,</span><span>
+</span><a name="line-65"></a><span>  </span><span class="hs-identifier hs-var">withSqlPool</span><span class="hs-special">,</span><span>
+</span><a name="line-66"></a><span>  </span><span class="hs-identifier hs-var">readToUnknown</span><span class="hs-special">,</span><span>
+</span><a name="line-67"></a><span>  </span><span class="hs-identifier hs-var">readToWrite</span><span class="hs-special">,</span><span>
+</span><a name="line-68"></a><span>  </span><span class="hs-identifier hs-var">writeToUnknown</span><span class="hs-special">,</span><span>
+</span><a name="line-69"></a><span>  </span><span class="hs-identifier hs-var">entityKeyFields</span><span class="hs-special">,</span><span>
+</span><a name="line-70"></a><span>  </span><span class="hs-identifier hs-var">entityPrimary</span><span class="hs-special">,</span><span>
+</span><a name="line-71"></a><span>  </span><span class="hs-identifier hs-var">fromPersistValueText</span><span class="hs-special">,</span><span>
+</span><a name="line-72"></a><span>  </span><span class="hs-identifier hs-var">keyAndEntityFields</span><span class="hs-special">,</span><span>
+</span><a name="line-73"></a><span>  </span><span class="hs-identifier hs-var">toEmbedEntityDef</span><span class="hs-special">,</span><span>
+</span><a name="line-74"></a><span>  </span><span class="hs-identifier hs-type">PersistStore</span><span class="hs-special">,</span><span>
+</span><a name="line-75"></a><span>  </span><span class="hs-identifier hs-type">PersistUnique</span><span class="hs-special">,</span><span>
+</span><a name="line-76"></a><span>  </span><span class="hs-identifier hs-type">DeleteCascade</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-77"></a><span>  </span><span class="hs-identifier hs-type">PersistConfig</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-78"></a><span>  </span><span class="hs-identifier hs-type">BackendSpecificUpdate</span><span class="hs-special">,</span><span>
+</span><a name="line-79"></a><span>  </span><span class="hs-identifier hs-type">Entity</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-80"></a><span>  </span><span class="hs-identifier hs-type">PersistEntity</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-81"></a><span>  </span><span class="hs-identifier hs-type">PersistField</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-82"></a><span>  </span><span class="hs-identifier hs-type">SomePersistField</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-83"></a><span>  </span><span class="hs-identifier hs-type">PersistQueryRead</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-84"></a><span>  </span><span class="hs-identifier hs-type">PersistQueryWrite</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-85"></a><span>  </span><span class="hs-identifier hs-type">BackendCompatible</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-86"></a><span>  </span><span class="hs-identifier hs-type">BackendKey</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-87"></a><span>  </span><span class="hs-identifier hs-type">HasPersistBackend</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-88"></a><span>  </span><span class="hs-identifier hs-type">IsPersistBackend</span><span class="hs-special">,</span><span>
+</span><a name="line-89"></a><span>  </span><span class="hs-identifier hs-type">PersistCore</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-90"></a><span>  </span><span class="hs-identifier hs-type">PersistRecordBackend</span><span class="hs-special">,</span><span>
+</span><a name="line-91"></a><span>  </span><span class="hs-identifier hs-type">PersistStoreRead</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-92"></a><span>  </span><span class="hs-identifier hs-type">PersistStoreWrite</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-93"></a><span>  </span><span class="hs-identifier hs-type">ToBackendKey</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-94"></a><span>  </span><span class="hs-identifier hs-type">PersistUniqueRead</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-95"></a><span>  </span><span class="hs-identifier hs-type">PersistUniqueWrite</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-96"></a><span>  </span><span class="hs-identifier hs-type">PersistFieldSql</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-97"></a><span>  </span><span class="hs-identifier hs-type">RawSql</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-98"></a><span>  </span><span class="hs-identifier hs-type">CautiousMigration</span><span class="hs-special">,</span><span>
+</span><a name="line-99"></a><span>  </span><span class="hs-identifier hs-type">Column</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-100"></a><span>  </span><span class="hs-identifier hs-type">ConnectionPool</span><span class="hs-special">,</span><span>
+</span><a name="line-101"></a><span>  </span><span class="hs-identifier hs-type">Migration</span><span class="hs-special">,</span><span>
+</span><a name="line-102"></a><span>  </span><span class="hs-identifier hs-type">PersistentSqlException</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-103"></a><span>  </span><span class="hs-identifier hs-type">Single</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-104"></a><span>  </span><span class="hs-identifier hs-type">Sql</span><span class="hs-special">,</span><span>
+</span><a name="line-105"></a><span>  </span><span class="hs-identifier hs-type">SqlPersistM</span><span class="hs-special">,</span><span>
+</span><a name="line-106"></a><span>  </span><span class="hs-identifier hs-type">SqlPersistT</span><span class="hs-special">,</span><span>
+</span><a name="line-107"></a><span>  </span><span class="hs-identifier hs-type">InsertSqlResult</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-108"></a><span>  </span><span class="hs-identifier hs-type">IsSqlBackend</span><span class="hs-special">,</span><span>
+</span><a name="line-109"></a><span>  </span><span class="hs-identifier hs-type">LogFunc</span><span class="hs-special">,</span><span>
+</span><a name="line-110"></a><span>  </span><span class="hs-identifier hs-type">SqlBackend</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-111"></a><span>  </span><span class="hs-identifier hs-type">SqlBackendCanRead</span><span class="hs-special">,</span><span>
+</span><a name="line-112"></a><span>  </span><span class="hs-identifier hs-type">SqlBackendCanWrite</span><span class="hs-special">,</span><span>
+</span><a name="line-113"></a><span>  </span><span class="hs-identifier hs-type">SqlReadBackend</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-114"></a><span>  </span><span class="hs-identifier hs-type">SqlReadT</span><span class="hs-special">,</span><span>
+</span><a name="line-115"></a><span>  </span><span class="hs-identifier hs-type">SqlWriteBackend</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-116"></a><span>  </span><span class="hs-identifier hs-type">SqlWriteT</span><span class="hs-special">,</span><span>
+</span><a name="line-117"></a><span>  </span><span class="hs-identifier hs-type">Statement</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-118"></a><span>  </span><span class="hs-identifier hs-type">Attr</span><span class="hs-special">,</span><span>
+</span><a name="line-119"></a><span>  </span><span class="hs-identifier hs-type">Checkmark</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-120"></a><span>  </span><span class="hs-identifier hs-type">CompositeDef</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-121"></a><span>  </span><span class="hs-identifier hs-type">DBName</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-122"></a><span>  </span><span class="hs-identifier hs-type">EmbedEntityDef</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-123"></a><span>  </span><span class="hs-identifier hs-type">EmbedFieldDef</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-124"></a><span>  </span><span class="hs-identifier hs-type">EntityDef</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-125"></a><span>  </span><span class="hs-identifier hs-type">ExtraLine</span><span class="hs-special">,</span><span>
+</span><a name="line-126"></a><span>  </span><span class="hs-identifier hs-type">FieldDef</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-127"></a><span>  </span><span class="hs-identifier hs-type">FieldType</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-128"></a><span>  </span><span class="hs-identifier hs-type">ForeignDef</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-129"></a><span>  </span><span class="hs-identifier hs-type">ForeignFieldDef</span><span class="hs-special">,</span><span>
+</span><a name="line-130"></a><span>  </span><span class="hs-identifier hs-type">HaskellName</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-131"></a><span>  </span><span class="hs-identifier hs-type">IsNullable</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-132"></a><span>  </span><span class="hs-identifier hs-type">OnlyUniqueException</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-133"></a><span>  </span><span class="hs-identifier hs-type">PersistException</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-134"></a><span>  </span><span class="hs-identifier hs-type">PersistFilter</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-135"></a><span>  </span><span class="hs-identifier hs-type">PersistUpdate</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-136"></a><span>  </span><span class="hs-identifier hs-type">PersistValue</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-137"></a><span>  </span><span class="hs-identifier hs-type">ReferenceDef</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-138"></a><span>  </span><span class="hs-identifier hs-type">SqlType</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-139"></a><span>  </span><span class="hs-identifier hs-type">UniqueDef</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-140"></a><span>  </span><span class="hs-identifier hs-type">UpdateException</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span>
+</span><a name="line-141"></a><span>  </span><span class="hs-identifier hs-type">WhyNullable</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><a name="line-142"></a><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-143"></a><span>
+</span><a name="line-144"></a><span class="hs-keyword">import</span><span> </span><span class="hs-identifier">Database.Persist.Sql</span><span> </span><span class="hs-keyword">hiding</span><span>
+</span><a name="line-145"></a><span>  </span><span class="hs-special">(</span><span> </span><span class="hs-identifier hs-type">BackendSpecificFilter</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-type">Filter</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-type">PersistQuery</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-type">SelectOpt</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><a name="line-146"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-type">Update</span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">delete</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">deleteWhereCount</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">updateWhereCount</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">selectList</span><span>
+</span><a name="line-147"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">selectKeysList</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">deleteCascadeWhere</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">=.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">+=.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">-=.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">*=.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">/=.</span><span class="hs-special">)</span><span>
+</span><a name="line-148"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">==.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">!=.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">&lt;.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">&gt;.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">&lt;=.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">&gt;=.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">&lt;-.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">/&lt;-.</span><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><span class="hs-special">(</span><span class="hs-operator hs-var">||.</span><span class="hs-special">)</span><span>
+</span><a name="line-149"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">listToJSON</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">mapToJSON</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">getPersistMap</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">limitOffsetOrder</span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">selectSource</span><span>
+</span><a name="line-150"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">update</span><span> </span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-var">count</span><span> </span><span class="hs-special">)</span><span>
+</span><a name="line-151"></a></pre></body></html>
