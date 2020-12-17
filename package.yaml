@@ -85,3 +85,4 @@ tests:
     dependencies:
     - language-parser
     - tasty
+    - tasty-hspec
