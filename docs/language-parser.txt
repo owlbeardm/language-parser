@@ -246,7 +246,7 @@ listWordsInfo :: MonadIO m => LanguageName -> ([Entity Word] -> a) -> AppT m a
 module Language.Language
 evolveWordText :: WordText -> [EvolveLaw] -> WordText
 
--- | The <tt>square</tt> function squares an integer.
+-- | The <a>changeWord</a> function changes a word.
 changeWord :: WordText -> EvolveLaw -> WordText
 
 module Database.Language
