@@ -2,9 +2,9 @@ name:                language-parser
 version:             0.1.0.0
 github:              "githubuser/language-parser"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2019 Author name here"
+author:              "Mikita Kukavenka"
+maintainer:          "godinfrog@gmail.com"
+copyright:           "2019 Mikita Kukavenka"
 
 extra-source-files:
 - README.md
@@ -26,34 +26,33 @@ default-extensions:
 
 
 dependencies:
-- classy-prelude
-- base
-- transformers
-
+  - base
+  - classy-prelude
 
 
 library:
   source-dirs: src
   dependencies:
-  - scotty
-  - text
-  - regex-compat-tdfa
-  - directory
-  - scotty
-  - postgresql-simple
-  - time
-  - resource-pool
-  - bytestring
-  - persistent
-  - persistent-template
-  - persistent-postgresql
-  - monad-logger
-  - template-haskell
-  - resourcet
-  - esqueleto
+  # - regex-compat
   - boxes
+  - bytestring
+  - directory
+  - esqueleto
+  - monad-logger
+  - persistent
+  - persistent-postgresql
+  - persistent-template
+  - postgresql-simple
   - prettyprinter
   - prettyprinter-ansi-terminal
+  - regex-compat-tdfa
+  - resource-pool
+  - resourcet
+  - scotty
+  - template-haskell
+  - text
+  - time
+  - transformers
   ghc-options:
   - -Wall
   - -Werror
@@ -73,22 +72,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - language-parser
-    - scotty
-    - text
-    # - regex-compat
-    - directory
-    - scotty
-    - postgresql-simple
-    - time
-    - resource-pool
-    - bytestring
-    - persistent
-    - persistent-template
-    - persistent-postgresql
-    - monad-logger
-    - template-haskell
-    - resourcet
-    - esqueleto
+    
   
 tests:
   language-parser-test:
@@ -100,3 +84,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - language-parser
+    - tasty
