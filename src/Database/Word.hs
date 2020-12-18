@@ -35,14 +35,17 @@ addWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech -> Bool ->  A
 addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten
 
 addWordByLangName :: (MonadIO m, MonadLogger m) =>  WordText -> PartOfSpeech -> LanguageName ->  AppT m (Maybe (Key Word))
-addWordByLangName  word pos langName = do
+addWordByLangName word pos langName = addWordByLangNameF word pos langName False
+
+addWordByLangNameF :: (MonadIO m, MonadLogger m) =>  WordText -> PartOfSpeech -> LanguageName -> Bool ->  AppT m (Maybe (Key Word))
+addWordByLangNameF  word pos langName fgtn = do
   lang <- findLangByName langName
   case lang of
     Nothing -> do
       logErrorNS "addWordByLangName" "There is no such lang in the database"
       return Nothing
     (Just l) -> do
-      key <- addWord word (entityKey l) pos False
+      key <- addWord word (entityKey l) pos fgtn
       return $ Just key
 
 addEvolvedWord :: (MonadIO m) => WordText -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
