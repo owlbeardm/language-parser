@@ -28,7 +28,7 @@ data LanguageName = Aboleth
                   | ClassicalArcane
                   | Dragon
                   | Dwarven
-                  | Elven
+                  | Edhellen
                   | English
                   | Halfling
                   | Infernal
