@@ -11,7 +11,20 @@
 {-# LANGUAGE TypeFamilies               #-}
 {-# LANGUAGE UndecidableInstances       #-}
 
-module Database.Entity where
+module Database.Entity  where
+--   (
+--   WordText,
+--   Comment,
+--   SoundRegex,
+--   Sound,
+--   Priority,
+--   Language (..),
+--   Word (..),
+--   Translation (..),
+--   WordOrigin (..),
+--   WordOriginFrom (..),
+--   EvolveLaw (..)    
+--   )
 
 import           ClassyPrelude       (Bool, Show, Text, mconcat, show, ($), Maybe, MonadIO, Eq)
 import           Data.Int

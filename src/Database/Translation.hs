@@ -1,4 +1,11 @@
-module Database.Translation where
+module Database.Translation
+  (
+  WordAndLang,
+  WordDescription,
+  WordSource,
+  WordTranslation,
+  getFullWordDescription, translateWord
+  ) where
 
 import           ClassyPrelude        hiding (groupBy, id, on, words)
 import           Control.Monad.Logger

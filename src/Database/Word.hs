@@ -1,4 +1,17 @@
-module Database.Word where
+module Database.Word 
+  (
+  findWordById, 
+  findWordsByAncestorText,
+  findWordsByText,
+  getAllWordOrigins, 
+  getEvolvedWord, 
+  listCombinedWordsByLangFromAndTo,
+  listEvolvedWordsByLangFromAndTo, 
+  listNotEvolvedWordsByLangFromAndTo,
+  listWordsByLang,
+  listWordsByLangAndSound,
+  listWordsInfo,
+  ) where
 
 import           ClassyPrelude        hiding (Word, delete, groupBy, isNothing,
                                        on, (\\))

@@ -1,6 +1,12 @@
 {-# LANGUAGE TemplateHaskell #-}
 
-module Database.Base where
+module Database.Base
+  (
+  LanguageName (..),
+  PartOfSpeech (..),
+  AppT,
+  runSQLAction
+  ) where
 
 -- import           Control.Monad.Logger         (NoLoggingT, logErrorN,
 --                                                logErrorNS, runNoLoggingT,

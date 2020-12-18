@@ -1,4 +1,13 @@
-module Database.Language where
+module Database.Language
+  (
+  doAllLangWithAll,
+  evolveLang,
+  findLangByKey,
+  listEvolveLawsByLangs,
+  listLangs,
+  reEvolveLang,
+  traceWordEvolve
+  ) where
 
 import           ClassyPrelude      hiding (Word, keys, on, words)
 import           Control.Monad      (zipWithM)
