@@ -1,4 +1,10 @@
-module Language.Sounds where
+module Language.Sounds
+  (
+  filterAllClusters,
+  filterFirstCluster,
+  filterLastCluster,
+  getConsonantClustersFiltered,
+  ) where
 
 import           ClassyPrelude
 -- import           Data.List

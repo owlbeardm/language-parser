@@ -1,4 +1,10 @@
-module Language.Word where
+module Language.Word
+  (
+  getWordsConstClusters,
+  getWordsConstLastClusters,
+  getWordsConstStartingClusters,
+  getWordsSounds,
+  ) where
 
 import           ClassyPrelude      hiding (Word, delete, groupBy, isNothing,
                                      on, (\\))

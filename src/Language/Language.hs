@@ -1,4 +1,7 @@
-module Language.Language where
+module Language.Language
+  (
+  evolveWordText   
+  ) where
 
 import           ClassyPrelude   hiding (Word, keys, on, words)
 import qualified Data.Text       as T
