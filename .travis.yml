@@ -28,9 +28,11 @@ addons:
 
 services:
   - postgresql
+  - docker
+
 
 before_script:
-  - psql -c 'create database wiki;' -U postgres
+  - cd Docker  && docker-compose build && docker-compose up;
 
 
 before_install:
