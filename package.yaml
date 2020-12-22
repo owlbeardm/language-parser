@@ -1,14 +1,14 @@
-name:                language-parser
-version:             0.1.0.0
-github:              "githubuser/language-parser"
-license:             BSD3
-author:              "Mikita Kukavenka"
-maintainer:          "godinfrog@gmail.com"
-copyright:           "2019 Mikita Kukavenka"
+name: language-parser
+version: 0.1.0.0
+github: "githubuser/language-parser"
+license: BSD3
+author: "Mikita Kukavenka"
+maintainer: "godinfrog@gmail.com"
+copyright: "2019 Mikita Kukavenka"
 
 extra-source-files:
-- README.md
-- ChangeLog.md
+  - README.md
+  - ChangeLog.md
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -17,91 +17,86 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/language-parser#readme>
+description: Please see the README on GitHub at <https://github.com/githubuser/language-parser#readme>
 
 default-extensions:
-- OverloadedStrings
-# - GeneralizedNewtypeDeriving
-- NoImplicitPrelude
-
+  - OverloadedStrings
+  - NoImplicitPrelude
 
 dependencies:
   - base
   - classy-prelude
 
-
 library:
-  source-dirs: src
   dependencies:
-  # - regex-compat
-  - aeson
-  - boxes
-  - bytestring
-  - directory
-  - esqueleto
-  - monad-logger
-  - persistent
-  - persistent-postgresql
-  - persistent-template
-  - postgresql-simple
-  - prettyprinter
-  - prettyprinter-ansi-terminal
-  - regex-compat-tdfa
-  - resource-pool
-  - resourcet
-  - scotty
-  - servant
-  - servant-client
-  - servant-server
-  - template-haskell
-  - text
-  - time
-  - transformers
-  - warp
+    - aeson
+    - boxes
+    - bytestring
+    - directory
+    - esqueleto
+    - monad-logger
+    - persistent
+    - persistent-postgresql
+    - persistent-template
+    - postgresql-simple
+    - prettyprinter
+    - prettyprinter-ansi-terminal
+    - regex-compat-tdfa
+    - resource-pool
+    - resourcet
+    - scotty
+    - servant
+    - servant-client
+    - servant-server
+    - template-haskell
+    - text
+    - time
+    - transformers
+    - warp
   ghc-options:
-  - -Wall
-  - -Werror
-  - -Wincomplete-record-updates
-  - -Wincomplete-uni-patterns
-  - -Wredundant-constraints
-  - -Wno-unused-top-binds
-  - -O2
+    - '-Wall'
+    - '-Werror'
+    - '-Wincomplete-record-updates'
+    - '-Wincomplete-uni-patterns'
+    - '-Wredundant-constraints'
+    - '-Wno-unused-top-binds'
+    - '-O2'
+  source-dirs: src
 
 executables:
   language-parser-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
     dependencies:
-    - language-parser
-    
-  
+      - language-parser
+    ghc-options:
+      - '-threaded'
+      - '-rtsopts'
+      - '-with-rtsopts=-N'
+    main: Main.hs
+    source-dirs: app
+
 tests:
   language-parser-test:
-    main:                Spec.hs
-    source-dirs:         test
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
     dependencies:
-    - language-parser
-    - tasty
-    - tasty-hspec
-
+      - language-parser
+      - tasty
+      - tasty-hspec
+      - hspec-wai
+    ghc-options:
+      - '-threaded'
+      - '-rtsopts'
+      - '-with-rtsopts=-N'
+    main: Spec.hs
+    source-dirs: test
 
 benchmarks:
   language-parser-benchmarks:
-    main:                Bench.hs
-    source-dirs:         bench
-    ghc-options:
-      - -O2
-      - -rtsopts
-      - -threaded
-      - -with-rtsopts=-N
     dependencies:
-    - criterion
-    - language-parser
+      - criterion
+      - language-parser
+    ghc-options:
+      - '-O2'
+      - '-rtsopts'
+      - '-threaded'
+      - '-with-rtsopts=-N'
+    main: Bench.hs
+    source-dirs: bench
