@@ -23,14 +23,18 @@ module Database.Entity  where
 --   Translation (..),
 --   WordOrigin (..),
 --   WordOriginFrom (..),
---   EvolveLaw (..)    
+--   EvolveLaw (..)
 --   )
 
-import           ClassyPrelude       (Bool, Show, Text, mconcat, show, ($), Maybe, MonadIO, Eq)
+import           ClassyPrelude       (Bool, Eq, Maybe, MonadIO, Show, Text,
+                                      mconcat, show, ($), return)
+import           Data.Aeson          (FromJSON, Object, ToJSON, object,
+                                      parseJSON, toJSON, withObject, (.:), (.=))
+import           Data.Aeson.Types    (Parser)
 import           Data.Int
 import           Database.Base
-import           Database.Persist.TH
 import           Database.Esqueleto
+import           Database.Persist.TH
 
 type WordText   = Text
 type Comment    = Text
@@ -80,6 +84,21 @@ EvolveLaw sql=evolve_law_tbl
 
 instance Show Language where
     show l = mconcat [ show $ languageLname l]
+
+instance ToJSON Language where
+  toJSON language = object
+    [ "name" .= show (languageLname language)
+    ]
+
+instance FromJSON Language where
+  parseJSON = withObject "Language" parseLanguage
+
+parseLanguage :: Object -> Parser Language
+parseLanguage o = do
+  lName <- o .: "name"
+  return Language
+    { languageLname = lName
+    }
 
 findLangByName :: (MonadIO m) => LanguageName -> AppT m  (Maybe (Entity Language))
 findLangByName name =  getBy $ LanguageNameUnq name

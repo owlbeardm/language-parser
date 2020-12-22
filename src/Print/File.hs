@@ -35,10 +35,14 @@ prettyLangToLangEdge :: (MonadIO m) =>  (Entity Language, Entity Language) -> Ap
 prettyLangToLangEdge (langFrom, langTo) = do
      evolved <- listEvolvedWordsByLangFromAndTo (getLangName langFrom) (getLangName langTo)
      combined <- listCombinedWordsByLangFromAndTo (getLangName langFrom) (getLangName langTo)
+     migrated <- listMigratedWordsByLangFromAndTo (getLangName langFrom) (getLangName langTo)
+     derivated <- listDerivatedWordsByLangFromAndTo (getLangName langFrom) (getLangName langTo)
      let prettyEdgeLL ws = prettyEdge langFrom langTo ((not . null) ws)
      return $ vsep [
           prettyEdgeLL evolved "\"standard\"" "2",
-          prettyEdgeLL combined "\"dotted\"" "1"
+          prettyEdgeLL migrated "\"standard\"" "1",
+          prettyEdgeLL combined "\"dashed\"" "1",
+          prettyEdgeLL derivated "\"dotted\"" "1"
           ]
      where
           getLangName = languageLname . entityVal

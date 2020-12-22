@@ -3,9 +3,8 @@ module Lib
   main
   ) where
 
-import           ClassyPrelude
-import           Database.Base
-import           Print.Console
+import           ClassyPrelude (IO)
+import           Platform.HTTP (runServer)
 
 main :: IO ()
-main = printWordsFrom Nitholan
+main = runServer

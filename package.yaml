@@ -34,6 +34,7 @@ library:
   source-dirs: src
   dependencies:
   # - regex-compat
+  - aeson
   - boxes
   - bytestring
   - directory
@@ -49,10 +50,14 @@ library:
   - resource-pool
   - resourcet
   - scotty
+  - servant
+  - servant-client
+  - servant-server
   - template-haskell
   - text
   - time
   - transformers
+  - warp
   ghc-options:
   - -Wall
   - -Werror

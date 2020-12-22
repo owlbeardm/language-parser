@@ -1,12 +1,14 @@
 module Database.Language
   (
+  addLang,
+  combineWord,
   doAllLangWithAll,
   evolveLang,
   findLangByKey,
   listEvolveLawsByLangs,
   listLangs,
   reEvolveLang,
-  traceWordEvolve
+  traceWordEvolve,
   ) where
 
 import           ClassyPrelude      hiding (Word, keys, on, words)
@@ -35,7 +37,13 @@ findLangByKey k = select $ from $ \lang -> do
 listLangs :: (MonadIO m) => AppT m [Entity Language]
 listLangs = select $ from $ \lang -> return lang
 
-addLang :: (MonadIO m) => LanguageName -> AppT m  (Key Language)
+-- |The 'addLang' function inserts new language.
+--
+-- >>> runSQLAction $ addLang 'Khuzdûl'
+-- LanguageKey {unLanguageKey = SqlBackendKey {unSqlBackendKey = 19950}}
+addLang :: (MonadIO m) =>
+        LanguageName     -- ^ 'LanguageName'
+        -> AppT m  (Key Language)     -- ^ 'Key' 'Language' if inserted succsesfully
 addLang name = insert $ Language name
 
 insertEvolvedWord :: (MonadIO m) => WordText -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
@@ -62,7 +70,18 @@ listEvolveLawsByLangs langNameFrom langNameTo = select $ from $ \(evolveLaw,lang
               --order by prior
       return evolveLaw
 
-combineWord :: (MonadIO m) => WordText -> PartOfSpeech -> LanguageName -> [Int64] -> AppT m (Maybe (Key Word))
+-- |The 'combineWord' function inserts result of combining other words from any language.
+--
+-- @\/ kʷiliati \/ [v.] ( __19240__ ) from 'Queran'@
+--
+-- >>> runSQLAction $ combineWord "kʷilissa" Noun Queran [19240, 19300]
+-- Just (WordKey {unWordKey = SqlBackendKey {unSqlBackendKey = 19310}})
+combineWord :: (MonadIO m) =>
+            WordText    -- ^ Result of combinations. Must be done manually.
+            -> PartOfSpeech    -- ^ 'PartOfSpeech' of the resulting word
+            -> LanguageName    -- ^ 'LanguageName' of the resulting word
+            -> [Int64]    -- ^ Word's IDs from which  it's combined.
+            -> AppT m (Maybe (Key Word))
 combineWord text pos langN wids = do
    mLang <- findLangByName langN
    case mLang of
