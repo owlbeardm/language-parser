@@ -32,8 +32,7 @@ services:
 
 
 before_script:
-  - cd $HOME/owlbeardm/language-parser/Docker  && docker-compose build && docker-compose up -d;
-  - cd $HOME/owlbeardm/language-parser/test  && docker-compose build && docker-compose up -d;
+  - cd Docker  && docker-compose build && docker-compose up -d;
 
 
 before_install:

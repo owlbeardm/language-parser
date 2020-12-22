@@ -25,10 +25,11 @@ services:
           - postgres.wiki.lo
   wiki-flyway:
     container_name: "wiki-flyway"
-    image: boxfuse/flyway:5.2.4
-    command: -url=jdbc:postgresql://postgres.wiki.lo:5432/wiki -user=wiki -password=wiki -connectRetries=60 migrate
+    image: flyway/flyway:7.2.0
+    command: -url=jdbc:postgresql://postgres.wiki.lo:5432/wiki -user=wiki -password=wiki -connectRetries=60 -ignoreMissingMigrations=true migrate
     volumes:
-      - ./sql/flyway-migration:/flyway/sql
+      - ./sql/flyway-migration:/flyway/sql/flyway-migration
+      - ../test/sql/flyway-migration:/flyway/sql/flyway-migration-test
     networks:
       - wiki-network
     depends_on:
