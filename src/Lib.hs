@@ -4,7 +4,7 @@ module Lib
   ) where
 
 import           ClassyPrelude (IO)
-import           Platform.HTTP (runServer)
+import           HTTP.API (runServer)
 
 main :: IO ()
 main = runServer

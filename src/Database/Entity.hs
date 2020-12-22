@@ -90,6 +90,19 @@ instance ToJSON Language where
     [ "name" .= show (languageLname language)
     ]
 
+instance ToJSON Translation where
+  toJSON translation = object
+    [ "comment" .= show (translationComment translation),
+      "altTranslation" .= show (translationAltTranslation translation)
+    ]
+
+instance ToJSON Word where
+  toJSON word = object
+    [ "word" .= show (wordWord word),
+      "partOfSpeech" .= show (wordPartOfSpeech word),
+      "forgotten" .= show (wordForgotten word)
+    ]    
+
 instance FromJSON Language where
   parseJSON = withObject "Language" parseLanguage
 

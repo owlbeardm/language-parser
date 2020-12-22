@@ -1,8 +1,8 @@
 {-# LANGUAGE QuasiQuotes #-}
-module Platform.HTTPSpec where
+module HTTP.APISpec where
 
 import           ClassyPrelude
-import           Platform.HTTP
+import           HTTP.API
 import           Test.Hspec
 import           Test.Hspec.Wai
 import           Test.Hspec.Wai.JSON
