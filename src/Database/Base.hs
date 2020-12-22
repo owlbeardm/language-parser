@@ -76,7 +76,7 @@ data PartOfSpeech = Adjective
 derivePersistField "PartOfSpeech"
 
 connStr :: ConnectionString
-connStr = "host=localhost dbname=wiki user=wiki password=wiki port=5432"
+connStr = "host=172.19.7.103 dbname=wiki user=wiki password=wiki port=5432"
 
 runSQLAction :: SqlPersistT (ResourceT (NoLoggingT IO)) a -> IO a
 runSQLAction =
