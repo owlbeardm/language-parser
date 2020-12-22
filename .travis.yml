@@ -19,6 +19,7 @@ language: generic
 cache:
   directories:
   - $HOME/.stack
+  - docker_images
 
 # Ensure necessary system libraries are present
 addons:
@@ -40,6 +41,7 @@ before_install:
 - mkdir -p ~/.local/bin
 - export PATH=$HOME/.local/bin:$PATH
 - travis_retry curl -L https://get.haskellstack.org/stable/linux-x86_64.tar.gz | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
+- docker load -i docker_images/images.tar || true
 
 install:
 # Build dependencies
@@ -59,3 +61,6 @@ after_success:
   #     git add --all &&
   #     git commit -m "Docs updated";
   #   fi
+
+before_cache:
+  - docker save -o docker_images/images.tar $(docker images -a -q)
