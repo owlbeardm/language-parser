@@ -1,27 +1,45 @@
+{-# LANGUAGE DataKinds     #-}
+{-# LANGUAGE TypeOperators #-}
+
 module Platform.HTTP
-      ( 
+      (
+      runServer
       ) where
 
--- import           ClassyPrelude
+import           ClassyPrelude            (IO, map, return, ($))
+import           Control.Monad.IO.Class   (liftIO)
+-- import           Control.Monad.Trans.Except (throwE)
+-- import           Data.Int                   (Int64)
+import           Data.Proxy               (Proxy (..))
+import           Database.Base            (runSQLAction)
+import           Database.Entity
+import           Database.Esqueleto       (entityVal)
+import           Database.Language        (listLangs)
+import           Network.Wai.Handler.Warp (run)
+import           Servant.API
+-- import           Servant.Client
+import           Servant.Server
 
--- -- import           Network.Wai        (Response)
--- import           System.Environment
+type LanguageAPI =
+       "api" :> "langs" :> Get '[JSON] [Language]
+--   :<|> "api" :> "langs" :> ReqBody '[JSON] Language :> Post '[JSON] Int64
 
--- type App r m = (MonadIO m)
+languageAPI :: Proxy LanguageAPI
+languageAPI = Proxy :: Proxy LanguageAPI
 
+fetchUsersHandler ::  Handler [Language]
+fetchUsersHandler = do
+  langs <- liftIO $ runSQLAction listLangs
+  return (map entityVal langs)
+--   case maybeUser of
+--     Just user -> return user
+--     Nothing -> Handler $ (throwE $ err401 { errBody = "Could not find user with that ID" })
 
--- main :: (App r m) => (m Response -> IO Response) -> IO ()
--- main runner = do
---   port <- acquirePort
---   mayTLSSetting <- acquireTLSSetting
---   scottyT port runner routes
---   where
---     acquirePort = do
---       port <- fromMaybe "" <$> lookupEnv "PORT"
---       return . fromMaybe 3000 $ readMay port
---     acquireTLSSetting = do
---       env <- (>>= readMay) <$> lookupEnv "ENABLE_HTTPS"
---       let enableHttps = fromMaybe True env
---       return $ if enableHttps
---         then Just $ tlsSettings "secrets/tls/certificate.pem" "secrets/tls/key.pem"
---         else Nothing
+languageServer :: Server LanguageAPI
+languageServer = fetchUsersHandler
+--  :<|> (createUserHandler connString)
+
+runServer :: IO ()
+runServer = run 8000 (serve languageAPI languageServer)
+--   connString <- fetchPostgresConnection
+

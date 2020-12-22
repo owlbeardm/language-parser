@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass  #-}
+{-# LANGUAGE DeriveGeneric   #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Database.Base
@@ -8,13 +10,11 @@ module Database.Base
   runSQLAction
   ) where
 
--- import           Control.Monad.Logger         (NoLoggingT, logErrorN,
---                                                logErrorNS, runNoLoggingT,
---                                                runStderrLoggingT)
--- import           Control.Monad.Logger         (LoggingT, runStderrLoggingT)
 import           ClassyPrelude
 import           Control.Monad.Logger         (NoLoggingT, runNoLoggingT)
+-- import           Control.Monad.Logger         (LoggingT, runStderrLoggingT)
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
+import           Data.Aeson                   (FromJSON, ToJSON)
 import           Database.Esqueleto
 import           Database.Persist.Postgresql  (ConnectionString,
                                                withPostgresqlConn)
@@ -57,7 +57,7 @@ data LanguageName = Aboleth
                   | SlaveRunic
                   | Sylvan
                   | Titan
-    deriving (Eq, Enum, Read, Show)
+    deriving (Eq, Enum, Read, Show, Generic, ToJSON, FromJSON)
 derivePersistField "LanguageName"
 
 data PartOfSpeech = Adjective
@@ -80,5 +80,3 @@ connStr = "host=localhost dbname=wiki user=wiki password=wiki port=5432"
 runSQLAction :: SqlPersistT (ResourceT (NoLoggingT IO)) a -> IO a
 runSQLAction =
   runNoLoggingT . runResourceT . withPostgresqlConn connStr . runSqlConn
-
-
