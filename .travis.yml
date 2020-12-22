@@ -32,7 +32,7 @@ services:
 
 
 before_script:
-  - cd Docker  && docker-compose build && docker-compose up;
+  - cd Docker  && docker-compose build && docker-compose up -d;
 
 
 before_install:
