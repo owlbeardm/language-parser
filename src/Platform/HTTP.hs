@@ -3,10 +3,11 @@
 
 module Platform.HTTP
       (
-      runServer
+      runServer,
+      myApp
       ) where
 
-import           ClassyPrelude            (IO, map, return, ($))
+import           ClassyPrelude            (IO, Text, map, return, ($))
 import           Control.Monad.IO.Class   (liftIO)
 -- import           Control.Monad.Trans.Except (throwE)
 -- import           Data.Int                   (Int64)
@@ -22,7 +23,7 @@ import           Servant.Server
 
 type LanguageAPI =
        "api" :> "langs" :> Get '[JSON] [Language]
---   :<|> "api" :> "langs" :> ReqBody '[JSON] Language :> Post '[JSON] Int64
+  :<|> "api" :> "hello" :> Get '[PlainText] Text
 
 languageAPI :: Proxy LanguageAPI
 languageAPI = Proxy :: Proxy LanguageAPI
@@ -37,9 +38,12 @@ fetchUsersHandler = do
 
 languageServer :: Server LanguageAPI
 languageServer = fetchUsersHandler
---  :<|> (createUserHandler connString)
+ :<|> return "hello"
+
+myApp :: Application
+myApp = serve languageAPI languageServer
 
 runServer :: IO ()
-runServer = run 8000 (serve languageAPI languageServer)
+runServer = run 8000 myApp
 --   connString <- fetchPostgresConnection
 

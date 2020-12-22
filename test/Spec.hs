@@ -1,13 +1,15 @@
 import           ClassyPrelude
 import           Language.SoundsSpec
+import           Platform.HTTPSpec
+import           Test.Hspec
 import           Test.Tasty
 import           Test.Tasty.Hspec
 
 main :: IO ()
 main = do
   specs <- concat <$> mapM testSpecs
-             [ soundsSpecs
-            --  , lookupIPSpecs
+             [ soundsSpecs,
+               httpSpecs
              ]
 --   goldens <- goldenTests
   defaultMain (testGroup " All Tests" [
@@ -15,4 +17,5 @@ main = do
                 -- , testGroup "Properties" props
                 -- , testGroup "Golden Tests" goldens
                 ])
+  -- hspec httpSpecs
 -- main = defaultMain (testGroup "(no tests)" [])

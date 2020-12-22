@@ -77,10 +77,12 @@ executables:
 tests:
   language-parser-test:
     dependencies:
+      - hspec
+      - hspec-wai
+      - hspec-wai-json
       - language-parser
       - tasty
       - tasty-hspec
-      - hspec-wai
     ghc-options:
       - '-threaded'
       - '-rtsopts'
