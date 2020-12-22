@@ -33,6 +33,7 @@ services:
 
 before_script:
   - cd Docker  && docker-compose build && docker-compose up -d;
+  - cd test  && docker-compose build && docker-compose up -d;
 
 
 before_install:

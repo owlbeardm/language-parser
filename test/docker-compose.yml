@@ -1,0 +1,17 @@
+version: "3.3"
+networks:
+  wiki-network-external:
+    external:
+      name: docker_wiki-network
+
+services:
+  wiki-flyway-test:
+    container_name: "wiki-flyway-test"
+    image: boxfuse/flyway:5.2.4
+    command: -url=jdbc:postgresql://postgres.wiki.lo:5432/wiki -user=wiki -password=wiki -connectRetries=60 migrate
+    volumes:
+      - ./sql/flyway-migration:/flyway/sql
+    networks:
+      - wiki-network-external
+volumes:
+  pgdata:

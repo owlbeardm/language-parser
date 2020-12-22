@@ -20,8 +20,8 @@ spec_api = describe "GET /api/hello" $
 spec_apiLangs = describe "GET /api/langs" $  do
             it "responds with 200" $
                 get "/api/langs" `shouldRespondWith` 200
-            it "responds with 200" $ 
+            it "responds with [Titan,ProtoHuman,English]" $ 
                 get "/api/langs" `shouldRespondWith` 
                     [json|
-                    {foo: 23, bar: 42}
+                    [{"name":"Titan"},{"name":"ProtoHuman"},{"name":"English"}]
                     |]
