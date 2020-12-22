@@ -8,17 +8,16 @@
 @version 0.1.0.0
 
 module Database.Base
-type AppT = ReaderT SqlBackend
 data LanguageName
 Aboleth :: LanguageName
 Alko :: LanguageName
 ClassicalArcane :: LanguageName
 Dragon :: LanguageName
-Dwarven :: LanguageName
-Elven :: LanguageName
+Edhellen :: LanguageName
 English :: LanguageName
 Halfling :: LanguageName
 Infernal :: LanguageName
+Khuzdûl :: LanguageName
 Kobold :: LanguageName
 LizardFolk :: LanguageName
 Necril :: LanguageName
@@ -56,7 +55,7 @@ Preposition :: PartOfSpeech
 Pronoun :: PartOfSpeech
 Suffix :: PartOfSpeech
 Verb :: PartOfSpeech
-connStr :: ConnectionString
+type AppT = ReaderT SqlBackend
 runSQLAction :: SqlPersistT (ResourceT (NoLoggingT IO)) a -> IO a
 instance Database.Persist.Class.PersistField.PersistField Database.Base.PartOfSpeech
 instance Database.Persist.Sql.Class.PersistFieldSql Database.Base.PartOfSpeech
@@ -221,84 +220,98 @@ instance Database.Persist.Class.PersistStore.ToBackendKey Database.Persist.Sql.T
 instance GHC.Show.Show Database.Entity.Language
 
 module Database.Word
-findWordById_ :: MonadIO m => Int64 -> AppT m [Entity Word]
-findWordById :: MonadIO m => Int64 -> AppT m (Maybe (Entity Word))
-addWord :: MonadIO m => WordText -> Key Language -> PartOfSpeech -> Bool -> AppT m (Key Word)
+
+-- | The <a>addWordByLangName</a> function inserts new word for language.
+--   
+--   <pre>
+--   &gt;&gt;&gt; runSQLAction $ addWordByLangName "kibil" Noun Khuzdûl
+--   Just (WordKey {unWordKey = SqlBackendKey {unSqlBackendKey = 19960}})
+--   </pre>
 addWordByLangName :: (MonadIO m, MonadLogger m) => WordText -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
-addEvolvedWord :: MonadIO m => WordText -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
-findWord :: MonadIO m => Entity Language -> WordText -> PartOfSpeech -> AppT m (Maybe (Entity Word))
-findWordsByText :: MonadIO m => WordText -> AppT m [Entity Word]
+findWordById :: MonadIO m => Int64 -> AppT m (Maybe (Entity Word))
 findWordsByAncestorText :: MonadIO m => WordText -> AppT m [Entity Word]
+findWordsByText :: MonadIO m => WordText -> AppT m [Entity Word]
+getAllWordOrigins :: MonadIO m => Entity Word -> AppT m [(Entity Word, Entity Language)]
+getEvolvedWord :: MonadIO m => LanguageName -> Entity Word -> AppT m [Entity Word]
+listCombinedWordsByLangFromAndTo :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity Word]
+listDerivatedWordsByLangFromAndTo :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity Word]
+listEvolvedWordsByLangFromAndTo :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity Word]
+listMigratedWordsByLangFromAndTo :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity Word]
+listNotEvolvedWordsByLangFromAndTo :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity Word]
 listWordsByLang :: MonadIO m => LanguageName -> AppT m [Entity Word]
 listWordsByLangAndSound :: MonadIO m => LanguageName -> Text -> AppT m [Entity Word]
-listNotForgottenWordsByLang :: MonadIO m => LanguageName -> AppT m [Entity Word]
-listNotEvolvedWordsByLangFromAndTo :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity Word]
-listCombinedWordsByLangFromAndTo :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity Word]
-listEvolvedWordsByLangFromAndTo :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity Word]
-listEvolvedWordsToKeysByWordFromAndTo :: MonadIO m => Entity Word -> LanguageName -> AppT m [Entity Word]
-deleteEvolvedWordsByLangFromAndTo :: MonadIO m => LanguageName -> LanguageName -> AppT m ()
-getAllWordOrigins :: MonadIO m => Entity Word -> AppT m [(Entity Word, Entity Language)]
-getWordOrigin :: MonadIO m => Entity Word -> AppT m (Maybe (Entity WordOrigin))
-getWordFromWordLang :: MonadIO m => Entity WordOrigin -> AppT m [(Entity Word, Entity Language)]
-getEvolvedWord :: MonadIO m => LanguageName -> Entity Word -> AppT m [Entity Word]
 listWordsInfo :: MonadIO m => LanguageName -> ([Entity Word] -> a) -> AppT m a
 
 module Language.Language
 evolveWordText :: WordText -> [EvolveLaw] -> WordText
 
--- | The <a>changeWord</a> function changes a word.
-changeWord :: WordText -> EvolveLaw -> WordText
-
 module Database.Language
-findLangById_ :: MonadIO m => Int64 -> AppT m [Entity Language]
-findLangById :: MonadIO m => Int64 -> AppT m (Maybe (Entity Language))
-findLangByKey :: MonadIO m => Key Language -> AppT m [Entity Language]
-listLangs :: MonadIO m => AppT m [Entity Language]
+
+-- | The <a>addLang</a> function inserts new language.
+--   
+--   <pre>
+--   &gt;&gt;&gt; runSQLAction $ addLang 'Khuzdûl'
+--   LanguageKey {unLanguageKey = SqlBackendKey {unSqlBackendKey = 19950}}
+--   </pre>
 addLang :: MonadIO m => LanguageName -> AppT m (Key Language)
-insertEvolvedWord :: MonadIO m => WordText -> PartOfSpeech -> Key Word -> Key Language -> AppT m (Key Word)
-insertCombinedWord :: MonadIO m => WordText -> PartOfSpeech -> Key Language -> [Key Word] -> AppT m (Key Word)
-listEvolveLawsByLangs :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity EvolveLaw]
+
+-- | The <a>combineWord</a> function inserts result of combining other
+--   words from any language.
+--   
+--   <pre>
+--   / kʷiliati / [v.] ( <b>19240</b> ) from <a>Queran</a>
+--   </pre>
+--   
+--   <pre>
+--   &gt;&gt;&gt; runSQLAction $ combineWord "kʷilissa" Noun Queran [19240, 19300]
+--   Just (WordKey {unWordKey = SqlBackendKey {unSqlBackendKey = 19310}})
+--   </pre>
 combineWord :: MonadIO m => WordText -> PartOfSpeech -> LanguageName -> [Int64] -> AppT m (Maybe (Key Word))
-evolvedWord :: MonadIO m => [EvolveLaw] -> Entity Word -> Key Language -> AppT m (Key Word)
-evolveLang :: MonadIO m => LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))
-reEvolveLang :: MonadIO m => LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))
-updateWord :: MonadIO m => (Entity Word, Text) -> AppT m Int64
-doLangWithAll :: MonadIO m => (LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))) -> LanguageName -> [LanguageName] -> AppT m [(Int, LanguageName, LanguageName)]
 doAllLangWithAll :: MonadIO m => (LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))) -> AppT m [(Int, LanguageName, LanguageName)]
-evolveAllLangWithAll :: MonadIO m => AppT m [(Int, LanguageName, LanguageName)]
-reEvolveAllLangWithAll :: MonadIO m => AppT m [(Int, LanguageName, LanguageName)]
+evolveLang :: MonadIO m => LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))
+findLangByKey :: MonadIO m => Key Language -> AppT m [Entity Language]
+listEvolveLawsByLangs :: MonadIO m => LanguageName -> LanguageName -> AppT m [Entity EvolveLaw]
+listLangs :: MonadIO m => AppT m [Entity Language]
+reEvolveLang :: MonadIO m => LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))
 traceWordEvolve :: MonadIO m => WordText -> [LanguageName] -> AppT m [WordText]
 
 module Database.Translation
-type FullTranslation = (Translation, Word, Language, Language, Maybe Word)
-type WordTranslation = (Translation, Language, Maybe Word)
 type WordAndLang = (Word, Language)
-type WordSource = (WordAndLang, [WordTranslation])
 type WordDescription = (Entity Word, [Language], [WordTranslation], [WordSource])
-translate :: WordText -> IO [FullTranslation]
-translateWord :: MonadIO m => Text -> AppT m [WordDescription]
-getFullWordDescription :: MonadIO m => [Entity Word] -> AppT m [WordDescription]
-findWordsByTranslation :: MonadIO m => Text -> AppT m [Entity Word]
-getWordTranslations :: MonadIO m => Entity Word -> AppT m [WordTranslation]
-printAllTranslationsByLang :: LanguageName -> IO [FullTranslation]
+type WordSource = (WordAndLang, [WordTranslation])
+type WordTranslation = (Translation, Language, Maybe Word)
+
+-- | The <a>addTranslationFromAlt</a> function inserts new translation not
+--   to a word.
+--   
+--   <pre>
+--   &gt;&gt;&gt; runSQLAction $ addTranslationFromAlt "bhrentos" Noun Titan English "animal horned" Nothing
+--   Just (TranslationKey {unTranslationKey = SqlBackendKey {unSqlBackendKey = 19980}})
+--   </pre>
+addTranslationFromAlt :: (MonadIO m, MonadLogger m) => WordText -> PartOfSpeech -> LanguageName -> LanguageName -> Text -> Maybe Comment -> AppT m (Maybe (Key Translation))
+
+-- | The <a>addTranslationFromTo</a> function inserts new translation to a
+--   existing word.
+--   
+--   <pre>
+--   &gt;&gt;&gt; runSQLAction $ addTranslationFromTo "kibil" Noun Khuzdûl "silver" Noun English (Just "metal")
+--   Just (TranslationKey {unTranslationKey = SqlBackendKey {unSqlBackendKey = 19980}})
+--   </pre>
 addTranslationFromTo :: (MonadIO m, MonadLogger m) => WordText -> PartOfSpeech -> LanguageName -> WordText -> PartOfSpeech -> LanguageName -> Maybe Comment -> AppT m (Maybe (Key Translation))
-addTranslationFromAlt :: (MonadIO m, MonadLogger m) => WordText -> PartOfSpeech -> LanguageName -> LanguageName -> Maybe Comment -> Text -> AppT m (Maybe (Key Translation))
-addTranslationFromToByKeys :: (MonadIO m, MonadLogger m) => Int64 -> Int64 -> Maybe Comment -> AppT m (Maybe (Key Translation))
+getFullWordDescription :: MonadIO m => [Entity Word] -> AppT m [WordDescription]
+translateWord :: MonadIO m => Text -> AppT m [WordDescription]
 
 module Language.Sounds
-vovels :: Text
-isVowel :: Char -> Bool
-splitOnAnyOf :: [Text] -> Text -> [Text]
-getConsonantClustersFiltered :: (Text -> [Text] -> [Text]) -> [Text] -> [Text]
+filterAllClusters :: Text -> [Text] -> [Text]
 filterFirstCluster :: Text -> [Text] -> [Text]
 filterLastCluster :: Text -> [Text] -> [Text]
-filterAllClusters :: Text -> [Text] -> [Text]
+getConsonantClustersFiltered :: (Text -> [Text] -> [Text]) -> [Text] -> [Text]
 
 module Language.Word
-getWordsSounds :: [Entity Word] -> Text
 getWordsConstClusters :: [Entity Word] -> [Text]
-getWordsConstStartingClusters :: [Entity Word] -> [Text]
 getWordsConstLastClusters :: [Entity Word] -> [Text]
+getWordsConstStartingClusters :: [Entity Word] -> [Text]
+getWordsSounds :: [Entity Word] -> Text
 
 module PhoneticChanges
 

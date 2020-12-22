@@ -1,12 +1,15 @@
 module Database.Word 
   (
+  addWordByLangName,
   findWordById, 
   findWordsByAncestorText,
   findWordsByText,
   getAllWordOrigins, 
   getEvolvedWord, 
   listCombinedWordsByLangFromAndTo,
+  listDerivatedWordsByLangFromAndTo,
   listEvolvedWordsByLangFromAndTo, 
+  listMigratedWordsByLangFromAndTo,
   listNotEvolvedWordsByLangFromAndTo,
   listWordsByLang,
   listWordsByLangAndSound,
@@ -34,7 +37,16 @@ findWordById i = do
 addWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech -> Bool ->  AppT m (Key Word)
 addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten
 
-addWordByLangName :: (MonadIO m, MonadLogger m) =>  WordText -> PartOfSpeech -> LanguageName ->  AppT m (Maybe (Key Word))
+
+-- |The 'addWordByLangName' function inserts new word for language.
+--
+-- >>> runSQLAction $ addWordByLangName "kibil" Noun Khuzdûl
+-- Just (WordKey {unWordKey = SqlBackendKey {unSqlBackendKey = 19960}})
+addWordByLangName :: (MonadIO m, MonadLogger m) =>  
+                  WordText     -- ^ 'Text' of new word, must be unique with 'PartOfSpeech' and 'LanguageName' combined.
+                  -> PartOfSpeech     -- ^ 'PartOfSpeech'
+                  -> LanguageName     -- ^ 'LanguageName'
+                  ->  AppT m (Maybe (Key Word))     -- ^ 'Key' 'Word' if inserted sucsessfully
 addWordByLangName  word pos langName = do
   lang <- findLangByName langName
   case lang of
@@ -113,6 +125,37 @@ listCombinedWordsByLangFromAndTo langNameFrom langNameTo =
       where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
               langTo ^. LanguageLname ==. val langNameTo &&.
               wordOrg ^. WordOriginCombinedYn ==. val True)
+      groupBy (word ^. WordId)
+      return word
+
+listMigratedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity Word]
+listMigratedWordsByLangFromAndTo langNameFrom langNameTo =
+  select $
+  from $ \(word `InnerJoin` langFrom `InnerJoin` wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
+      on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
+      on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
+      on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
+      on (word ^. WordId ==. wordOrgFrom ^. WordOriginFromWordFromId)
+      on (word ^. WordLangId ==. langFrom ^. LanguageId)
+      where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
+              langTo ^. LanguageLname ==. val langNameTo &&.
+              wordOrg ^. WordOriginMigratedYn ==. val True)
+      groupBy (word ^. WordId)
+      return word
+
+
+listDerivatedWordsByLangFromAndTo :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [Entity Word]
+listDerivatedWordsByLangFromAndTo langNameFrom langNameTo =
+  select $
+  from $ \(word `InnerJoin` langFrom `InnerJoin` wordOrgFrom `InnerJoin` wordOrg `InnerJoin` wordTo `InnerJoin` langTo) -> do
+      on (wordTo ^. WordLangId ==. langTo ^. LanguageId)
+      on (wordOrg ^. WordOriginWordId ==. wordTo ^. WordId)
+      on (wordOrgFrom ^. WordOriginFromOriginId ==. wordOrg ^. WordOriginId)
+      on (word ^. WordId ==. wordOrgFrom ^. WordOriginFromWordFromId)
+      on (word ^. WordLangId ==. langFrom ^. LanguageId)
+      where_ (langFrom ^. LanguageLname ==. val langNameFrom &&.
+              langTo ^. LanguageLname ==. val langNameTo &&.
+              wordOrg ^. WordOriginDerivatedYn ==. val True)
       groupBy (word ^. WordId)
       return word
 

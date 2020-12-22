@@ -150,6 +150,57 @@ graph
          fontSize 14
       ]
    ]
+   node
+   [
+      id 18400
+      label "Edhellen"
+      graphics
+      [
+         type "rectangle"
+         fill "#FFCC00"
+      ]
+      LabelGraphics
+      [
+         text "Edhellen"
+         fontSize 14
+      ]
+   ]
+   node
+   [
+      id 18410
+      label "Sylvan"
+      graphics
+      [
+         type "rectangle"
+         fill "#FFCC00"
+      ]
+      LabelGraphics
+      [
+         text "Sylvan"
+         fontSize 14
+      ]
+   ]
+   node
+   [
+      id 19950
+      label "Khuzdûl"
+      graphics
+      [
+         type "rectangle"
+         fill "#FFCC00"
+      ]
+      LabelGraphics
+      [
+         text "Khuzdûl"
+         fontSize 14
+      ]
+   ]
+
+
+
+
+
+
 
 
 
@@ -184,6 +235,46 @@ edge
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+edge
+[
+   source 9830
+   target 9830
+   graphics
+   [
+      style "dotted"
+      targetArrow "standard"
+      width 1
+   ]
+]
 edge
 [
    source 9830
@@ -193,6 +284,17 @@ edge
       style "standard"
       targetArrow "standard"
       width 2
+   ]
+]
+edge
+[
+   source 9830
+   target 9840
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+      width 1
    ]
 ]
 
@@ -215,6 +317,59 @@ edge
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+edge
+[
+   source 9840
+   target 9840
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+      width 1
+   ]
+]
+edge
+[
+   source 9840
+   target 9840
+   graphics
+   [
+      style "dashed"
+      targetArrow "standard"
+      width 1
+   ]
+]
 edge
 [
    source 9840
@@ -228,6 +383,8 @@ edge
 ]
 
 
+
+
 edge
 [
    source 9840
@@ -239,6 +396,32 @@ edge
       width 2
    ]
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -291,17 +474,101 @@ edge
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 edge
 [
    source 9860
    target 9870
    graphics
    [
-      style "dotted"
+      style "standard"
+      targetArrow "standard"
+      width 2
+   ]
+]
+edge
+[
+   source 9860
+   target 9870
+   graphics
+   [
+      style "standard"
       targetArrow "standard"
       width 1
    ]
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -333,6 +600,40 @@ edge
       width 2
    ]
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -388,6 +689,286 @@ edge
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+edge
+[
+   source 19950
+   target 9840
+   graphics
+   [
+      style "standard"
+      targetArrow "standard"
+      width 1
+   ]
+]
 
 
 

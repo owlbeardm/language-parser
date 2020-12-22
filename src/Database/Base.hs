@@ -27,11 +27,11 @@ data LanguageName = Aboleth
                   | Alko
                   | ClassicalArcane
                   | Dragon
-                  | Dwarven
-                  | Elven
+                  | Edhellen
                   | English
                   | Halfling
                   | Infernal
+                  | Khuzdûl
                   | Kobold
                   | LizardFolk
                   | Necril

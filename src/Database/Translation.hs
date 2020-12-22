@@ -4,7 +4,10 @@ module Database.Translation
   WordDescription,
   WordSource,
   WordTranslation,
-  getFullWordDescription, translateWord
+  addTranslationFromAlt,
+  addTranslationFromTo,
+  getFullWordDescription, 
+  translateWord,
   ) where
 
 import           ClassyPrelude        hiding (groupBy, id, on, words)
@@ -129,16 +132,19 @@ printAllTranslationsByLang lname =
       , entityVal toLang
       , map entityVal mToWord)
 
-
+-- |The 'addTranslationFromTo' function inserts new translation to a existing word.
+--
+-- >>> runSQLAction $ addTranslationFromTo "kibil" Noun Khuzdûl "silver" Noun English (Just "metal")
+-- Just (TranslationKey {unTranslationKey = SqlBackendKey {unSqlBackendKey = 19980}})
 addTranslationFromTo :: (MonadIO m, MonadLogger m) =>
-     WordText
-  -> PartOfSpeech
-  -> LanguageName
-  -> WordText
-  -> PartOfSpeech
-  -> LanguageName
-  -> Maybe Comment
-  -> AppT m (Maybe (Key Translation))
+     WordText     -- ^ 'Text' of source word
+  -> PartOfSpeech     -- ^ 'PartOfSpeech' of source word
+  -> LanguageName     -- ^ 'LanguageName' of source word
+  -> WordText     -- ^ 'Text' of translation word
+  -> PartOfSpeech     -- ^ 'PartOfSpeech' of translation word
+  -> LanguageName     -- ^ 'LanguageName' of translation word
+  -> Maybe Comment     -- ^ 'Maybe' 'Text' of translation comment
+  -> AppT m (Maybe (Key Translation))     -- ^ 'Key' 'Translation' if inserted succsesfully
 addTranslationFromTo fromWord fromPos fromLang toWord toPos toLang mComment = do
     mLangFrom <- getLang fromLang
     mLangTo <- getLang toLang
@@ -166,16 +172,19 @@ addTranslationFromTo fromWord fromPos fromLang toWord toPos toLang mComment = do
   where
     getLang = getBy . LanguageNameUnq
 
-
+-- |The 'addTranslationFromAlt' function inserts new translation not to a word.
+--
+-- >>> runSQLAction $ addTranslationFromAlt "bhrentos" Noun Titan English "animal horned" Nothing
+-- Just (TranslationKey {unTranslationKey = SqlBackendKey {unSqlBackendKey = 19980}})
 addTranslationFromAlt :: (MonadIO m, MonadLogger m) =>
-     WordText
-  -> PartOfSpeech
-  -> LanguageName
-  -> LanguageName
-  -> Maybe Comment
-  -> Text
+     WordText     -- ^ 'Text' of source word
+  -> PartOfSpeech     -- ^ 'PartOfSpeech' of source word
+  -> LanguageName     -- ^ 'LanguageName' of source word
+  -> LanguageName     -- ^ 'LanguageName' of translation word
+  -> Text     -- ^ 'Text' of the translation
+  -> Maybe Comment     -- ^ 'Maybe' 'Text' of translation comment
   -> AppT m (Maybe (Key Translation))
-addTranslationFromAlt fromWord fromPos fromLang toLang mComment altTran = do
+addTranslationFromAlt fromWord fromPos fromLang toLang altTran mComment = do
     mLangFrom <- getLang fromLang
     mLangTo <- getLang toLang
     case (mLangFrom, mLangTo) of
