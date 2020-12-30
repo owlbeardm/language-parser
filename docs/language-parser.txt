@@ -13,6 +13,7 @@ Aboleth :: LanguageName
 Alko :: LanguageName
 ClassicalArcane :: LanguageName
 Dragon :: LanguageName
+Dwarven :: LanguageName
 Edhellen :: LanguageName
 English :: LanguageName
 Halfling :: LanguageName
@@ -65,6 +66,9 @@ instance GHC.Enum.Enum Database.Base.PartOfSpeech
 instance GHC.Classes.Eq Database.Base.PartOfSpeech
 instance Database.Persist.Class.PersistField.PersistField Database.Base.LanguageName
 instance Database.Persist.Sql.Class.PersistFieldSql Database.Base.LanguageName
+instance Data.Aeson.Types.FromJSON.FromJSON Database.Base.LanguageName
+instance Data.Aeson.Types.ToJSON.ToJSON Database.Base.LanguageName
+instance GHC.Generics.Generic Database.Base.LanguageName
 instance GHC.Show.Show Database.Base.LanguageName
 instance GHC.Read.Read Database.Base.LanguageName
 instance GHC.Enum.Enum Database.Base.LanguageName
@@ -118,6 +122,7 @@ EvolveLaw :: !Key Language -> !Key Language -> !SoundRegex -> !Sound -> !Priorit
 [evolveLawPriority] :: EvolveLaw -> !Priority
 type EvolveLawId = Key EvolveLaw
 migrateAll :: Migration
+parseLanguage :: Object -> Parser Language
 findLangByName :: MonadIO m => LanguageName -> AppT m (Maybe (Entity Language))
 instance GHC.Show.Show Database.Entity.EvolveLaw
 instance GHC.Show.Show Database.Entity.WordOriginFrom
@@ -209,15 +214,19 @@ instance Database.Persist.Class.PersistField.PersistField Database.Entity.Transl
 instance Database.Persist.Sql.Class.PersistFieldSql Database.Entity.Translation
 instance Database.Persist.Class.PersistEntity.PersistEntity Database.Entity.Translation
 instance Database.Persist.Class.PersistStore.ToBackendKey Database.Persist.Sql.Types.Internal.SqlBackend Database.Entity.Translation
+instance Data.Aeson.Types.ToJSON.ToJSON Database.Entity.Translation
 instance Database.Persist.Class.PersistField.PersistField Database.Entity.Word
 instance Database.Persist.Sql.Class.PersistFieldSql Database.Entity.Word
 instance Database.Persist.Class.PersistEntity.PersistEntity Database.Entity.Word
 instance Database.Persist.Class.PersistStore.ToBackendKey Database.Persist.Sql.Types.Internal.SqlBackend Database.Entity.Word
+instance Data.Aeson.Types.ToJSON.ToJSON Database.Entity.Word
 instance Database.Persist.Class.PersistField.PersistField Database.Entity.Language
 instance Database.Persist.Sql.Class.PersistFieldSql Database.Entity.Language
 instance Database.Persist.Class.PersistEntity.PersistEntity Database.Entity.Language
 instance Database.Persist.Class.PersistStore.ToBackendKey Database.Persist.Sql.Types.Internal.SqlBackend Database.Entity.Language
 instance GHC.Show.Show Database.Entity.Language
+instance Data.Aeson.Types.ToJSON.ToJSON Database.Entity.Language
+instance Data.Aeson.Types.FromJSON.FromJSON Database.Entity.Language
 
 module Database.Word
 
@@ -225,7 +234,6 @@ module Database.Word
 --   
 --   <pre>
 --   &gt;&gt;&gt; runSQLAction $ addWordByLangName "kibil" Noun Khuzdûl
---   Just (WordKey {unWordKey = SqlBackendKey {unSqlBackendKey = 19960}})
 --   </pre>
 addWordByLangName :: (MonadIO m, MonadLogger m) => WordText -> PartOfSpeech -> LanguageName -> AppT m (Maybe (Key Word))
 findWordById :: MonadIO m => Int64 -> AppT m (Maybe (Entity Word))
@@ -275,6 +283,10 @@ listLangs :: MonadIO m => AppT m [Entity Language]
 reEvolveLang :: MonadIO m => LanguageName -> LanguageName -> AppT m (Maybe (Int, LanguageName, LanguageName))
 traceWordEvolve :: MonadIO m => WordText -> [LanguageName] -> AppT m [WordText]
 
+module HTTP.LanguageAPI
+type LangsApi = "langs" :> (Get '[JSON] [Language])
+languageServer :: Server LangsApi
+
 module Database.Translation
 type WordAndLang = (Word, Language)
 type WordDescription = (Entity Word, [Language], [WordTranslation], [WordSource])
@@ -301,11 +313,21 @@ addTranslationFromTo :: (MonadIO m, MonadLogger m) => WordText -> PartOfSpeech -
 getFullWordDescription :: MonadIO m => [Entity Word] -> AppT m [WordDescription]
 translateWord :: MonadIO m => Text -> AppT m [WordDescription]
 
+module HTTP.WordAPI
+type WordsApi = "words" :> (Get '[JSON] [WordDescriptionAPI] :<|> Capture "word" Text :> Get '[JSON] [WordDescriptionAPI])
+wordServer :: Server WordsApi
+
+module HTTP.API
+runServer :: IO ()
+myApp :: Application
+
 module Language.Sounds
 filterAllClusters :: Text -> [Text] -> [Text]
 filterFirstCluster :: Text -> [Text] -> [Text]
 filterLastCluster :: Text -> [Text] -> [Text]
 getConsonantClustersFiltered :: (Text -> [Text] -> [Text]) -> [Text] -> [Text]
+isVowel :: Char -> Bool
+splitOnAnyOf :: [Text] -> Text -> [Text]
 
 module Language.Word
 getWordsConstClusters :: [Entity Word] -> [Text]
@@ -313,9 +335,10 @@ getWordsConstLastClusters :: [Entity Word] -> [Text]
 getWordsConstStartingClusters :: [Entity Word] -> [Text]
 getWordsSounds :: [Entity Word] -> Text
 
-module PhoneticChanges
+module Lib
+main :: IO ()
 
-module Platform.HTTP
+module PhoneticChanges
 
 module Print.Console
 square :: Int -> Int
@@ -348,9 +371,6 @@ prettyWord :: Word -> Doc AnsiStyle
 prettyEWord :: Entity Word -> Doc AnsiStyle
 prettyWT :: WordTranslation -> Doc AnsiStyle
 conShow :: PartOfSpeech -> Text
-
-module Lib
-main :: IO ()
 
 module Print.File
 printLangsGML :: IO ()
