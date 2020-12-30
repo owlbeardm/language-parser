@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Lib</span><span>
+</span><a name="line-2"></a><span>  </span><span class="hs-special">(</span><span>
+</span><a name="line-3"></a><span>  </span><a href="Lib.html#main"><span class="hs-identifier hs-var">main</span></a><span>
+</span><a name="line-4"></a><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-5"></a><span>
+</span><a name="line-6"></a><span>
+</span><a name="line-7"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">ClassyPrelude</span><span>
+</span><a name="line-8"></a><span class="hs-keyword">import</span><span>           </span><a href="Database.Base.html"><span class="hs-identifier">Database.Base</span></a><span>
+</span><a name="line-9"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Database.Esqueleto</span><span>
+</span><a name="line-10"></a><span class="hs-keyword">import</span><span>           </span><a href="Database.Language.html"><span class="hs-identifier">Database.Language</span></a><span>
+</span><a name="line-11"></a><span>
+</span><a name="line-12"></a><span class="hs-comment">-- main :: IO ()</span><span>
+</span><a name="line-13"></a><span class="hs-comment">-- main = runSQLAction $ printMigration migrateAll</span><span>
+</span><a name="line-14"></a><span>
+</span><a name="line-15"></a><span class="hs-comment">-- main :: IO ()</span><span>
+</span><a name="line-16"></a><span class="hs-comment">-- main = print &quot;Hello&quot;</span><span>
+</span><a name="line-17"></a><span>
+</span><a name="line-18"></a><span class="hs-identifier">main</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">IO</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><a name="line-19"></a><a name="main"><a href="Lib.html#main"><span class="hs-identifier">main</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><a href="Database.Base.html#runSQLAction"><span class="hs-identifier hs-var">runSQLAction</span></a><span> </span><span class="hs-operator hs-var">$</span><span> </span><span class="hs-keyword">do</span><span>
+</span><a name="line-20"></a><span>  </span><a name="local-6989586621679318399"><a href="#local-6989586621679318399"><span class="hs-identifier">l</span></a></a><span> </span><span class="hs-glyph">&lt;-</span><span> </span><a href="Database.Language.html#findLangById"><span class="hs-identifier hs-var">findLangById</span></a><span> </span><span class="hs-number">1</span><span>
+</span><a name="line-21"></a><span>  </span><span class="hs-identifier hs-var">mapM_</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-var">print</span><span> </span><span class="hs-operator hs-var">.</span><span> </span><span class="hs-identifier hs-var">tshow</span><span> </span><span class="hs-operator hs-var">.</span><span> </span><span class="hs-identifier">entityVal</span><span class="hs-special">)</span><span> </span><a href="#local-6989586621679318399"><span class="hs-identifier hs-var">l</span></a><span>
+</span><a name="line-22"></a></pre></body></html>
