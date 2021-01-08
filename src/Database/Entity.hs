@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE DerivingStrategies         #-}
 {-# LANGUAGE EmptyDataDecls             #-}
 {-# LANGUAGE FlexibleContexts           #-}
@@ -26,12 +27,13 @@ module Database.Entity  where
 --   EvolveLaw (..)
 --   )
 
-import           ClassyPrelude       (Bool, Eq, Maybe, MonadIO, Show, Text,
-                                      mconcat, show, ($), return)
+import           ClassyPrelude       (Bool, Eq, Generic, Maybe, MonadIO, Show,
+                                      Text, mconcat, return, show, ($))
 import           Data.Aeson          (FromJSON, Object, ToJSON, object,
                                       parseJSON, toJSON, withObject, (.:), (.=))
 import           Data.Aeson.Types    (Parser)
 import           Data.Int
+import           Data.Swagger        (ToSchema)
 import           Database.Base
 import           Database.Esqueleto
 import           Database.Persist.TH
@@ -46,13 +48,15 @@ share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
 Language sql=language_tbl
     lname LanguageName sql=name
     LanguageNameUnq lname
+    deriving Generic
 Word sql=word_tbl
     word WordText
     langId LanguageId
     partOfSpeech PartOfSpeech
     forgotten Bool
     WordWordPosLangIdUnq word partOfSpeech langId
-    deriving Eq
+    deriving Eq 
+    deriving Generic
 Translation sql=translation_tbl
     fromWordId WordId
     toLangId LanguageId
@@ -90,6 +94,8 @@ instance ToJSON Language where
     [ "name" .= show (languageLname language)
     ]
 
+instance ToSchema Language
+
 instance ToJSON Translation where
   toJSON translation = object
     [ "comment" .= show (translationComment translation),
@@ -101,7 +107,10 @@ instance ToJSON Word where
     [ "word" .= show (wordWord word),
       "partOfSpeech" .= show (wordPartOfSpeech word),
       "forgotten" .= show (wordForgotten word)
-    ]    
+    ]
+
+-- instance ToSchema Word
+-- instance ToSchema (Key Language)
 
 instance FromJSON Language where
   parseJSON = withObject "Language" parseLanguage
