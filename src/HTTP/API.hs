@@ -14,7 +14,7 @@ import           Data.Proxy                  (Proxy (..))
 import           HTTP.LanguageAPI            (LangsApi, languageServer)
 import           HTTP.WordAPI                (WordsApi, wordServer)
 import           Network.Wai.Handler.Warp    (run)
-import           Network.Wai.Middleware.Cors (simpleCors)
+-- import           Network.Wai.Middleware.Cors (simpleCors)
 import           Servant.API
 import           Servant.Server
 
@@ -35,7 +35,7 @@ apiServer = return "hello"
   :<|> wordServer
 
 myApp :: Application
-myApp = simpleCors (serve api apiServer)
+myApp = serve api apiServer
 
 runServer :: IO ()
 runServer = run 8000 myApp
