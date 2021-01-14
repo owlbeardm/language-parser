@@ -1,14 +1,15 @@
-module Database.Word 
+module Database.Word
   (
   addWordByLangName,
-  findWordById, 
+  findWordById,
   findWordsByAncestorText,
   findWordsByText,
-  getAllWordOrigins, 
-  getEvolvedWord, 
+  findWordsByTextAndLang,
+  getAllWordOrigins,
+  getEvolvedWord,
   listCombinedWordsByLangFromAndTo,
   listDerivatedWordsByLangFromAndTo,
-  listEvolvedWordsByLangFromAndTo, 
+  listEvolvedWordsByLangFromAndTo,
   listMigratedWordsByLangFromAndTo,
   listNotEvolvedWordsByLangFromAndTo,
   listWordsByLang,
@@ -41,7 +42,7 @@ addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten
 -- |The 'addWordByLangName' function inserts new word for language.
 --
 -- >>> runSQLAction $ addWordByLangName "kibil" Noun Khuzdûl
-addWordByLangName :: (MonadIO m, MonadLogger m) =>  
+addWordByLangName :: (MonadIO m, MonadLogger m) =>
 -- Just (WordKey {unWordKey = SqlBackendKey {unSqlBackendKey = 19960}})
                   WordText     -- ^ 'Text' of new word, must be unique with 'PartOfSpeech' and 'LanguageName' combined.
                   -> PartOfSpeech     -- ^ 'PartOfSpeech'
@@ -75,6 +76,14 @@ findWordsByText text =
     select $
     from $ \(word) -> do
       where_ (word ^. WordWord ==. val text)
+      return word
+
+findWordsByTextAndLang :: (MonadIO m) => WordText -> LanguageName -> AppT m  [Entity Word]
+findWordsByTextAndLang text langName = select $ from $ \(word,lang) -> do
+      where_ (word ^. WordLangId ==. lang ^. LanguageId &&.
+              lang ^. LanguageLname ==. val langName &&.
+              word ^. WordWord ==. val text)
+      orderBy [asc (word ^. WordLangId), asc (word ^. WordWord)]
       return word
 
 findWordsByAncestorText :: (MonadIO m) => WordText-> AppT m  [Entity Word]

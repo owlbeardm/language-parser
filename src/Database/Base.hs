@@ -20,6 +20,8 @@ import           Database.Esqueleto
 import           Database.Persist.Postgresql  (ConnectionString,
                                                withPostgresqlConn)
 import           Database.Persist.TH
+import           Web.HttpApiData              (FromHttpApiData, parseQueryParam,
+                                               readTextData)
 
 
 type AppT = ReaderT SqlBackend
@@ -61,6 +63,9 @@ data LanguageName = Aboleth
                   | Titan
     deriving (Eq, Enum, Read, Show, Generic, ToJSON, FromJSON, ToSchema)
 derivePersistField "LanguageName"
+
+instance FromHttpApiData LanguageName where
+  parseQueryParam = readTextData
 
 data PartOfSpeech = Adjective
     | Adverb
