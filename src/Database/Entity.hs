@@ -124,4 +124,3 @@ parseLanguage o = do
 
 findLangByName :: (MonadIO m) => LanguageName -> AppT m  (Maybe (Entity Language))
 findLangByName name =  getBy $ LanguageNameUnq name
-

@@ -7,12 +7,14 @@ module HTTP.WordAPI
       wordServer
       ) where
 
-import           ClassyPrelude          (Maybe(..), Text, map,
-                                         return, ($))
+import           ClassyPrelude          (Int64, Maybe (..), Text, map, return,
+                                         show, unpack, ($), (.))
 import           Control.Monad.IO.Class (liftIO)
+import           Data.Aeson             (ToJSON, object, toJSON, (.=))
 import           Database.Base          (LanguageName (..), runSQLAction)
-import           Database.Entity        (Language, Word)
-import           Database.Esqueleto     (entityVal)
+import           Database.Entity        (Language, Word, wordForgotten,
+                                         wordPartOfSpeech, wordWord)
+import           Database.Esqueleto     (entityKey, entityVal, fromSqlKey)
 import           Database.Translation   (WordDescription, WordSource,
                                          WordTranslation,
                                          getFullWordDescription)
@@ -23,9 +25,18 @@ import           Servant.API
 import           Servant.Server
 
 type WordDescriptionAPI = (Word, [Language], [WordTranslation], [WordSource])
+data WordJSON = WordJSON Int64 Word
+
+instance ToJSON WordJSON where
+  toJSON (WordJSON key word) = object
+    [ "id" .= key,
+      "word" .= unpack (wordWord word),
+      "partOfSpeech" .= show (wordPartOfSpeech word),
+      "forgotten" .= wordForgotten word
+    ]
 
 type WordsApi = "words" :>
-  (    QueryParam "lang" LanguageName :> Get '[JSON] [WordDescriptionAPI]
+  (    "lang" :> Capture "lang" LanguageName :> Get '[JSON] [WordJSON]
   :<|> Capture "word" Text :> QueryParam "lang" LanguageName :> Get '[JSON] [WordDescriptionAPI]
   )
 
@@ -34,15 +45,19 @@ wordServer =
        fetchWordsHandler
   :<|> lookUpWordsHandler
 
-fetchWordsHandler ::  Maybe LanguageName -> Handler [WordDescriptionAPI]
-fetchWordsHandler mLang = do
-  words <- liftIO $ runSQLAction $ listWrds mLang
-  fullDescr <- liftIO $ runSQLAction $ getFullWordDescription words
-  return (map toWordDescriptionAPI fullDescr)
+fetchWordsHandler ::  LanguageName -> Handler [WordJSON]
+fetchWordsHandler langName = do
+  words <- liftIO $ runSQLAction $ listWordsByLang langName
+  return (map makeWordJson words)
   where
-    -- listWrds :: (MonadIO m) => Maybe LanguageName -> AppT m [Entity Word]
-    listWrds Nothing = []
-    listWrds (Just langName) = listWordsByLang langName
+    makeWordJson eWord = WordJSON (toInt eWord) (entityVal eWord)
+    toInt = fromSqlKey . entityKey
+--   fullDescr <- liftIO $ runSQLAction $ getFullWordDescription words
+--   return (map toWordDescriptionAPI fullDescr)
+--   where
+--     -- listWrds :: (MonadIO m) => Maybe LanguageName -> AppT m [Entity Word]
+--     listWrds Nothing = []
+--     listWrds (Just langName) = listWordsByLang langName
 
 lookUpWordsHandler :: Text -> Maybe LanguageName -> Handler [WordDescriptionAPI]
 lookUpWordsHandler word mLang = do

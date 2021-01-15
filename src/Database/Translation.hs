@@ -7,6 +7,7 @@ module Database.Translation
   addTranslationFromAlt,
   addTranslationFromTo,
   getFullWordDescription, 
+  getWordTranslationsByKey,
   translateWord,
   ) where
 
@@ -90,7 +91,10 @@ findWordsByTranslation translationText =
         return frWord
 
 getWordTranslations :: (MonadIO m) => Entity Database.Entity.Word -> AppT m [WordTranslation]
-getWordTranslations enWord = do
+getWordTranslations = getWordTranslationsByKey . fromSqlKey . entityKey
+
+getWordTranslationsByKey :: (MonadIO m) => Int64 -> AppT m [WordTranslation]
+getWordTranslationsByKey key = do
     results <-
       select $
       from $ \(tr `InnerJoin` frWord `InnerJoin` toLang `LeftOuterJoin` mToWord) -> do
@@ -98,7 +102,7 @@ getWordTranslations enWord = do
         on (tr ^. TranslationToLangId ==. toLang ^. LanguageId)
         on (tr ^. TranslationFromWordId ==. frWord ^. WordId)
         where_
-          (frWord ^. WordId ==. val (entityKey enWord))
+          (frWord ^. WordId ==. val (toSqlKey key))
         orderBy [asc (toLang ^. LanguageId), asc (mToWord ?. WordWord), asc (tr ^. TranslationAltTranslation)]
         return (tr, toLang, mToWord)
     return $ map convert results
