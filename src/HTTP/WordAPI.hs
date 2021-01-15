@@ -25,8 +25,8 @@ import           Servant.Server
 type WordDescriptionAPI = (Word, [Language], [WordTranslation], [WordSource])
 
 type WordsApi = "words" :>
-  (    Get '[JSON] [WordDescriptionAPI]
-  :<|> Capture "word" Text :> QueryParam "lang" LanguageName  :> Get '[JSON] [WordDescriptionAPI]
+  (    QueryParam "lang" LanguageName :> Get '[JSON] [WordDescriptionAPI]
+  :<|> Capture "word" Text :> QueryParam "lang" LanguageName :> Get '[JSON] [WordDescriptionAPI]
   )
 
 wordServer :: Server WordsApi
@@ -34,13 +34,15 @@ wordServer =
        fetchWordsHandler
   :<|> lookUpWordsHandler
 
-fetchWordsHandler ::  Handler [WordDescriptionAPI]
-fetchWordsHandler = do
-  words <- liftIO $ runSQLAction $ listWordsByLang langName
+fetchWordsHandler ::  Maybe LanguageName -> Handler [WordDescriptionAPI]
+fetchWordsHandler mLang = do
+  words <- liftIO $ runSQLAction $ listWrds mLang
   fullDescr <- liftIO $ runSQLAction $ getFullWordDescription words
   return (map toWordDescriptionAPI fullDescr)
   where
-    langName = Queran
+    -- listWrds :: (MonadIO m) => Maybe LanguageName -> AppT m [Entity Word]
+    listWrds Nothing = []
+    listWrds (Just langName) = listWordsByLang langName
 
 lookUpWordsHandler :: Text -> Maybe LanguageName -> Handler [WordDescriptionAPI]
 lookUpWordsHandler word mLang = do

@@ -106,7 +106,7 @@ instance ToJSON Word where
   toJSON word = object
     [ "word" .= unpack (wordWord word),
       "partOfSpeech" .= show (wordPartOfSpeech word),
-      "forgotten" .= show (wordForgotten word)
+      "forgotten" .= wordForgotten word
     ]
 
 -- instance ToSchema Word
