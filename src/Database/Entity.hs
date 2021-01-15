@@ -28,7 +28,7 @@ module Database.Entity  where
 --   )
 
 import           ClassyPrelude       (Bool, Eq, Generic, Maybe, MonadIO, Show,
-                                      Text, mconcat, return, show, ($))
+                                      Text, mconcat, return, show, unpack, ($))
 import           Data.Aeson          (FromJSON, Object, ToJSON, object,
                                       parseJSON, toJSON, withObject, (.:), (.=))
 import           Data.Aeson.Types    (Parser)
@@ -55,7 +55,7 @@ Word sql=word_tbl
     partOfSpeech PartOfSpeech
     forgotten Bool
     WordWordPosLangIdUnq word partOfSpeech langId
-    deriving Eq 
+    deriving Eq
     deriving Generic
 Translation sql=translation_tbl
     fromWordId WordId
@@ -104,7 +104,7 @@ instance ToJSON Translation where
 
 instance ToJSON Word where
   toJSON word = object
-    [ "word" .= show (wordWord word),
+    [ "word" .= unpack (wordWord word),
       "partOfSpeech" .= show (wordPartOfSpeech word),
       "forgotten" .= show (wordForgotten word)
     ]
