@@ -63,7 +63,7 @@ Translation sql=translation_tbl
     toWordId WordId Maybe
     comment Comment Maybe
     altTranslation Text Maybe
-    deriving Show
+    deriving Generic
 WordOrigin sql=word_origin_tbl
     wordId WordId
     comment Comment Maybe
@@ -98,8 +98,8 @@ instance ToSchema Language
 
 instance ToJSON Translation where
   toJSON translation = object
-    [ "comment" .= show (translationComment translation),
-      "altTranslation" .= show (translationAltTranslation translation)
+    [ "comment" .= toJSON (translationComment translation),
+      "altTranslation" .= toJSON (translationAltTranslation translation)
     ]
 
 instance ToJSON Word where
