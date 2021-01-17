@@ -7,43 +7,37 @@ module HTTP.WordAPI
       wordServer
       ) where
 
-import           ClassyPrelude          (Int64, Maybe (..), Text, map, return,
-                                         show, unpack, ($), (.))
+import           ClassyPrelude          (Bool (..), Maybe (..), Text, map,
+                                         maxBound, minBound, return, ($), (.))
 import           Control.Monad.IO.Class (liftIO)
-import           Data.Aeson             (ToJSON, object, toJSON, (.=))
-import           Database.Base          (LanguageName (..), runSQLAction)
-import           Database.Entity        (Language, Word, wordForgotten,
-                                         wordPartOfSpeech, wordWord)
+import           Database.Base          (LanguageName (..), PartOfSpeech (..),
+                                         runSQLAction)
 import           Database.Esqueleto     (entityKey, entityVal, fromSqlKey)
-import           Database.Translation   (WordDescription, WordSource,
-                                         WordTranslation,
+import           Database.Translation   (WordDescription,
                                          getFullWordDescription)
-import           Database.Word          (findWordsByText,
+import           Database.Word          (addWordByLangNameF, findWordsByText,
                                          findWordsByTextAndLang,
-                                         listWordsByLang)
+                                         getByWordByLangName, listWordsByLang)
+import           HTTP.Utility           (AddWordJSON (..), WordDescriptionAPI,
+                                         WordJSON (..), checkadded)
 import           Servant.API
 import           Servant.Server
 
-type WordDescriptionAPI = (Word, [Language], [WordTranslation], [WordSource])
-data WordJSON = WordJSON Int64 Word
-
-instance ToJSON WordJSON where
-  toJSON (WordJSON key word) = object
-    [ "id" .= key,
-      "word" .= unpack (wordWord word),
-      "partOfSpeech" .= show (wordPartOfSpeech word),
-      "forgotten" .= wordForgotten word
-    ]
-
 type WordsApi = "words" :>
   (    "lang" :> Capture "lang" LanguageName :> Get '[JSON] [WordJSON]
+  :<|> ReqBody '[JSON] AddWordJSON :> Post '[JSON] Bool
+  :<|> "pos" :> Get '[JSON] [PartOfSpeech]
   :<|> Capture "word" Text :> QueryParam "lang" LanguageName :> Get '[JSON] [WordDescriptionAPI]
+  :<|> "exists" :> ReqBody '[JSON] AddWordJSON :>  Post '[JSON] Bool
   )
 
 wordServer :: Server WordsApi
 wordServer =
        fetchWordsHandler
+  :<|> addWord
+  :<|> fetchPosHandler
   :<|> lookUpWordsHandler
+  :<|> lookUpWordExistsHandler
 
 fetchWordsHandler ::  LanguageName -> Handler [WordJSON]
 fetchWordsHandler langName = do
@@ -52,12 +46,14 @@ fetchWordsHandler langName = do
   where
     makeWordJson eWord = WordJSON (toInt eWord) (entityVal eWord)
     toInt = fromSqlKey . entityKey
---   fullDescr <- liftIO $ runSQLAction $ getFullWordDescription words
---   return (map toWordDescriptionAPI fullDescr)
---   where
---     -- listWrds :: (MonadIO m) => Maybe LanguageName -> AppT m [Entity Word]
---     listWrds Nothing = []
---     listWrds (Just langName) = listWordsByLang langName
+
+addWord :: AddWordJSON -> Handler Bool
+addWord (AddWordJSON l p w f) = do
+  result <- liftIO $ runSQLAction $ addWordByLangNameF w p l f
+  return (checkadded result)
+
+fetchPosHandler :: Handler [PartOfSpeech]
+fetchPosHandler = return [minBound..maxBound]
 
 lookUpWordsHandler :: Text -> Maybe LanguageName -> Handler [WordDescriptionAPI]
 lookUpWordsHandler word mLang = do
@@ -68,6 +64,12 @@ lookUpWordsHandler word mLang = do
     findWords wrd Nothing         = findWordsByText wrd
     findWords wrd (Just langName) = findWordsByTextAndLang wrd langName
 
+lookUpWordExistsHandler :: AddWordJSON -> Handler Bool
+lookUpWordExistsHandler (AddWordJSON l p w _) = do
+  mw <- liftIO $ runSQLAction $ getByWordByLangName w l p
+  case mw of
+    Nothing -> return False
+    _       -> return True
 
 toWordDescriptionAPI :: WordDescription -> WordDescriptionAPI
 toWordDescriptionAPI (a, b, c, d) = (entityVal a, b, c, d)

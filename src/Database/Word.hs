@@ -1,11 +1,13 @@
 module Database.Word
   (
   addWordByLangName,
+  addWordByLangNameF,
   findWordById,
   findWordsByAncestorText,
   findWordsByText,
   findWordsByTextAndLang,
   getAllWordOrigins,
+  getByWordByLangName,
   getEvolvedWord,
   listCombinedWordsByLangFromAndTo,
   listDerivatedWordsByLangFromAndTo,
@@ -38,6 +40,17 @@ findWordById i = do
 addWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech -> Bool ->  AppT m (Key Word)
 addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten
 
+getByWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech ->  AppT m (Maybe (Entity Word))
+getByWord word langKey pos  = getBy $ WordWordPosLangIdUnq word pos langKey
+
+getByWordByLangName :: (MonadIO m, MonadLogger m) => WordText -> LanguageName -> PartOfSpeech ->  AppT m (Maybe (Entity Word))
+getByWordByLangName word langName pos  = do
+  lang <- findLangByName langName
+  case lang of
+    Nothing -> do
+      logErrorNS "getByWordByLangName" "There is no such lang in the database"
+      return Nothing
+    Just l -> getByWord word (entityKey l) pos
 
 -- |The 'addWordByLangName' function inserts new word for language.
 --

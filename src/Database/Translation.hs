@@ -4,14 +4,16 @@ module Database.Translation
   WordDescription,
   WordSource,
   WordTranslation,
+  addAltTranslationFromId,
   addTranslationFromAlt,
+  addTranslationFromIdTo,
   addTranslationFromTo,
-  getFullWordDescription, 
+  getFullWordDescription,
   getWordTranslationsByKey,
   translateWord,
   ) where
 
-import           ClassyPrelude        hiding (groupBy, id, on, words)
+import           ClassyPrelude        hiding (Word, groupBy, id, on, words)
 import           Control.Monad.Logger
 import           Database.Base
 import           Database.Entity
@@ -72,7 +74,7 @@ getFullWordDescription words = do
     makeZipInside (x, y) = zip x y
     zipOrigins origins shortTranslations = map makeZipInside (tempZip origins shortTranslations)
 
-    
+
 
 findWordsByTranslation :: (MonadIO m) => Text -> AppT m [Entity Database.Entity.Word]
 findWordsByTranslation translationText =
@@ -170,9 +172,7 @@ addTranslationFromTo fromWord fromPos fromLang toWord toPos toLang mComment = do
           (_, Nothing) ->  do
             logErrorNS "addTranslationFromTo" "There is no such word to in the database"
             return Nothing
-          (Just wordFrom, Just wordTo) -> do
-            id <- insert $ Translation (entityKey wordFrom) (entityKey langTo) (Just (entityKey wordTo)) mComment Nothing
-            return (Just id)
+          (Just wordFrom, Just wordTo) -> addTranslation wordFrom wordTo mComment
   where
     getLang = getBy . LanguageNameUnq
 
@@ -205,9 +205,7 @@ addTranslationFromAlt fromWord fromPos fromLang toLang altTran mComment = do
           Nothing ->  do
             logErrorNS "addTranslationFromTo" "There is no such word from in the database"
             return Nothing
-          Just wordFrom -> do
-            id <- insert $ Translation (entityKey wordFrom) (entityKey langTo) Nothing mComment (Just altTran)
-            return (Just id)
+          Just wordFrom -> addAltTranslation wordFrom altTran langTo mComment
   where
     getLang = getBy . LanguageNameUnq
 
@@ -226,8 +224,93 @@ addTranslationFromToByKeys fromKWord toKWord mComment = do
       (_, Nothing) ->  do
         logErrorNS "addTranslationFromToByKeys" "There is no such word to in the database"
         return Nothing
-      (Just wFrom, Just wTo) -> do
-        id <- insert $ Translation (entityKey wFrom) ((wordLangId . entityVal) wTo) (Just (entityKey wTo)) mComment Nothing
-        return (Just id)
-  -- where
-    -- getLang = getBy . LanguageNameUnq
+      (Just wFrom, Just wTo) -> addTranslation wFrom wTo mComment
+
+
+addTranslation :: (MonadIO m) =>
+     Entity Word
+  -> Entity Word
+  -> Maybe Comment
+  -> AppT m (Maybe (Key Translation))
+addTranslation wFrom wTo mComment = do
+  id <- insert $ Translation (entityKey wFrom) ((wordLangId . entityVal) wTo) (Just (entityKey wTo)) mComment Nothing
+  return (Just id)
+
+addAltTranslation :: (MonadIO m) =>
+     Entity Word
+  -> Text
+  -> Entity Language
+  -> Maybe Comment
+  -> AppT m (Maybe (Key Translation))
+addAltTranslation wFrom altTran lTo mComment = do
+  id <- insert $ Translation (entityKey wFrom) (entityKey lTo) Nothing mComment (Just altTran)
+  return (Just id)
+
+addTranslationFromETo :: (MonadIO m, MonadLogger m) =>
+     Entity Word
+  -> WordText     -- ^ 'Text' of translation word
+  -> PartOfSpeech     -- ^ 'PartOfSpeech' of translation word
+  -> LanguageName     -- ^ 'LanguageName' of translation word
+  -> Maybe Comment     -- ^ 'Maybe' 'Text' of translation comment
+  -> AppT m (Maybe (Key Translation))     -- ^ 'Key' 'Translation' if inserted succsesfully
+addTranslationFromETo wFrom toWord toPos toLang mComment = do
+    mLangTo <- getLang toLang
+    case mLangTo of
+      Nothing ->  do
+        logErrorNS "addTranslationFromIdTo" "There is no such lang to in the database"
+        return Nothing
+      Just langTo -> do
+        mWordTo <- getBy $ WordWordPosLangIdUnq toWord toPos (entityKey langTo)
+        case mWordTo of
+          Nothing ->  do
+            logErrorNS "addTranslationFromIdTo" "There is no such word to in the database"
+            return Nothing
+          Just wordTo -> addTranslation wFrom wordTo mComment
+  where
+    getLang = getBy . LanguageNameUnq
+
+addTranslationFromIdTo :: (MonadIO m, MonadLogger m) =>
+     Int64
+  -> WordText     -- ^ 'Text' of translation word
+  -> PartOfSpeech     -- ^ 'PartOfSpeech' of translation word
+  -> LanguageName     -- ^ 'LanguageName' of translation word
+  -> Maybe Comment     -- ^ 'Maybe' 'Text' of translation comment
+  -> AppT m (Maybe (Key Translation))     -- ^ 'Key' 'Translation' if inserted succsesfully
+addTranslationFromIdTo wFromId toWord toPos toLang mComment = do
+  mWFrom <- findWordById wFromId
+  case mWFrom of
+    Nothing ->  do
+       logErrorNS "addTranslationFromIdTo" "There is no such word from in the database"
+       return Nothing
+    Just wFrom -> addTranslationFromETo wFrom toWord toPos toLang mComment
+    
+
+addAltTranslationFromE :: (MonadIO m, MonadLogger m) =>
+     Entity Word
+  -> LanguageName     -- ^ 'LanguageName' of translation word
+  -> Text     -- ^ 'Text' of the translation
+  -> Maybe Comment     -- ^ 'Maybe' 'Text' of translation comment
+  -> AppT m (Maybe (Key Translation))
+addAltTranslationFromE wFrom toLang altTran mComment = do
+    mLangTo <- getLang toLang
+    case mLangTo of
+      Nothing ->  do
+        logErrorNS "addAltTranslationFromId" "There is no such lang to in the database"
+        return Nothing
+      Just langTo -> addAltTranslation wFrom altTran langTo mComment
+  where
+    getLang = getBy . LanguageNameUnq
+
+addAltTranslationFromId :: (MonadIO m, MonadLogger m) =>
+     Int64
+  -> LanguageName     -- ^ 'LanguageName' of translation word
+  -> Text     -- ^ 'Text' of the translation
+  -> Maybe Comment     -- ^ 'Maybe' 'Text' of translation comment
+  -> AppT m (Maybe (Key Translation))
+addAltTranslationFromId wFromId toLang altTran mComment = do
+  mWFrom <- findWordById wFromId
+  case mWFrom of
+    Nothing ->  do
+       logErrorNS "addTranslationFromIdTo" "There is no such word from in the database"
+       return Nothing
+    Just wFrom -> addAltTranslationFromE wFrom toLang altTran mComment
