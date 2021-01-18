@@ -23,5 +23,5 @@ spec_apiLangs = describe "GET /api/langs" $  do
             it "responds with [Titan,ProtoHuman,English]" $ 
                 get "/api/langs" `shouldRespondWith` 
                     [json|
-                    [{"name":"Titan"},{"name":"ProtoHuman"},{"name":"English"}]
+                    ["Titan","ProtoHuman","English"]
                     |]
