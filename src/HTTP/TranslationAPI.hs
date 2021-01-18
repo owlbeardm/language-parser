@@ -8,22 +8,23 @@ module HTTP.TranslationAPI
       translationServer
       ) where
 
-import           ClassyPrelude             (Bool (..), Int64, Maybe (..),
-                                            return, throwIO, ($))
-import           Control.Monad.IO.Class    (liftIO)
-import           Database.Base             (runSQLAction)
-import           Database.Translation      (WordTranslation,
-                                            addAltTranslationFromId,
-                                            addTranslationFromIdTo,
-                                            getWordTranslationsByKey)
-import           HTTP.Utility              (AddWordJSON (..),
-                                            AddWordTranslationJSON (..),
-                                            checkadded)
+import           ClassyPrelude          (Bool (..), Int64, Maybe (..), map,
+                                         return, throwIO, ($))
+import           Control.Monad.IO.Class (liftIO)
+import           Database.Base          (runSQLAction)
+import           Database.Translation   (WordTranslation,
+                                         addAltTranslationFromId,
+                                         addTranslationFromIdTo,
+                                         getWordTranslationsByKey)
+import           HTTP.Utility           (AddWordJSON (..),
+                                         AddWordTranslationJSON (..),
+                                         WordTranslationAPI, checkadded,
+                                         convertWordTranslationAPI)
 import           Servant.API
 import           Servant.Server
 
 type TranslationAPI = "translation" :>
-  (    "bywordkey" :> Capture "wordId" Int64 :> Get '[JSON] [WordTranslation]
+  (    "bywordkey" :> Capture "wordId" Int64 :> Get '[JSON] [WordTranslationAPI]
   :<|> ReqBody '[JSON] AddWordTranslationJSON :> Post '[JSON] Bool
   )
 
@@ -31,8 +32,10 @@ translationServer :: Server TranslationAPI
 translationServer = fetchTranslationsByKeyHandler
   :<|> addTranslation
 
-fetchTranslationsByKeyHandler :: Int64 -> Handler [WordTranslation]
-fetchTranslationsByKeyHandler key = liftIO $ runSQLAction $ getWordTranslationsByKey key
+fetchTranslationsByKeyHandler :: Int64 -> Handler [WordTranslationAPI]
+fetchTranslationsByKeyHandler key = do
+  wt <- liftIO $ runSQLAction $ getWordTranslationsByKey key
+  return (map convertWordTranslationAPI wt)
 
 addTranslation :: AddWordTranslationJSON -> Handler Bool
 addTranslation awt = do

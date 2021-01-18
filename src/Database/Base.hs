@@ -15,7 +15,9 @@ import           Control.Monad.Logger         (NoLoggingT, runNoLoggingT)
 -- import           Control.Monad.Logger         (LoggingT, runStderrLoggingT)
 import           Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import           Data.Aeson                   (FromJSON, ToJSON)
-import           Data.Swagger                 (ToSchema)
+import           Data.Swagger                 (ToParamSchema (..),
+                                               ToSchema (..))
+
 import           Database.Esqueleto
 import           Database.Persist.Postgresql  (ConnectionString,
                                                withPostgresqlConn)
@@ -61,7 +63,7 @@ data LanguageName = Aboleth
                   | SlaveRunic
                   | Sylvan
                   | Titan
-    deriving (Eq, Enum, Read, Show, Generic, ToJSON, FromJSON, ToSchema)
+    deriving (Eq, Enum, Read, Show, Generic, ToJSON, FromJSON, ToSchema, ToParamSchema)
 derivePersistField "LanguageName"
 
 instance FromHttpApiData LanguageName where
@@ -78,7 +80,7 @@ data PartOfSpeech = Adjective
     | Pronoun
     | Suffix
     | Verb
-    deriving (Eq, Bounded, Enum, Read, Show, Generic, ToJSON, FromJSON, ToSchema)
+    deriving (Eq, Bounded, Enum, Read, Show, Generic, ToJSON, FromJSON, ToSchema, ToParamSchema)
 derivePersistField "PartOfSpeech"
 
 connStr :: ConnectionString

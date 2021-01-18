@@ -33,7 +33,8 @@ import           Data.Aeson          (FromJSON, Object, ToJSON, object,
                                       parseJSON, toJSON, withObject, (.:), (.=))
 import           Data.Aeson.Types    (Parser)
 import           Data.Int
-import           Data.Swagger        (ToSchema)
+import           Data.Proxy          (Proxy (..))
+import           Data.Swagger        (ToSchema (..))
 import           Database.Base
 import           Database.Esqueleto
 import           Database.Persist.TH
@@ -86,6 +87,9 @@ EvolveLaw sql=evolve_law_tbl
     deriving Show
 |]
 
+
+instance ToSchema Language
+
 instance Show Language where
     show l = mconcat [ show $ languageLname l]
 
@@ -93,8 +97,6 @@ instance ToJSON Language where
   toJSON language = object
     [ "name" .= show (languageLname language)
     ]
-
-instance ToSchema Language
 
 instance ToJSON Translation where
   toJSON translation = object

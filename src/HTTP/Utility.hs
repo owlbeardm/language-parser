@@ -4,21 +4,41 @@
 module HTTP.Utility where
 
 import           ClassyPrelude        (Bool (..), Generic, Int64, Maybe (..),
-                                       Text, show, unpack)
+                                       Text, map, mapM, show, unpack, (.))
 import           Data.Aeson           (FromJSON, ToJSON, object, toJSON, (.=))
+import           Data.Swagger         (ToParamSchema (..), ToSchema (..))
 import           Database.Base        (LanguageName (..), PartOfSpeech (..))
-import           Database.Entity      (Language, Word, WordText, wordForgotten,
+import           Database.Entity      (Comment, Language, Translation, Word,
+                                       WordText, languageLname, wordForgotten,
                                        wordPartOfSpeech, wordWord)
-import           Database.Translation (WordSource, WordTranslation)
+import qualified Database.Entity      as DE (translationAltTranslation,
+                                             translationComment,
+                                             translationFromWordId,
+                                             translationToLangId,
+                                             translationToWordId)
+import           Database.Esqueleto   (entityKey, entityVal, fromSqlKey)
+import           Database.Translation (WordAndLang, WordDescription, WordSource,
+                                       WordTranslation)
 
-type WordDescriptionAPI = (Word, [Language], [WordTranslation], [WordSource])
+type WordTranslationAPI = (TranslationAPI, LanguageName, Maybe WordJSON)
+type WordAndLangAPI = (WordJSON, LanguageName)
+type WordSourceAPI = (WordAndLangAPI, [WordTranslationAPI])
+type WordDescriptionAPI = (WordJSON, [LanguageName], [WordTranslationAPI], [WordSourceAPI])
 
-data AddWordJSON = AddWordJSON { lang      :: LanguageName
-                               , pos       :: PartOfSpeech
-                               , wordText  :: WordText
-                               , forgotten :: Bool
+data TranslationAPI = TranslationAPI { fromWordId                :: Int64
+                                     , toLangId                  :: Int64
+                                     , toWordId                  :: Maybe Int64
+                                     , translationComment        :: Maybe Comment
+                                     , translationAltTranslation :: Maybe Text
+                                     }
+                                     deriving (Generic, ToJSON, FromJSON, ToSchema)
+
+data AddWordJSON = AddWordJSON { lang          :: LanguageName
+                               , pos           :: PartOfSpeech
+                               , wordText      :: WordText
+                               , makeForgotten :: Bool
                                }
-                               deriving (Generic, ToJSON, FromJSON)
+                               deriving (Generic, ToJSON, FromJSON, ToSchema)
 
 data AddWordTranslationJSON = AddWordTranslationJSON { translation      :: Maybe AddWordJSON
                                                      , wordFromId       :: Int64
@@ -27,23 +47,51 @@ data AddWordTranslationJSON = AddWordTranslationJSON { translation      :: Maybe
                                                      , isAltTranslation :: Bool
                                                      , comment          :: Maybe Text
                                                      }
-                                                     deriving (Generic, ToJSON, FromJSON)
+                                                     deriving (Generic, ToJSON, FromJSON, ToSchema)
 
-data TraceWordReq = TraceWordReq { wordTrace  :: WordText
-                                 , langs :: [LanguageName]
+data TraceWordReq = TraceWordReq { wordTrace :: WordText
+                                 , langs     :: [LanguageName]
                                  }
-                                 deriving (Generic, ToJSON, FromJSON)
+                                 deriving (Generic, ToJSON, FromJSON, ToSchema)
 
-data WordJSON = WordJSON Int64 Word
+data WordJSON = WordJSON { id           :: Maybe Int64
+                         , word         :: WordText
+                         , partOfSpeech :: PartOfSpeech
+                         , forgotten    :: Bool
+                         } deriving (Generic, ToJSON, FromJSON, ToSchema)
 
-instance ToJSON WordJSON where
-  toJSON (WordJSON key word) = object
-    [ "id" .= key,
-      "word" .= unpack (wordWord word),
-      "partOfSpeech" .= show (wordPartOfSpeech word),
-      "forgotten" .= wordForgotten word
-    ]
+convertWordToWordJson :: (Int64, Word) -> WordJSON
+convertWordToWordJson (id, word) = WordJSON (Just id) (wordWord word) (wordPartOfSpeech word) (wordForgotten word)
 
+convertToWordJson :: Word -> WordJSON
+convertToWordJson word = WordJSON Nothing (wordWord word) (wordPartOfSpeech word) (wordForgotten word)
+
+convertTranslationAPI :: Translation -> TranslationAPI
+convertTranslationAPI tr = TranslationAPI ((fromSqlKey . DE.translationFromWordId) tr) ((fromSqlKey . DE.translationToLangId) tr) (map fromSqlKey (DE.translationToWordId tr)) (DE.translationComment tr) (DE.translationAltTranslation tr)
+
+-- type WordTranslation = (Translation, Language, Maybe Database.Entity.Word)
+-- type WordAndLang = (Database.Entity.Word, Language)
+-- type WordSource = (WordAndLang, [WordTranslation])
+-- type WordDescription = (Entity Database.Entity.Word, [Language], [WordTranslation], [WordSource])
+
+convertWordTranslationAPI :: WordTranslation -> WordTranslationAPI
+convertWordTranslationAPI (tr, ln, mwrd) = (convertTranslationAPI tr, languageLname ln, map convertToWordJson mwrd)
+
+convertWordAndLangAPI :: WordAndLang -> WordAndLangAPI
+convertWordAndLangAPI (wrd, ln) = (convertToWordJson wrd, languageLname ln)
+
+convertWordSourceAPI :: WordSource -> WordSourceAPI
+convertWordSourceAPI (wl, listwt) = (convertWordAndLangAPI wl, map convertWordTranslationAPI listwt)
+
+convertWordDescriptionAPI :: WordDescription -> WordDescriptionAPI
+convertWordDescriptionAPI (eWord, lLn, lWt, lWs) = (
+  (convertWordToWordJson . toTuple) eWord,
+  map languageLname lLn,
+  map convertWordTranslationAPI lWt,
+  map convertWordSourceAPI lWs)
+  where
+    toTuple eW = (toInt eW, entityVal eW)
+    toInt = fromSqlKey . entityKey
 
 checkadded :: Maybe a -> Bool
 checkadded Nothing = False

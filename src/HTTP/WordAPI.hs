@@ -19,7 +19,9 @@ import           Database.Word          (addWordByLangNameF, findWordsByText,
                                          findWordsByTextAndLang,
                                          getByWordByLangName, listWordsByLang)
 import           HTTP.Utility           (AddWordJSON (..), WordDescriptionAPI,
-                                         WordJSON (..), checkadded)
+                                         WordJSON (..), checkadded,
+                                         convertWordDescriptionAPI,
+                                         convertWordToWordJson)
 import           Servant.API
 import           Servant.Server
 
@@ -44,7 +46,7 @@ fetchWordsHandler langName = do
   words <- liftIO $ runSQLAction $ listWordsByLang langName
   return (map makeWordJson words)
   where
-    makeWordJson eWord = WordJSON (toInt eWord) (entityVal eWord)
+    makeWordJson eWord = convertWordToWordJson (toInt eWord, entityVal eWord)
     toInt = fromSqlKey . entityKey
 
 addWord :: AddWordJSON -> Handler Bool
@@ -59,7 +61,7 @@ lookUpWordsHandler :: Text -> Maybe LanguageName -> Handler [WordDescriptionAPI]
 lookUpWordsHandler word mLang = do
   words <- liftIO $ runSQLAction $ findWords word mLang
   fullDescr <- liftIO $ runSQLAction $ getFullWordDescription words
-  return (map toWordDescriptionAPI fullDescr)
+  return (map convertWordDescriptionAPI fullDescr)
   where
     findWords wrd Nothing         = findWordsByText wrd
     findWords wrd (Just langName) = findWordsByTextAndLang wrd langName
@@ -70,6 +72,3 @@ lookUpWordExistsHandler (AddWordJSON l p w _) = do
   case mw of
     Nothing -> return False
     _       -> return True
-
-toWordDescriptionAPI :: WordDescription -> WordDescriptionAPI
-toWordDescriptionAPI (a, b, c, d) = (entityVal a, b, c, d)
