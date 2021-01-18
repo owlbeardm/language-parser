@@ -4,11 +4,11 @@
 module HTTP.Utility where
 
 import           ClassyPrelude        (Bool (..), Generic, Int64, Maybe (..),
-                                       Text, map, mapM, show, unpack, (.))
-import           Data.Aeson           (FromJSON, ToJSON, object, toJSON, (.=))
-import           Data.Swagger         (ToParamSchema (..), ToSchema (..))
+                                       Text, map, (.))
+import           Data.Aeson           (FromJSON, ToJSON)
+import           Data.Swagger         (ToSchema (..))
 import           Database.Base        (LanguageName (..), PartOfSpeech (..))
-import           Database.Entity      (Comment, Language, Translation, Word,
+import           Database.Entity      (Comment, Translation, Word,
                                        WordText, languageLname, wordForgotten,
                                        wordPartOfSpeech, wordWord)
 import qualified Database.Entity      as DE (translationAltTranslation,
@@ -61,10 +61,10 @@ data WordJSON = WordJSON { id           :: Maybe Int64
                          } deriving (Generic, ToJSON, FromJSON, ToSchema)
 
 convertWordToWordJson :: (Int64, Word) -> WordJSON
-convertWordToWordJson (id, word) = WordJSON (Just id) (wordWord word) (wordPartOfSpeech word) (wordForgotten word)
+convertWordToWordJson (i, wrd) = WordJSON (Just i) (wordWord wrd) (wordPartOfSpeech wrd) (wordForgotten wrd)
 
 convertToWordJson :: Word -> WordJSON
-convertToWordJson word = WordJSON Nothing (wordWord word) (wordPartOfSpeech word) (wordForgotten word)
+convertToWordJson wrd = WordJSON Nothing (wordWord wrd) (wordPartOfSpeech wrd) (wordForgotten wrd)
 
 convertTranslationAPI :: Translation -> TranslationAPI
 convertTranslationAPI tr = TranslationAPI ((fromSqlKey . DE.translationFromWordId) tr) ((fromSqlKey . DE.translationToLangId) tr) (map fromSqlKey (DE.translationToWordId tr)) (DE.translationComment tr) (DE.translationAltTranslation tr)

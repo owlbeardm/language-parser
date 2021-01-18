@@ -11,7 +11,7 @@ module HTTP.LanguageAPI
 import           ClassyPrelude          (map, return, ($), (.))
 import           Control.Monad.IO.Class (liftIO)
 import           Database.Base          (LanguageName (..), runSQLAction)
-import           Database.Entity        (Language, WordText, languageLname)
+import           Database.Entity        (WordText, languageLname)
 import           Database.Esqueleto     (entityVal)
 import           Database.Language      (listLangs, traceWordEvolve)
 import           HTTP.Utility           (TraceWordReq (..))

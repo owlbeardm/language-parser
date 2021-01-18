@@ -12,8 +12,7 @@ import           ClassyPrelude          (Bool (..), Int64, Maybe (..), map,
                                          return, throwIO, ($))
 import           Control.Monad.IO.Class (liftIO)
 import           Database.Base          (runSQLAction)
-import           Database.Translation   (WordTranslation,
-                                         addAltTranslationFromId,
+import           Database.Translation   (addAltTranslationFromId,
                                          addTranslationFromIdTo,
                                          getWordTranslationsByKey)
 import           HTTP.Utility           (AddWordJSON (..),

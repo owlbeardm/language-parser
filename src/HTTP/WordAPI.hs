@@ -13,8 +13,7 @@ import           Control.Monad.IO.Class (liftIO)
 import           Database.Base          (LanguageName (..), PartOfSpeech (..),
                                          runSQLAction)
 import           Database.Esqueleto     (entityKey, entityVal, fromSqlKey)
-import           Database.Translation   (WordDescription,
-                                         getFullWordDescription)
+import           Database.Translation   (getFullWordDescription)
 import           Database.Word          (addWordByLangNameF, findWordsByText,
                                          findWordsByTextAndLang,
                                          getByWordByLangName, listWordsByLang)
@@ -58,8 +57,8 @@ fetchPosHandler :: Handler [PartOfSpeech]
 fetchPosHandler = return [minBound..maxBound]
 
 lookUpWordsHandler :: Text -> Maybe LanguageName -> Handler [WordDescriptionAPI]
-lookUpWordsHandler word mLang = do
-  words <- liftIO $ runSQLAction $ findWords word mLang
+lookUpWordsHandler wd mLang = do
+  words <- liftIO $ runSQLAction $ findWords wd mLang
   fullDescr <- liftIO $ runSQLAction $ getFullWordDescription words
   return (map convertWordDescriptionAPI fullDescr)
   where

@@ -1,8 +1,8 @@
 module Print.JS where
 
-import           ClassyPrelude              (IO, writeFile, ($))
+import           ClassyPrelude              (IO, ($))
 import           Data.Aeson                 (encode)
-import           Data.ByteString.Lazy.Char8 as BSL (putStrLn, writeFile)
+import           Data.ByteString.Lazy.Char8 as BSL (writeFile)
 import           Data.Proxy                 (Proxy (..))
 import           HTTP.API                   (API)
 import           Servant.Swagger            (toSwagger)

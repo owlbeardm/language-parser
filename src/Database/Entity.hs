@@ -33,7 +33,6 @@ import           Data.Aeson          (FromJSON, Object, ToJSON, object,
                                       parseJSON, toJSON, withObject, (.:), (.=))
 import           Data.Aeson.Types    (Parser)
 import           Data.Int
-import           Data.Proxy          (Proxy (..))
 import           Data.Swagger        (ToSchema (..))
 import           Database.Base
 import           Database.Esqueleto
