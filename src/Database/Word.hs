@@ -2,6 +2,7 @@ module Database.Word
   (
   addWordByLangName,
   addWordByLangNameF,
+  deleteWordById,
   findWordById,
   findWordsByAncestorText,
   findWordsByText,
@@ -17,6 +18,7 @@ module Database.Word
   listWordsByLang,
   listWordsByLangAndSound,
   listWordsInfo,
+  updateWordById,
   ) where
 
 import           ClassyPrelude        hiding (Word, delete, groupBy, isNothing,
@@ -36,6 +38,25 @@ findWordById :: (MonadIO m) => Int64 -> AppT m (Maybe (Entity Word))
 findWordById i = do
   wordsById <- findWordById_ i
   return $ if null wordsById then Nothing else Just ((head . impureNonNull) wordsById)
+
+deleteWordById :: (MonadIO m) => Int64 -> AppT m ()
+deleteWordById i =
+  delete $
+  from $ \word ->
+  where_ (word ^. WordId ==. val (toSqlKey i))
+  --  return word
+
+
+updateWordById :: (MonadIO m) => Int64 -> WordText -> 
+  -- Int64 -> 
+    PartOfSpeech -> Bool -> AppT m ()
+updateWordById i word partOfSpeech forgotten =
+  update $ \w -> do
+  set w [ WordWord =. val word
+        -- , WordLangId =. val (toSqlKey langId)
+        , WordPartOfSpeech =. val partOfSpeech
+        , WordForgotten =. val forgotten]
+  where_ (w ^. WordId ==. val (toSqlKey i))
 
 addWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech -> Bool ->  AppT m (Key Word)
 addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten
