@@ -23,7 +23,7 @@ module Database.Word
 
 import           ClassyPrelude        hiding (Word, delete, groupBy, isNothing,
                                        on, (\\))
-import           Control.Monad.Logger
+-- import           Control.Monad.Logger
 import           Data.List            ((\\))
 import           Database.Base
 import           Database.Entity
@@ -64,19 +64,19 @@ addWord word langKey pos forgotten  = insert $ Word word langKey pos forgotten
 getByWord :: (MonadIO m) => WordText -> Key Language -> PartOfSpeech ->  AppT m (Maybe (Entity Word))
 getByWord word langKey pos  = getBy $ WordWordPosLangIdUnq word pos langKey
 
-getByWordByLangName :: (MonadIO m, MonadLogger m) => WordText -> LanguageName -> PartOfSpeech ->  AppT m (Maybe (Entity Word))
+getByWordByLangName :: MonadIO m => WordText -> LanguageName -> PartOfSpeech ->  AppT m (Maybe (Entity Word))
 getByWordByLangName word langName pos  = do
   lang <- findLangByName langName
   case lang of
     Nothing -> do
-      logErrorNS "getByWordByLangName" "There is no such lang in the database"
+      -- logErrorNS "getByWordByLangName" "There is no such lang in the database"
       return Nothing
     Just l -> getByWord word (entityKey l) pos
 
 -- |The 'addWordByLangName' function inserts new word for language.
 --
 -- >>> runSQLAction $ addWordByLangName "kibil" Noun Khuzdûl
-addWordByLangName :: (MonadIO m, MonadLogger m) =>
+addWordByLangName :: MonadIO m =>
 -- Just (WordKey {unWordKey = SqlBackendKey {unSqlBackendKey = 19960}})
                   WordText     -- ^ 'Text' of new word, must be unique with 'PartOfSpeech' and 'LanguageName' combined.
                   -> PartOfSpeech     -- ^ 'PartOfSpeech'
@@ -84,12 +84,12 @@ addWordByLangName :: (MonadIO m, MonadLogger m) =>
                   ->  AppT m (Maybe (Key Word))     -- ^ 'Key' 'Word' if inserted sucsessfully
 addWordByLangName word pos langName = addWordByLangNameF word pos langName False
 
-addWordByLangNameF :: (MonadIO m, MonadLogger m) =>  WordText -> PartOfSpeech -> LanguageName -> Bool ->  AppT m (Maybe (Key Word))
+addWordByLangNameF :: MonadIO m =>  WordText -> PartOfSpeech -> LanguageName -> Bool ->  AppT m (Maybe (Key Word))
 addWordByLangNameF  word pos langName fgtn = do
   lang <- findLangByName langName
   case lang of
     Nothing -> do
-      logErrorNS "addWordByLangName" "There is no such lang in the database"
+      -- logErrorNS "addWordByLangName" "There is no such lang in the database"
       return Nothing
     (Just l) -> do
       key <- addWord word (entityKey l) pos fgtn

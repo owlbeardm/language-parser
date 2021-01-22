@@ -7,12 +7,11 @@ module HTTP.WordAPI
       wordServer
       ) where
 
-import           ClassyPrelude          (Bool (..), Int64, Maybe (..), Text,
-                                         map, maxBound, minBound, return, ($),
-                                         (.))
-import           Control.Monad.IO.Class (liftIO)
+import           ClassyPrelude          (Bool (..), Int64, Maybe (..), MonadIO,
+                                         Text, map, maxBound, minBound, return,
+                                         ($), (.))
 import           Database.Base          (LanguageName (..), PartOfSpeech (..),
-                                         runSQLAction)
+                                         runDb)
 import           Database.Esqueleto     (entityKey, entityVal, fromSqlKey)
 import           Database.Translation   (getFullWordDescription)
 import           Database.Word          (addWordByLangNameF, deleteWordById,
@@ -20,6 +19,7 @@ import           Database.Word          (addWordByLangNameF, deleteWordById,
                                          findWordsByTextAndLang,
                                          getByWordByLangName, listWordsByLang,
                                          updateWordById)
+import           HTTP.Config
 import           HTTP.Utility           (AddWordJSON (..), WordDescriptionAPI,
                                          WordJSON (..), checkadded,
                                          convertWordDescriptionAPI,
@@ -37,7 +37,7 @@ type WordsApi = "words" :>
   :<|> "exists" :> ReqBody '[JSON] AddWordJSON :>  Post '[JSON] Bool
   )
 
-wordServer :: Server WordsApi
+wordServer :: MonadIO m => ServerT WordsApi (AppServerT m)
 wordServer =
        fetchWordsHandler
   :<|> addWord
@@ -47,40 +47,40 @@ wordServer =
   :<|> lookUpWordsHandler
   :<|> lookUpWordExistsHandler
 
-fetchWordsHandler ::  LanguageName -> Handler [WordJSON]
+fetchWordsHandler :: MonadIO m => LanguageName -> AppServerT m [WordJSON]
 fetchWordsHandler langName = do
-  words <- liftIO $ runSQLAction $ listWordsByLang langName
+  words <- runDb $ listWordsByLang langName
   return (map makeWordJson words)
   where
     makeWordJson eWord = convertWordToWordJson (toInt eWord, entityVal eWord)
     toInt = fromSqlKey . entityKey
 
-addWord :: AddWordJSON -> Handler Bool
+addWord :: MonadIO m => AddWordJSON -> AppServerT m Bool
 addWord (AddWordJSON l p w f) = do
-  result <- liftIO $ runSQLAction $ addWordByLangNameF w p l f
+  result <- runDb $ addWordByLangNameF w p l f
   return (checkadded result)
 
-deleteWord :: Int64 -> Handler ()
-deleteWord wordId = liftIO $ runSQLAction $ deleteWordById wordId
+deleteWord :: MonadIO m => Int64 -> AppServerT m ()
+deleteWord wordId = runDb $ deleteWordById wordId
 
-updateWord :: Int64 -> AddWordJSON -> Handler ()
-updateWord wordId (AddWordJSON _ p w f) = liftIO $ runSQLAction $ updateWordById wordId w p f
+updateWord :: MonadIO m => Int64 -> AddWordJSON -> AppServerT m ()
+updateWord wordId (AddWordJSON _ p w f) = runDb $ updateWordById wordId w p f
 
-fetchPosHandler :: Handler [PartOfSpeech]
+fetchPosHandler :: MonadIO m => AppServerT m [PartOfSpeech]
 fetchPosHandler = return [minBound..maxBound]
 
-lookUpWordsHandler :: Text -> Maybe LanguageName -> Handler [WordDescriptionAPI]
+lookUpWordsHandler :: MonadIO m => Text -> Maybe LanguageName -> AppServerT m [WordDescriptionAPI]
 lookUpWordsHandler wd mLang = do
-  words <- liftIO $ runSQLAction $ findWords wd mLang
-  fullDescr <- liftIO $ runSQLAction $ getFullWordDescription words
+  words <- runDb $ findWords wd mLang
+  fullDescr <- runDb $ getFullWordDescription words
   return (map convertWordDescriptionAPI fullDescr)
   where
     findWords wrd Nothing         = findWordsByText wrd
     findWords wrd (Just langName) = findWordsByTextAndLang wrd langName
 
-lookUpWordExistsHandler :: AddWordJSON -> Handler Bool
+lookUpWordExistsHandler :: MonadIO m => AddWordJSON -> AppServerT m Bool
 lookUpWordExistsHandler (AddWordJSON l p w _) = do
-  mw <- liftIO $ runSQLAction $ getByWordByLangName w l p
+  mw <- runDb $ getByWordByLangName w l p
   case mw of
     Nothing -> return False
     _       -> return True

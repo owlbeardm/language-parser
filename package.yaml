@@ -36,6 +36,7 @@ library:
     - esqueleto
     - http-api-data
     - monad-logger
+    - mtl
     - persistent
     - persistent-postgresql
     - persistent-template
@@ -45,6 +46,7 @@ library:
     - regex-compat-tdfa
     - resource-pool
     - resourcet
+    - say
     - scotty
     - servant
     - servant-client

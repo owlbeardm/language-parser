@@ -8,13 +8,13 @@ module HTTP.TranslationAPI
       translationServer
       ) where
 
-import           ClassyPrelude          (Bool (..), Int64, Maybe (..), map,
-                                         return, throwIO, ($))
-import           Control.Monad.IO.Class (liftIO)
-import           Database.Base          (runSQLAction)
+import           ClassyPrelude          (Bool (..), Int64, Maybe (..), MonadIO,
+                                         map, return, throwIO, ($))
+import           Database.Base          (runDb)
 import           Database.Translation   (addAltTranslationFromId,
                                          addTranslationFromIdTo,
                                          getWordTranslationsByKey)
+import           HTTP.Config
 import           HTTP.Utility           (AddWordJSON (..),
                                          AddWordTranslationJSON (..),
                                          WordTranslationAPI, checkadded,
@@ -27,24 +27,24 @@ type TranslationAPI = "translation" :>
   :<|> ReqBody '[JSON] AddWordTranslationJSON :> Post '[JSON] Bool
   )
 
-translationServer :: Server TranslationAPI
+translationServer :: MonadIO m => ServerT TranslationAPI (AppServerT m)
 translationServer = fetchTranslationsByKeyHandler
   :<|> addTranslation
 
-fetchTranslationsByKeyHandler :: Int64 -> Handler [WordTranslationAPI]
+fetchTranslationsByKeyHandler :: MonadIO m => Int64 -> AppServerT m [WordTranslationAPI]
 fetchTranslationsByKeyHandler key = do
-  wt <- liftIO $ runSQLAction $ getWordTranslationsByKey key
+  wt <- runDb $ getWordTranslationsByKey key
   return (map convertWordTranslationAPI wt)
 
-addTranslation :: AddWordTranslationJSON -> Handler Bool
+addTranslation :: MonadIO m => AddWordTranslationJSON -> AppServerT m Bool
 addTranslation awt = do
-  key <- liftIO $ if isAltTranslation awt
+  key <- if isAltTranslation awt
     then
       case altTranslation awt of
         Nothing -> throwIO $ err400 { errBody = "Your request makes no sense to me." }
-        Just atr -> runSQLAction $ addAltTranslationFromId (wordFromId awt) (langTo awt) atr (comment awt)
+        Just atr -> runDb $ addAltTranslationFromId (wordFromId awt) (langTo awt) atr (comment awt)
     else
       case translation awt of
         Nothing -> throwIO $ err400 { errBody = "Your request makes no sense to me." }
-        Just tr -> runSQLAction $ addTranslationFromIdTo (wordFromId awt) (wordText tr) (pos tr) (langTo awt) (comment awt)
+        Just tr -> runDb $ addTranslationFromIdTo (wordFromId awt) (wordText tr) (pos tr) (langTo awt) (comment awt)
   return (checkadded key)

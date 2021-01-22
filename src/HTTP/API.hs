@@ -9,16 +9,16 @@ module HTTP.API
       runServer
       ) where
 
-import           ClassyPrelude            (IO, Text, return)
+import           ClassyPrelude            (IO, MonadIO, Text, return,
+                                           runReaderT, ($))
 import           Data.Proxy               (Proxy (..))
+import           HTTP.Config
 import           HTTP.LanguageAPI         (LangsApi, languageServer)
 import           HTTP.TranslationAPI      (TranslationAPI, translationServer)
 import           HTTP.WordAPI             (WordsApi, wordServer)
 import           Network.Wai.Handler.Warp (run)
--- import           Network.Wai.Middleware.Cors (simpleCors)
 import           Servant.API
 import           Servant.Server
-
 
 
 type API = "api" :>
@@ -31,15 +31,20 @@ type API = "api" :>
 api :: Proxy API
 api = Proxy :: Proxy API
 
-apiServer :: Server API
+apiServer :: MonadIO m => ServerT API (AppServerT m)
 apiServer = return "hello"
   :<|> languageServer
   :<|> wordServer
   :<|> translationServer
 
-myApp :: Application
-myApp = serve api apiServer
+myApp :: Config -> Application
+myApp cfg = serve api (appToServer cfg)
 
-runServer :: IO ()
-runServer = run 8000 myApp
+runServer :: Config -> IO ()
+runServer cfg = run (configPort cfg) (myApp cfg)
 
+convertApp :: Config -> AppServerT IO a -> Handler a
+convertApp cfg appt = Handler $ runReaderT (runApp appt) cfg
+
+appToServer :: Config -> Server API
+appToServer cfg = hoistServer api (convertApp cfg) apiServer

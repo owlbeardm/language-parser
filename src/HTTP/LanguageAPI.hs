@@ -8,12 +8,12 @@ module HTTP.LanguageAPI
       languageServer
       ) where
 
-import           ClassyPrelude          (map, return, ($), (.))
-import           Control.Monad.IO.Class (liftIO)
-import           Database.Base          (LanguageName (..), runSQLAction)
+import           ClassyPrelude          (MonadIO, map, return, ($), (.))
+import           Database.Base          (LanguageName (..), runDb)
 import           Database.Entity        (WordText, languageLname)
 import           Database.Esqueleto     (entityVal)
 import           Database.Language      (listLangs, traceWordEvolve)
+import           HTTP.Config
 import           HTTP.Utility           (TraceWordReq (..))
 import           Servant.API
 import           Servant.Server
@@ -23,15 +23,15 @@ type LangsApi = "langs" :>
   :<|> "traceWord" :> ReqBody '[JSON] TraceWordReq :> Post '[JSON] [WordText]
   )
 
-languageServer :: Server LangsApi
+languageServer :: MonadIO m => ServerT LangsApi (AppServerT m)
 languageServer = fetchLanguagesHandler
   :<|> traceWordHandler
 
-fetchLanguagesHandler :: Handler [LanguageName]
+fetchLanguagesHandler :: MonadIO m => AppServerT m [LanguageName]
 fetchLanguagesHandler = do
-  l <- liftIO $ runSQLAction listLangs
+  l <- runDb listLangs
   return (map (languageLname . entityVal) l)
 
-traceWordHandler :: TraceWordReq -> Handler [WordText]
-traceWordHandler twr = liftIO $ runSQLAction $ traceWordEvolve (wordTrace twr) (langs twr)
+traceWordHandler :: MonadIO m => TraceWordReq -> AppServerT m [WordText]
+traceWordHandler twr = runDb $ traceWordEvolve (wordTrace twr) (langs twr)
 
