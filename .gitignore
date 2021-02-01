@@ -25,3 +25,5 @@ language-parser.cabal
 sql/dump/dumpfile.sql
 
 dumpfile.sql
+
+prod-export.sh
