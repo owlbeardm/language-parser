@@ -82,6 +82,7 @@ data WordToEvolveJSON =
   WordToEvolveJSON
     { wordToEvolve :: WordJSON
     , evolvedText  :: WordText
+    , evolvedWords  :: Maybe [WordJSON]
     }
   deriving (Generic, ToJSON, FromJSON, ToSchema)
 

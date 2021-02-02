@@ -4,6 +4,7 @@ module Database.Language
   , evolveLang
   , evolveLangsTo
   , findLangByKey
+  , getWordsEvolved
   , getWordsToEvolve
   , listEvolveLawsByLangs
   , listLangs
@@ -12,7 +13,7 @@ module Database.Language
   , traceWordEvolve
   ) where
 
-import           ClassyPrelude      hiding (Word, keys, on, words, groupBy)
+import           ClassyPrelude      hiding (Word, groupBy, keys, on, words)
 import           Control.Monad      (zipWithM)
 import           Database.Base
 import           Database.Entity
@@ -274,16 +275,6 @@ evolveLangsTo langNameFrom =
     return langTo
     --
 
--- ongoing <- runDB $ E.select
---                  $ E.from $ \(player `E.InnerJoin` game) -> do
---                      E.on $ player^.PlayerGame E.==. game^.GameId
---                      E.where_ $
---                        player^.PlayerUser E.==. E.just (E.val userId) E.&&.
---                        game^.GameState E.==. E.val MyGame.Ongoing
---                      E.orderBy [E.desc $ game^.GameLastActionTime]
---                      E.limit pagelen
---                      E.offset $ max 0 $ (page1 - 1) * pagelen
---                      return (game, player)
 getWordsToEvolve ::
      (MonadIO m) => LanguageName -> LanguageName -> AppT m [(Entity Word, Text)]
 getWordsToEvolve langNameFrom langNameTo = do
@@ -293,13 +284,14 @@ getWordsToEvolve langNameFrom langNameTo = do
   where
     wordToWordAndEvolved laws word =
       (word, evolveWordText ((wordWord . entityVal) word) laws)
+
 -- TODO:
--- getWordsToReEvolve :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [(Entity Word, Text)]
--- getWordsToReEvolve langNameFrom langNameTo = do
---   evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
---   words <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
---   wordsToUpdate <- mapM (getEvolvedWord langNameTo) words
---   let wordsTupels = (unzip . mconcat) $ zipWordsWordsTo words wordsToUpdate
---   return makeTriple (map (wordToWordAndEvolved (map entityVal evolveLaws)) words)
---   where
---     wordToWordAndEvolved laws word = (word, evolveWordText ((wordWord . entityVal) word) laws)
+getWordsEvolved :: (MonadIO m) => LanguageName -> LanguageName -> AppT m [(Entity Word, Text, [Entity Word])]
+getWordsEvolved langNameFrom langNameTo = do
+  evolveLaws <- listEvolveLawsByLangs langNameFrom langNameTo
+  words <- listEvolvedWordsByLangFromAndTo langNameFrom langNameTo
+  wordsEvolved <- mapM (getEvolvedWord langNameTo) words
+  let wordsTupels = zip words wordsEvolved
+  return (map (wordToWordAndEvolved (map entityVal evolveLaws)) wordsTupels)
+  where
+    wordToWordAndEvolved laws (word, wordEvolved) = (word, evolveWordText ((wordWord . entityVal) word) laws, wordEvolved)
