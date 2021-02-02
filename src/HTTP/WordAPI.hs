@@ -17,6 +17,7 @@ import           Data.Swagger         (ToParamSchema (..), ToSchema (..))
 import           Database.Base        (LanguageName (..), PartOfSpeech (..),
                                        runDb)
 import           Database.Esqueleto   (entityKey, entityVal, fromSqlKey)
+import           Database.Language    (newWordWithOrigin)
 import           Database.Translation (getFullWordDescription)
 import           Database.Word        (addWordByLangNameF, deleteWordById,
                                        findWordsByText, findWordsByTextAndLang,
@@ -67,11 +68,14 @@ instance FromHttpApiData ClusterType where
 
 wordServer :: MonadIO m => ServerT WordsApi (AppServerT m)
 wordServer =
-  fetchWordsHandler :<|> addWord :<|> deleteWord :<|> updateWord :<|>
-  fetchPosHandler :<|>
-  lookUpWordsHandler :<|>
-  lookUpWordExistsHandler :<|>
-  fetchConstClusters
+  fetchWordsHandler :<|>  --
+  addWord :<|>  --
+  deleteWord :<|>  --
+  updateWord :<|> --
+  fetchPosHandler :<|> --
+  lookUpWordsHandler :<|> --
+  lookUpWordExistsHandler :<|> --
+  fetchConstClusters --
 
 fetchWordsHandler :: MonadIO m => LanguageName -> AppServerT m [WordJSON]
 fetchWordsHandler langName = do
@@ -82,15 +86,18 @@ fetchWordsHandler langName = do
     toInt = fromSqlKey . entityKey
 
 addWord :: MonadIO m => AddWordJSON -> AppServerT m Bool
-addWord (AddWordJSON l p w f) = do
+addWord (AddWordJSON l p w f Nothing _) = do
   result <- runDb $ addWordByLangNameF w p l f
+  return (checkadded result)
+addWord (AddWordJSON l p w f (Just ot) oids) = do
+  result <- runDb $ newWordWithOrigin w p l f ot oids
   return (checkadded result)
 
 deleteWord :: MonadIO m => Int64 -> AppServerT m ()
 deleteWord wordId = runDb $ deleteWordById wordId
 
 updateWord :: MonadIO m => Int64 -> AddWordJSON -> AppServerT m ()
-updateWord wordId (AddWordJSON _ p w f) = runDb $ updateWordById wordId w p f
+updateWord wordId (AddWordJSON _ p w f _ _) = runDb $ updateWordById wordId w p f
 
 fetchPosHandler :: MonadIO m => AppServerT m [PartOfSpeech]
 fetchPosHandler = return [minBound .. maxBound]
@@ -109,7 +116,7 @@ lookUpWordsHandler wd mLang = do
     findWords wrd (Just langName) = findWordsByTextAndLang wrd langName
 
 lookUpWordExistsHandler :: MonadIO m => AddWordJSON -> AppServerT m Bool
-lookUpWordExistsHandler (AddWordJSON l p w _) = do
+lookUpWordExistsHandler (AddWordJSON l p w _ _ _) = do
   mw <- runDb $ getByWordByLangName w l p
   case mw of
     Nothing -> return False

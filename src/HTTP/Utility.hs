@@ -7,9 +7,9 @@ import           ClassyPrelude        (Bool (..), Generic, Int64, Maybe (..),
                                        Text, map, (.))
 import           Data.Aeson           (FromJSON, ToJSON)
 import           Data.Swagger         (ToSchema (..))
-import           Database.Base        (LanguageName (..), PartOfSpeech (..))
-import           Database.Entity      (Comment, Translation, Word,
-                                       WordText, languageLname, wordForgotten,
+import           Database.Base        (LanguageName (..), PartOfSpeech (..), WordOriginType (..))
+import           Database.Entity      (Comment, Translation, Word, WordText,
+                                       languageLname, wordForgotten,
                                        wordPartOfSpeech, wordWord)
 import qualified Database.Entity      as DE (translationAltTranslation,
                                              translationComment,
@@ -37,6 +37,8 @@ data AddWordJSON = AddWordJSON { lang          :: LanguageName
                                , pos           :: PartOfSpeech
                                , wordText      :: WordText
                                , makeForgotten :: Bool
+                               , originType    :: Maybe WordOriginType
+                               , originIds     :: [Int64]
                                }
                                deriving (Generic, ToJSON, FromJSON, ToSchema)
 

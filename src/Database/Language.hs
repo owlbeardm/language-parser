@@ -1,6 +1,5 @@
 module Database.Language
   ( addLang
-  , combineWord
   , doAllLangWithAll
   , evolveLang
   , findLangByKey
@@ -8,6 +7,7 @@ module Database.Language
   , listLangs
   , reEvolveLang
   , traceWordEvolve
+  , newWordWithOrigin
   ) where
 
 import           ClassyPrelude      hiding (Word, keys, on, words)
@@ -53,29 +53,31 @@ addLang ::
   -> AppT m (Key Language) -- ^ 'Key' 'Language' if inserted succsesfully
 addLang name = insert $ Language name
 
-insertEvolvedWord ::
-     (MonadIO m)
-  => WordText
-  -> PartOfSpeech
-  -> Key Word
-  -> Key Language
-  -> AppT m (Key Word)
-insertEvolvedWord textToAdd pos wfKey langToKey = do
-  wordToKey <- insert $ Word textToAdd langToKey pos False
-  wordOriginKey <- insert $ WordOrigin wordToKey Nothing True False False False
-  _ <- insert $ WordOriginFrom wfKey wordOriginKey
-  return wordToKey
+-- insertEvolvedWord ::
+--      (MonadIO m)
+--   => WordText
+--   -> PartOfSpeech
+--   -> Key Word
+--   -> Key Language
+--   -> AppT m (Key Word)
+-- insertEvolvedWord textToAdd pos wfKey langToKey = do
+--   wordToKey <- insert $ Word textToAdd langToKey pos False
+--   wordOriginKey <- insert $ WordOrigin wordToKey Nothing True False False False
+--   _ <- insert $ WordOriginFrom wfKey wordOriginKey
+--   return wordToKey
 
-insertCombinedWord ::
+insertWordWithOrigin ::
      (MonadIO m)
   => WordText
   -> PartOfSpeech
   -> Key Language
+  -> Bool
+  -> WordOriginType
   -> [Key Word]
   -> AppT m (Key Word)
-insertCombinedWord textToAdd pos langToKey wKeys = do
-  wordToKey <- insert $ Word textToAdd langToKey pos False
-  wordOriginKey <- insert $ WordOrigin wordToKey Nothing False False True False
+insertWordWithOrigin textToAdd pos langToKey forgotten woType wKeys = do
+  wordToKey <- insert $ Word textToAdd langToKey pos forgotten
+  wordOriginKey <- insert $ WordOrigin wordToKey Nothing (woType == Evolved) (woType == Migrated) (woType == Combined) (woType == Derivated)
   _ <- mapM (\wk -> insert $ WordOriginFrom wk wordOriginKey) wKeys
   return wordToKey
 
@@ -99,14 +101,16 @@ listEvolveLawsByLangs langNameFrom langNameTo =
 --
 -- >>> runSQLAction $ combineWord "kʷilissa" Noun Queran [19240, 19300]
 -- Just (WordKey {unWordKey = SqlBackendKey {unSqlBackendKey = 19310}})
-combineWord ::
+newWordWithOrigin ::
      (MonadIO m)
   => WordText -- ^ Result of combinations. Must be done manually.
   -> PartOfSpeech -- ^ 'PartOfSpeech' of the resulting word
   -> LanguageName -- ^ 'LanguageName' of the resulting word
+  -> Bool
+  -> WordOriginType
   -> [Int64] -- ^ Word's IDs from which  it's combined.
   -> AppT m (Maybe (Key Word))
-combineWord text pos langN wids = do
+newWordWithOrigin text pos langN forgotten woType wids = do
   mLang <- findLangByName langN
   case mLang of
     Nothing -> return Nothing
@@ -116,10 +120,12 @@ combineWord text pos langN wids = do
         then return Nothing
         else do
           cmbW <-
-            insertCombinedWord
+            insertWordWithOrigin
               text
               pos
               (entityKey langE)
+              forgotten
+              woType
               (map entityKey (catMaybes wds))
           return $ Just cmbW
 
@@ -129,11 +135,14 @@ evolvedWord ::
   -> Entity Word
   -> Key Language
   -> AppT m (Key Word)
-evolvedWord laws eWordFrom =
-  insertEvolvedWord
+evolvedWord laws eWordFrom kLang =
+  insertWordWithOrigin
     evolvedText
     ((wordPartOfSpeech . entityVal) eWordFrom)
-    (entityKey eWordFrom)
+    kLang
+    False
+    Evolved
+    [entityKey eWordFrom]
   where
     evolvedText = evolveWordText ((wordWord . entityVal) eWordFrom) laws
 

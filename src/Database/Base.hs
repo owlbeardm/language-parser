@@ -8,6 +8,7 @@ module Database.Base
   (
   LanguageName (..),
   PartOfSpeech (..),
+  WordOriginType (..),
   AppT,
   runSQLAction,
   runDb
@@ -86,9 +87,11 @@ data PartOfSpeech = Adjective
     deriving (Eq, Bounded, Enum, Read, Show, Generic, ToJSON, FromJSON, ToSchema, ToParamSchema)
 derivePersistField "PartOfSpeech"
 
+data WordOriginType = Evolved | Migrated | Combined | Derivated
+  deriving (Eq, Bounded, Enum, Read, Show, Generic, ToJSON, FromJSON, ToSchema, ToParamSchema)
+
 connStr :: ConnectionString
 connStr = "host=172.19.7.103 dbname=wiki user=wiki password=wiki port=5432"
--- connStr = "host=kedom.cql8wtdso3sc.eu-central-1.rds.amazonaws.com dbname=wiki user=wiki password=H1UniO7Nz7QeNqg6T9xa port=5432"
 
 -- runSQLAction :: SqlPersistT (ResourceT (NoLoggingT IO)) a -> IO a
 runSQLAction :: SqlPersistT (ResourceT (LoggingT IO)) a -> IO a
