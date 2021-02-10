@@ -61,7 +61,7 @@ data LanguageName = Aboleth
                   | ProtoHuman
                   | ProtoMaterial
                   | ProtoMonster
-                  | ProtoOrk
+                  | ProtoOrc
                   | ProtoTengu
                   | Queran
                   | SlaveRunic
